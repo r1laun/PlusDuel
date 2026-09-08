@@ -1,88 +1,72 @@
-# PlusDuel
+<p align="center">
+  <strong style="font-size: 2.2rem">Plus<span style="color:#2563eb">Duel</span></strong>
+  <br/>
+  <em>Real-time 1v1 competitive math</em>
+</p>
 
-Real-time 1v1 competitive math game. Given a target number and a multiset of digits, build an expression using **each digit exactly once** that evaluates exactly to the target. First valid answer wins the round — sudden death, best-of-5.
+<p align="center">
 
-## Rules
+  <a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white"></a>
+  <a href="https://nodejs.org"><img alt="Node" src="https://img.shields.io/badge/Node.js-22-339933?logo=nodedotjs&logoColor=white"></a>
+  <a href="https://socket.io"><img alt="Socket.io" src="https://img.shields.io/badge/Realtime-Socket.io-010101?logo=socketdotio"></a>
+  <a href="https://mathjs.org"><img alt="Exact arithmetic" src="https://img.shields.io/badge/Arithmetic-exact/Fraction.js-6f2fdb?logo=mathdotcom"></a>
 
-- Operators: `+ − × ÷ ( ) ^ √ !` (unicode or ASCII: `- * /`)
-- Digit concatenation allowed (`2`,`3` → `23`); leading zeros forbidden (`03` invalid)
-- Exact rational arithmetic (fraction.js) — no floats. `√` and `!` must yield exact integers
-- Digit multiset must match the issued set exactly (no reuse, no extras)
+</p>
 
-## Monorepo layout
+---
 
-| Path       | What                                                        |
-| ---------- | ----------------------------------------------------------- |
-| `shared/`  | Types, socket events, difficulty/scoring tables, validator (math.js AST + fraction.js + digit-multiset check), round generator |
-| `server/`  | Socket.io server: FIFO matchmaking hub, room/match state machine, validator unit tests + E2E smoke bot |
-| `client/`  | React + Vite web client: queue/join screens, round screen, hybrid input (touch tiles vs text+keyboard), live opponent status |
+A browser multiplayer game: build a math expression equal to the target using **every issued digit exactly once**.
 
-The validator lives in `shared/` so both tiers run identical logic:
-**tier 1** — client validates instantly in the browser; **tier 2** — the server re-validates before declaring a winner (source of truth).
+First valid expression wins the round. Wrong answer? You lose nothing but time — the round is sudden death.
 
-## Run
+## Gameplay
+
+- **Target + digits** — each round deals a target number and a multiset of digits
+- **Sudden death** — the first correct submission instantly wins the round; timeouts reward nobody
+- **Best-of-5 match** — score reflects both speed and round difficulty
+- **Learn from opponents** — after every round the winning expression is shown
+
+## Rules are enforced, not assumed
+
+- Operators: `+ − × ÷ ( ) ^ √ !`
+- Concatenation allowed (`2 3` → `23`), leading zeros rejected (`03` invalid)
+- **Exact rational math** — `fraction.js`, no floats; `√` and `!` must land on exact integers
+- Every digit used exactly once; digit multiset must match the round exactly
+
+Two-tier validation: the client checks instantly for zero-latency UX, the server re-validates every submission before declaring a winner. The server is the source of truth.
+
+## Playing
+
+- **Quick play** — FIFO matchmaking, no account required (guest nicknames on by default)
+- **Private rooms** — share a room code to duel a specific friend
+- **Hybrid input** — drag-and-drop tiles on touch, text + symbol keyboard on desktop
+
+## Stack
+
+| Layer    | Tech |
+| -------- | ---- |
+| Client   | React 19, Vite, socket.io-client |
+| Server   | Node.js, Socket.io, in-memory room/match state machine |
+| Shared   | TypeScript: exact-arithmetic validator (math.js AST), solvable round generator, difficulty/scoring |
+| Testing  | Vitest (33 unit + E2E bot match), TypeScript strict |
+
+Single-process production build: the Node server compiles and serves the web client from one origin — no proxy or CORS setup, WebSockets included.
+
+## Getting started
 
 ```bash
 npm install
-npm run dev:server   # Socket.io on :3001
-npm run dev:client   # Vite on :5173 (proxies /socket.io to :3001)
+npm run dev:server   # Socket.io server on :3001
+npm run dev:client   # web client on :5173 (proxies /socket.io)
 ```
-
-## Test
 
 ```bash
-npm test --workspace server    # validator + generator unit tests
-npm run start --workspace server &
-npm run smoke --workspace server   # two bots play a full best-of-5 match
+npm test             # unit tests
+npm run smoke        # two bots play a full best-of-5 match
 ```
 
-## Deploy
+Production: `npm run build:client && npm start` (requires Node 18+; `PORT` and `/health` supported).
 
-### Option A — Render/Railway/VPS (рекомендуется для MVP)
+---
 
-Production представляет собой **один Node-процесс**: сервер собирает клиента и раздаёт его с того же origin, поэтому Socket.io (websockets) не требует CORS/прокси.
-
-```bash
-npm install
-npm run build:client   # builds client/dist
-PORT=3000 npm start    # serves the app at http://host:3000
-```
-
-Требуется **Node 18+**. Сервер читает `PORT` (устанавливается на платформе), `/health` отдаёт `ok` для uptime-чеков.
-
-**Render** (бесплатно, проще всего)
-1. New → Web Service → подключи репозиторий.
-2. Runtime: Node. Build: `npm install && npm run build:client`. Start: `npm start`.
-3. Render сам задаст `PORT`. Деплой. Websockets работают на free-тарифе.
-
-### Option B — Клиент на Vercel + сервер на Render/Railway
-
-Статика отлично ложится на Vercel, но **не** переноси на него сам Socket.io-сервер: текущие вебсокеты Vercel (Fluid) привязывают соединение к одной функции сроком до 5 мин и не гарантируют попадание игроков на один инстанс — 1v1 матчи в памяти сломаются.
-
-**1. Запусти Socket.io-сервер на постоянном хостинге** (Render/Railway/Fly, как в Option A). Задай там:
-```
-CORS_ORIGIN=https://<ваш-client>.vercel.app
-```
-
-**2. Vercel (клиент)** — Import Git repo → настройки:
-| Поле           | Значение                                  |
-| -------------- | ----------------------------------------- |
-| Root Directory | `client`                                  |
-| Build          | `npm run build`                           |
-| Output         | `dist` (определится автоматически)        |
-| Env var        | `VITE_SOCKET_URL=https://<url-socket-сервера>` |
-
-Env-переменная вшивается в клиент **на этапе сборки** (проверено: URL появляется в бандле). Dev-прокси в `vite.config.ts` — только для локальной разработки.
-
-> Если Vercel не соберёт `@plusduel/shared` из workspace — замени root на весь репозиторий и укажи build: `npm install && npm run build:client`, а статикой послужит `client/dist`.
-
-### Split deploy (запуск веб-сборки на статике в целом)
-- Сервер: `CORS_ORIGIN=https://ваш-сайт`.
-- Клиент: собрать с `VITE_SOCKET_URL=https://ваш-socket-сервер`.
-
-## Scoring
-
-`score = speed_factor × difficulty_coefficient`
-
-- `difficulty_coefficient = digit_count × ceil(target_max / 100)`
-- `speed_factor = clamp(remaining_time / round_time, 0.25 … 1)` — faster answers score more; timeouts award nobody and reveal a sample solution.
+<p align="center"><sub>Built with React, Socket.io, math.js and fraction.js.</sub></p>

@@ -38,39 +38,47 @@ npm run smoke --workspace server   # two bots play a full best-of-5 match
 
 ## Deploy
 
-Production is a **single Node process**: the server builds the client and serves it from the same origin, so Socket.io (websockets) needs no CORS/proxy setup.
+### Option A — Render/Railway/VPS (рекомендуется для MVP)
+
+Production представляет собой **один Node-процесс**: сервер собирает клиента и раздаёт его с того же origin, поэтому Socket.io (websockets) не требует CORS/прокси.
 
 ```bash
 npm install
 npm run build:client   # builds client/dist
-PORT=3001 npm start    # serves the app at http://host:3001
+PORT=3000 npm start    # serves the app at http://host:3000
 ```
 
-Requires **Node 18+**. The server reads `PORT` (set it on your platform) and `/health` returns `ok` for uptime checks.
+Требуется **Node 18+**. Сервер читает `PORT` (устанавливается на платформе), `/health` отдаёт `ok` для uptime-чеков.
 
-### Platforms
+**Render** (бесплатно, проще всего)
+1. New → Web Service → подключи репозиторий.
+2. Runtime: Node. Build: `npm install && npm run build:client`. Start: `npm start`.
+3. Render сам задаст `PORT`. Деплой. Websockets работают на free-тарифе.
 
-**Render** (free, easiest)
-1. New → Web Service → connect your repo.
-2. Runtime: Node. Build command: `npm install && npm run build:client`.
-3. Start command: `npm start`.
-4. Render sets `PORT` automatically. Deploy. Websockets work on free tier.
+### Option B — Клиент на Vercel + сервер на Render/Railway
 
-**Railway / Fly.io / Heroku**
-- Same two commands (`build` + `start`), same `PORT` env. One service, no extra config.
+Статика отлично ложится на Vercel, но **не** переноси на него сам Socket.io-сервер: текущие вебсокеты Vercel (Fluid) привязывают соединение к одной функции сроком до 5 мин и не гарантируют попадание игроков на один инстанс — 1v1 матчи в памяти сломаются.
 
-**VPS** (Ubuntu + Node)
-```bash
-git clone <repo> && cd PlusDuel
-npm install && npm run build:client
-# systemd unit: ExecStart=/usr/bin/node --import tsx node_modules/tsx/dist/cli.mjs server/src/index.ts
-# (or: npm start) with Environment=PORT=3000, behind nginx → proxy_http_version 1.1 + Upgrade headers
+**1. Запусти Socket.io-сервер на постоянном хостинге** (Render/Railway/Fly, как в Option A). Задай там:
+```
+CORS_ORIGIN=https://<ваш-client>.vercel.app
 ```
 
-### Split deploy (optional)
-Serving the web build on a static host (Vercel/Netlify/Cloudflare Pages) and the Socket.io server elsewhere:
-- Server side: set `CORS_ORIGIN=https://your-site.example`.
-- Client side: build with `VITE_SOCKET_URL=https://your-socket-server.example` so the client connects cross-origin.
+**2. Vercel (клиент)** — Import Git repo → настройки:
+| Поле           | Значение                                  |
+| -------------- | ----------------------------------------- |
+| Root Directory | `client`                                  |
+| Build          | `npm run build`                           |
+| Output         | `dist` (определится автоматически)        |
+| Env var        | `VITE_SOCKET_URL=https://<url-socket-сервера>` |
+
+Env-переменная вшивается в клиент **на этапе сборки** (проверено: URL появляется в бандле). Dev-прокси в `vite.config.ts` — только для локальной разработки.
+
+> Если Vercel не соберёт `@plusduel/shared` из workspace — замени root на весь репозиторий и укажи build: `npm install && npm run build:client`, а статикой послужит `client/dist`.
+
+### Split deploy (запуск веб-сборки на статике в целом)
+- Сервер: `CORS_ORIGIN=https://ваш-сайт`.
+- Клиент: собрать с `VITE_SOCKET_URL=https://ваш-socket-сервер`.
 
 ## Scoring
 

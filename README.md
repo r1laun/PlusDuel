@@ -52,21 +52,6 @@ Two-tier validation: the client checks instantly for zero-latency UX, the server
 
 Single-process production build: the Node server compiles and serves the web client from one origin — no proxy or CORS setup, WebSockets included.
 
-## Getting started
-
-```bash
-npm install
-npm run dev:server   # Socket.io server on :3001
-npm run dev:client   # web client on :5173 (proxies /socket.io)
-```
-
-```bash
-npm test             # unit tests
-npm run smoke        # two bots play a full best-of-5 match
-```
-
-Production: `npm run build:client && npm start` (requires Node 18+; `PORT` and `/health` supported).
-
 ---
 
 <p align="center"><sub>Built with React, Socket.io, math.js and fraction.js.</sub></p>

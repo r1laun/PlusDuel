@@ -44,7 +44,7 @@ body {
 /* ---------- Logo ---------- */
 
 .logo-img {
-  width: 120px;
+  width: 230px;
   max-width: 60vw;
   margin: 48px auto 4px;
   font-size: 0;
@@ -65,7 +65,7 @@ body {
 }
 .site-name em {
   font-style: italic;
-  color: var(--accent);
+  color: #f97316;
 }
 .tagline {
   margin: 0 0 32px;

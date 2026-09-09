@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc --noEmit && vite build && cp sitemap.xml dist/sitemap.xml",
+    "build": "tsc --noEmit && vite build && cp sitemap.xml dist/sitemap.xml && cp robots.txt dist/robots.txt",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

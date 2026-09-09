@@ -94,9 +94,16 @@ export default function App() {
   const joinPrivate = useCallback(
     (code: string) => {
       setError('');
+      // Optimistic: show the waiting screen immediately. Do NOT set the phase
+      // from the ack — the server sends match:start after join_private, and
+      // the ack arrives AFTER it, so re-setting 'queued' here would strand
+      // the guest on the waiting screen while the host is already playing.
+      setPhase('queued');
       socket.emit('game:join_private', { name, code }, (res) => {
-        if (!res?.joined) setError(`Could not join room "${code}".`);
-        else setPhase('queued');
+        if (!res?.joined) {
+          setPhase('home');
+          setError(`Could not join room "${code}".`);
+        }
       });
     },
     [name],

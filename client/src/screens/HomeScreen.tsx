@@ -27,8 +27,8 @@ export default function HomeScreen({
 
   return (
     <div className="screen home">
-      <h1 className="logo">
-        Plus<em>Duel</em>
+      <h1 className="logo-img">
+        <img src="/logo.png" alt="PlusDuel" />
       </h1>
       <p className="tagline">Build the target using every digit exactly once.</p>
 

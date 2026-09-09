@@ -1,5 +1,5 @@
 <p align="center">
-  <strong style="font-size: 2.2rem">Plus<span style="color:#2563eb">Duel</span></strong>
+  <img src="client/public/logo.png" alt="PlusDuel" width="340"/>
   <br/>
   <em>Real-time 1v1 competitive math</em>
 </p>

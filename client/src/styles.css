@@ -55,8 +55,16 @@ body {
   height: auto;
   display: block;
 }
-.logo em {
-  font-style: normal;
+.site-name {
+  margin: 18px auto 4px;
+  text-align: center;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+.site-name em {
+  font-style: italic;
   color: var(--accent);
 }
 .tagline {

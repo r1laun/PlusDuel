@@ -30,6 +30,9 @@ export default function HomeScreen({
       <h1 className="logo-img">
         <img src="/logo.png" alt="PlusDuel" />
       </h1>
+      <p className="site-name">
+        <em>Plus</em>Duel
+      </p>
       <p className="tagline">Build the target using every digit exactly once.</p>
 
       {error && <div className="notice">{error}</div>}

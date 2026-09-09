@@ -132,9 +132,10 @@ function serveStatic(req: import('node:http').IncomingMessage, res: import('node
   }
 
   const ext = finalPath.slice(finalPath.lastIndexOf('.')).toLowerCase();
+  const noCache = ext === '.html' || ext === '.xml' || ext === '.txt';
   res.writeHead(200, {
     'content-type': MIME[ext] ?? 'application/octet-stream',
-    'cache-control': ext === '.html' ? 'no-cache' : 'public, max-age=31536000, immutable',
+    'cache-control': noCache ? 'no-cache' : 'public, max-age=31536000, immutable',
   });
   if (req.method === 'HEAD') return res.end();
   res.end(readFileSync(finalPath));

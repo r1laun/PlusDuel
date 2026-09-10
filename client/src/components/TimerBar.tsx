@@ -35,15 +35,7 @@ export default function TimerBar({ timeLimitMs, receivedAt }: Props) {
     };
   }, [timeLimitMs, receivedAt]);
 
-  const pct = Math.min(100, (remaining / timeLimitMs) * 100);
-  const urgent = remaining < 10_000;
-
   return (
-    <div className="timer">
-      <div className={`timer-track${urgent ? ' urgent' : ''}`}>
-        <div className="timer-fill" style={{ width: `${pct}%` }} />
-      </div>
-      <span className="timer-num">{(remaining / 1000).toFixed(1)}s</span>
-    </div>
+    <div className="pd-display pd-display--accent">{(remaining / 1000).toFixed(1)}s</div>
   );
 }

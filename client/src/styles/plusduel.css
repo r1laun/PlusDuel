@@ -1,0 +1,221 @@
+/* =========================================================
+   PlusDuel — Design System CSS
+   Стиль: dot-matrix / LED, пунктирные обводки, ч/б + акцент
+   ========================================================= */
+
+@font-face {
+  font-family: 'CityLight Dots';
+  src: url('./fonts/CityLightDots.woff2') format('woff2'),
+       url('./fonts/CityLightDots.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --pd-black: #000000;
+  --pd-white: #FFFFFF;
+  --pd-orange: #FF5C00;
+  --pd-border-w: 2px;
+  --pd-radius-lg: 32px;   /* внешний фрейм, крупные панели */
+  --pd-radius-md: 20px;   /* карточки, клавиши крупные */
+  --pd-radius-pill: 999px; /* инпуты, кнопки, дисплеи */
+  --pd-font: 'CityLight Dots', ui-monospace, 'Courier New', monospace;
+  --pd-gap: 12px;
+}
+
+* { box-sizing: border-box; }
+
+.pd-app {
+  font-family: var(--pd-font);
+  color: var(--pd-black);
+  background: var(--pd-white);
+  letter-spacing: 0.02em;
+}
+
+/* ---------- Frame / Screen wrapper ---------- */
+.pd-frame {
+  border: var(--pd-border-w) dotted var(--pd-black);
+  border-radius: var(--pd-radius-lg);
+  padding: 24px;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ---------- Panel (карточка) ---------- */
+.pd-panel {
+  border: var(--pd-border-w) dotted var(--pd-black);
+  border-radius: var(--pd-radius-md);
+  background: var(--pd-white);
+  padding: 32px 28px;
+}
+.pd-panel + .pd-panel { margin-top: var(--pd-gap); }
+
+/* ---------- Logo ---------- */
+.pd-logo {
+  display: flex;
+  justify-content: center;
+  align-items: baseline;
+  font-size: 48px;
+  font-weight: 400;
+}
+.pd-logo__plus { color: var(--pd-orange); }
+.pd-logo__dual { color: var(--pd-black); }
+
+/* ---------- Text / status ---------- */
+.pd-title--victory {
+  color: var(--pd-orange);
+  font-size: 42px;
+  text-align: center;
+}
+.pd-status {
+  text-align: center;
+  font-size: 16px;
+  color: var(--pd-black);
+}
+.pd-status--accent {
+  border: var(--pd-border-w) dotted var(--pd-orange);
+  border-radius: var(--pd-radius-pill);
+  color: var(--pd-orange);
+  padding: 10px 20px;
+  display: inline-block;
+}
+
+/* ---------- Input field ---------- */
+.pd-field { display: flex; align-items: center; gap: var(--pd-gap); }
+.pd-label { white-space: nowrap; }
+.pd-input {
+  flex: 1;
+  font-family: inherit;
+  font-size: 16px;
+  border: var(--pd-border-w) dotted var(--pd-black);
+  border-radius: var(--pd-radius-pill);
+  padding: 12px 20px;
+  background: var(--pd-white);
+  outline: none;
+}
+.pd-input::placeholder { color: rgba(0,0,0,0.4); }
+
+/* ---------- Buttons ---------- */
+.pd-btn {
+  font-family: inherit;
+  font-size: 16px;
+  border-radius: var(--pd-radius-pill);
+  border: var(--pd-border-w) dotted var(--pd-black);
+  padding: 14px 24px;
+  width: 100%;
+  cursor: pointer;
+  background: var(--pd-white);
+  color: var(--pd-black);
+}
+.pd-btn--primary {
+  background: var(--pd-black);
+  color: var(--pd-white);
+  border-color: var(--pd-white); /* пунктир виден на чёрном фоне */
+}
+.pd-btn--primary:hover { opacity: 0.85; }
+.pd-btn--outline { background: var(--pd-white); color: var(--pd-black); }
+.pd-btn--sm { width: auto; padding: 10px 20px; }
+.pd-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---------- Divider ---------- */
+.pd-divider {
+  border: none;
+  border-top: var(--pd-border-w) dotted var(--pd-black);
+  margin: 20px 0;
+}
+
+/* ---------- Row layout ---------- */
+.pd-row { display: flex; gap: var(--pd-gap); }
+.pd-row > * { flex: 1; }
+
+/* ---------- Top bar (badges + display) ---------- */
+.pd-topbar { display: flex; align-items: center; gap: var(--pd-gap); }
+.pd-badge {
+  border: var(--pd-border-w) dotted var(--pd-black);
+  border-radius: var(--pd-radius-md);
+  padding: 10px 16px;
+  font-size: 14px;
+  text-align: center;
+}
+.pd-display {
+  flex: 1;
+  border: var(--pd-border-w) dotted var(--pd-black);
+  border-radius: var(--pd-radius-pill);
+  padding: 12px 20px;
+  text-align: center;
+}
+.pd-display--accent { color: var(--pd-orange); }
+
+/* ---------- Info row (hint / timer / rules / best-of) ---------- */
+.pd-info-box {
+  border: var(--pd-border-w) dotted var(--pd-black);
+  border-radius: var(--pd-radius-md);
+  padding: 14px 18px;
+  text-align: center;
+  font-size: 14px;
+}
+.pd-info-box--accent {
+  border-color: var(--pd-orange);
+  color: var(--pd-orange);
+}
+
+/* ---------- Keypad ---------- */
+.pd-keypad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+.pd-key {
+  font-family: inherit;
+  font-size: 18px;
+  border: var(--pd-border-w) dotted var(--pd-black);
+  border-radius: var(--pd-radius-md);
+  background: var(--pd-white);
+  color: var(--pd-black);
+  padding: 16px 0;
+  cursor: pointer;
+}
+.pd-key--active {
+  border-color: var(--pd-orange);
+  color: var(--pd-orange);
+}
+.pd-key--disabled {
+  color: rgba(0,0,0,0.3);
+  border-color: rgba(0,0,0,0.3);
+  cursor: not-allowed;
+}
+.pd-key--confirm { border-color: var(--pd-orange); }
+.pd-key--wide { grid-column: span 1; }
+
+/* Ряд цифр: всегда 5 слотов, независимо от кол-ва цифр в раунде (1-5) */
+.pd-digit-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+}
+/* Пустой слот (цифр в раунде меньше 5) — неактивная заглушка "><" */
+.pd-key--empty {
+  border-color: rgba(0,0,0,0.3);
+  color: rgba(0,0,0,0.3);
+  cursor: default;
+  pointer-events: none;
+  background: var(--pd-white);
+}
+.pd-key--empty::before { content: '><'; }
+
+/* ---------- Scoreboard ---------- */
+.pd-scoreboard__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 16px;
+  padding: 8px 0;
+  gap: 12px;
+}
+.pd-scoreboard__bar {
+  flex: 1;
+  border-top: var(--pd-border-w) dashed var(--pd-black);
+  margin: 0 8px;
+}
+.pd-scoreboard__score { min-width: 40px; text-align: right; }

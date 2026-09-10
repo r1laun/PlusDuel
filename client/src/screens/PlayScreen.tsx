@@ -50,40 +50,33 @@ export default function PlayScreen({
   }, [active, validation.valid, expr, onSubmit]);
 
   const iWon = roundEnd?.winnerId === myId;
-  const opponentSolved = roundEnd !== null && roundEnd.winnerId !== null && roundEnd.winnerId !== myId;
 
   return (
-    <div className="screen play">
-      <header className="match-bar">
-        <button className="icon-btn" onClick={onLeave} title="Leave match">
-          ✕
-        </button>
-        <div className="players">
-          <span className="player-name">
-            <span className="dot live" /> You
-          </span>
-          <span className="vs">vs</span>
-          <span className="player-name">
-            <span className={`dot ${opponentSolved ? 'solved' : 'live'}`} />
-            {matchInfo.opponent.name}
-          </span>
+    <div className="pd-frame">
+      <div className="pd-topbar">
+        <div
+          className="pd-badge"
+          role="button"
+          tabIndex={0}
+          title="Leave match"
+          onClick={onLeave}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') onLeave();
+          }}
+        >
+          EXT
         </div>
-        <span className="round-badge">R{round.index}</span>
-      </header>
-
-      <section className="target-section">
-        <div className="target-number">{round.target}</div>
-        <div className="digits-row">
-          {round.digits.map((d, i) => (
-            <span key={`${round.index}-${i}`} className="tile-display">{d}</span>
-          ))}
-        </div>
-        {active && (
+        {active ? (
           <TimerBar timeLimitMs={round.timeLimitMs} receivedAt={roundReceivedAt} />
+        ) : (
+          <div className="pd-display pd-display--accent">0.0s</div>
         )}
-      </section>
+        <div className="pd-badge">R{round.index}</div>
+      </div>
 
-      {error && <div className="error-msg">{error}</div>}
+      <div className="pd-display">{round.target}</div>
+
+      {error && <div className="pd-status">{error}</div>}
 
       {active ? (
         <ExpressionInput
@@ -97,35 +90,36 @@ export default function PlayScreen({
           onSubmit={submit}
         />
       ) : (
-        <div className="round-result">
+        <div className="pd-panel">
           {roundEnd!.winnerId === null ? (
             <>
-              <h2>Timeout</h2>
+              <div className="pd-status">Timeout</div>
               {roundEnd!.sampleSolution && (
-                <p className="solution-hint">
+                <div className="pd-info-box pd-info-box--accent">
                   {pretty(roundEnd!.sampleSolution)} = {round.target}
-                </p>
+                </div>
               )}
             </>
           ) : (
             <>
-              <h2 className={iWon ? 'win' : 'lose'}>
+              <div className={`pd-status${iWon ? ' pd-status--accent' : ''}`}>
                 {iWon ? 'You won' : `${matchInfo.opponent.name} won`}
-              </h2>
-              <p className="solution-hint">
+              </div>
+              <div className="pd-info-box pd-info-box--accent">
                 {pretty(roundEnd!.winningExpression ?? '')} = {round.target}
-              </p>
+              </div>
             </>
           )}
-          <p className="next-round">Next round…</p>
+          <div className="pd-status">Next round…</div>
         </div>
       )}
 
-      <footer className="match-footer">
-        <span>
+      <div className="pd-row">
+        <div className="pd-info-box">Use each digit once</div>
+        <div className="pd-info-box">
           {matchInfo.roundsToWin === 3 ? 'Best of 5' : `Best of ${matchInfo.roundsToWin * 2 - 1}`}
-        </span>
-      </footer>
+        </div>
+      </div>
     </div>
   );
 }

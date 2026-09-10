@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import type { ReactNode } from 'react';
 import type {
   ErrorPayload,
   MatchEndPayload,
@@ -134,8 +135,9 @@ export default function App() {
     setError('');
   }, []);
 
+  let content: ReactNode;
   if (phase === 'playing' && matchInfo && round) {
-    return (
+    content = (
       <PlayScreen
         key={matchInfo.roomCode ?? 'duel'}
         myId={myId.current}
@@ -148,10 +150,8 @@ export default function App() {
         onLeave={leaveMatch}
       />
     );
-  }
-
-  if (phase === 'ended' && matchEnd) {
-    return (
+  } else if (phase === 'ended' && matchEnd) {
+    content = (
       <EndScreen
         myId={myId.current}
         matchEnd={matchEnd}
@@ -159,22 +159,24 @@ export default function App() {
         onHome={backHome}
       />
     );
+  } else {
+    content = (
+      <HomeScreen
+        name={name}
+        setName={setName}
+        queued={phase === 'queued'}
+        queuePos={queuePos}
+        error={error}
+        onQuickPlay={quickPlay}
+        onCreatePrivate={createPrivate}
+        onJoinPrivate={joinPrivate}
+        onCancelQueue={() => {
+          socket.emit('game:queue_leave');
+          setPhase('home');
+        }}
+      />
+    );
   }
 
-  return (
-    <HomeScreen
-      name={name}
-      setName={setName}
-      queued={phase === 'queued'}
-      queuePos={queuePos}
-      error={error}
-      onQuickPlay={quickPlay}
-      onCreatePrivate={createPrivate}
-      onJoinPrivate={joinPrivate}
-      onCancelQueue={() => {
-        socket.emit('game:queue_leave');
-        setPhase('home');
-      }}
-    />
-  );
+  return <div className="pd-app">{content}</div>;
 }

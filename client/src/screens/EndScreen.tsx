@@ -27,20 +27,28 @@ export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) 
   const oppScore = oppId ? (matchEnd.scoresByPlayer[oppId] ?? 0) : 0;
 
   return (
-    <div className="screen end">
-      <h1 className={won ? 'win' : 'lose'}>{won ? 'Victory' : 'Defeat'}</h1>
-      {matchEnd.reason === 'forfeit' && <p className="muted">Match ended by forfeit.</p>}
-      <div className="card final-stats">
-        <div className="stat-row">
+    <div className="pd-frame">
+      <h1 className="pd-title--victory">{won ? 'Victory' : 'Defeat'}</h1>
+      <div className="pd-status">
+        {matchEnd.reason === 'forfeit'
+          ? 'Match ended by forfeit.'
+          : won
+            ? 'You won the match.'
+            : `${opponentName} won the match.`}
+      </div>
+      <div className="pd-panel">
+        <div className="pd-scoreboard__row">
           <span>You</span>
-          <span className="score">{myScore.toFixed(1)}</span>
+          <div className="pd-scoreboard__bar" />
+          <span className="pd-scoreboard__score">{myScore.toFixed(1)}</span>
         </div>
-        <div className="stat-row">
+        <div className="pd-scoreboard__row">
           <span>{opponentName}</span>
-          <span className="score">{oppScore.toFixed(1)}</span>
+          <div className="pd-scoreboard__bar" />
+          <span className="pd-scoreboard__score">{oppScore.toFixed(1)}</span>
         </div>
       </div>
-      <button className="btn primary big" onClick={onHome}>
+      <button className="pd-btn pd-btn--primary" onClick={onHome}>
         Back to lobby{countdown > 0 ? ` (${countdown})` : ''}
       </button>
     </div>

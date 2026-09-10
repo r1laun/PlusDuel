@@ -22,6 +22,15 @@
 /* EXT-бейдж кликабелен */
 .pd-topbar .pd-badge[role='button'] { cursor: pointer; }
 
+/* Акцентная пилюля в панели (напр. "You won") — по центру, а не слева:
+   inline-block из дизайн-системы иначе прижимается к левому краю */
+.pd-panel > .pd-status--accent {
+  display: block;
+  width: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Операторы 3×3 — симметричная сетка вместо хвоста 5+5+2 */
 .pd-keypad { grid-template-columns: repeat(3, 1fr); }
 

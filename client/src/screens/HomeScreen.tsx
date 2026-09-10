@@ -32,6 +32,7 @@ export default function HomeScreen({
         <span className="pd-logo__dual">Duel</span>
       </div>
       <p className="pd-status">Build the target using every digit exactly once.</p>
+      <p className="pd-status">Best of 5 — first to 3 round wins.</p>
 
       {error && <div className="pd-status">{error}</div>}
 

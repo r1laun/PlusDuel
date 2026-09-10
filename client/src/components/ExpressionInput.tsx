@@ -142,6 +142,9 @@ export default function ExpressionInput({
             {s}
           </button>
         ))}
+      </div>
+
+      <div className="pd-actions" role="group" aria-label="actions">
         <button
           className={keyClass}
           onClick={backspace}

@@ -21,3 +21,14 @@
 
 /* EXT-бейдж кликабелен */
 .pd-topbar .pd-badge[role='button'] { cursor: pointer; }
+
+/* Операторы 3×3 — симметричная сетка вместо хвоста 5+5+2 */
+.pd-keypad { grid-template-columns: repeat(3, 1fr); }
+
+/* Тройка экшенов (delete/clear/submit) — центрированный ряд равных клавиш */
+.pd-actions {
+  display: flex;
+  justify-content: center;
+  gap: var(--pd-gap);
+}
+.pd-actions > * { flex: 1; max-width: 200px; }

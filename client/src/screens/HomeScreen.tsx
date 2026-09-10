@@ -24,6 +24,7 @@ export default function HomeScreen({
   onCancelQueue,
 }: Props) {
   const [code, setCode] = useState('');
+  const [showRules, setShowRules] = useState(false);
 
   return (
     <div className="pd-frame">
@@ -31,8 +32,6 @@ export default function HomeScreen({
         <span className="pd-logo__plus">Plus</span>
         <span className="pd-logo__dual">Duel</span>
       </div>
-      <p className="pd-status">Build the target using every digit exactly once.</p>
-      <p className="pd-status">Best of 5 — first to 3 round wins.</p>
 
       {error && <div className="pd-status">{error}</div>}
 
@@ -96,6 +95,22 @@ export default function HomeScreen({
               </button>
             </div>
           </div>
+
+          <hr className="pd-divider" />
+
+          <button className="pd-btn pd-btn--outline" onClick={() => setShowRules((s) => !s)}>
+            {showRules ? 'Hide rules' : 'Rules'}
+          </button>
+
+          {showRules && (
+            <div className="pd-panel">
+              <p className="pd-status">Build the target using every digit exactly once.</p>
+              <p className="pd-status">First correct answer wins the round.</p>
+              <p className="pd-status">Timeout wins nobody — a sample solution is shown.</p>
+              <p className="pd-status">Best of 5 — first to 3 round wins; tied after 5 → draw.</p>
+              <p className="pd-status">Operators + − × ÷ ( ) ^ √ !, concatenation allowed.</p>
+            </div>
+          )}
         </>
       )}
     </div>

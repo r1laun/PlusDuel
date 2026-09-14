@@ -61,6 +61,14 @@
 }
 .pd-logo__plus { color: var(--pd-orange); }
 .pd-logo__dual { color: var(--pd-black); }
+.pd-tagline {
+  text-align: center;
+  font-size: 15px;
+  font-style: italic;
+  color: var(--pd-black);
+  opacity: 0.75;
+  margin: 4px 0 16px;
+}
 
 /* ---------- Text / status ---------- */
 .pd-title--victory {

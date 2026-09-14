@@ -1,0 +1,20 @@
+# PlusDuel
+
+> Real-time 1v1 competitive math in the browser. Build a math expression equal to the target using every issued digit exactly once. First valid expression wins the round.
+
+- Play: [PlusDuel](https://plusduel.onrender.com/)
+- Source: [r1laun/PlusDuel on GitHub](https://github.com/r1laun/PlusDuel)
+- Sitemap: [sitemap.xml](https://plusduel.onrender.com/sitemap.xml)
+
+## How to play
+
+- Each round deals a target number and a set of digits: [play a quick match](https://plusduel.onrender.com/) or create a private room and share the code with a friend.
+- Build an expression equal to the target with `+ − × ÷ ( ) ^ √ !`. Concatenation is allowed (`2 3` → `23`), leading zeros are rejected, arithmetic is exact (no floats).
+- Sudden death: the first correct submission instantly wins the round; timeouts reward nobody and reveal a sample solution.
+- Best-of-5 match: first to 3 round wins takes the match; tied after 5 rounds is a draw.
+
+## Notes for agents
+
+- No account required; nicknames are guest-only and stored locally.
+- A match needs two live players; a single client waiting in queue will not start a round.
+- Static pages only: the game state lives in a WebSocket session, not in URLs — there are no per-match pages to crawl.

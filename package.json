@@ -4,17 +4,17 @@
   "private": true,
   "workspaces": [
     "shared",
+    "server",
     "client"
   ],
   "scripts": {
+    "dev:server": "npm run dev --workspace server",
     "dev:client": "npm run dev --workspace client",
     "build": "npm run build --workspace shared --if-present && npm run build --workspace client",
     "build:client": "npm run build --workspace client",
-    "typecheck": "npm run typecheck --workspaces --if-present && npm run typecheck:functions",
-    "typecheck:functions": "tsc --noEmit -p netlify/functions/tsconfig.json",
-    "test": "npm run test --workspace shared"
-  },
-  "dependencies": {
-    "@netlify/blobs": "^11.0.3"
+    "start": "npm run start --workspace server",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "npm run test --workspace server",
+    "smoke": "npm run smoke --workspace server"
   }
 }

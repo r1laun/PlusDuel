@@ -1,13 +1,13 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import type {
+  ErrorPayload,
   MatchEndPayload,
   MatchStartPayload,
   RoundEndPayload,
   RoundStartPayload,
-  WsServerMessage,
 } from '@plusduel/shared';
-import { connect, wsUrl, type NetConn } from './net';
+import { socket } from './socket';
 import HomeScreen from './screens/HomeScreen';
 import PlayScreen from './screens/PlayScreen';
 import EndScreen from './screens/EndScreen';
@@ -24,155 +24,116 @@ export default function App() {
   const [roundEnd, setRoundEnd] = useState<RoundEndPayload | null>(null);
   const [matchEnd, setMatchEnd] = useState<MatchEndPayload | null>(null);
   const [error, setError] = useState('');
-  const myId = useRef<string>('');
+  const myId = useRef<string>(socket.id ?? '');
 
-  // One NetConn = one player session. Swapping connRef makes the old
-  // connection's close event stale and ignored (used for lobby→room handover).
-  const connRef = useRef<NetConn | null>(null);
-  const phaseRef = useRef<Phase>('home');
-  const closeMsgRef = useRef('Connection lost. Try again.');
   useEffect(() => {
-    phaseRef.current = phase;
-  }, [phase]);
+    socket.connect();
 
-  const closeConn = () => {
-    const c = connRef.current;
-    connRef.current = null;
-    c?.close();
-  };
+    const onMatchStart = (p: MatchStartPayload) => {
+      myId.current = p.youAre;
+      setMatchInfo(p);
+      setRoundEnd(null);
+      setMatchEnd(null);
+      setPhase('playing');
+    };
+    const onRoundStart = (p: RoundStartPayload) => {
+      setRound(p);
+      setRoundEnd(null);
+      setRoundReceivedAt(Date.now());
+      setError('');
+    };
+    const onRoundEnd = (p: RoundEndPayload) => setRoundEnd(p);
+    const onMatchEnd = (p: MatchEndPayload) => {
+      setMatchEnd(p);
+      setPhase('ended');
+    };
+    const onError = (p: ErrorPayload) => setError(p.message);
+    const onQueued = (p: { position: number }) => setQueuePos(p.position);
+    const onOpponentLeft = () => setError('Opponent left the match.');
 
-  const handleClose = (c: NetConn) => {
-    if (connRef.current !== c) return; // stale (handover) — ignore
-    connRef.current = null;
-    if (phaseRef.current === 'queued') {
-      resetMatchState();
-      setPhase('home');
-      setError(closeMsgRef.current);
-    } else if (phaseRef.current === 'playing') {
-      // Unexpected drop mid-match: the server forfeits us, opponent is notified.
-      resetMatchState();
-      setPhase('home');
-      setError('Connection lost — match forfeited.');
-    }
-    // In 'ended'/'home' a close is always expected — ignore.
-  };
+    socket.on('game:queued', onQueued);
+    socket.on('match:start', onMatchStart);
+    socket.on('round:start', onRoundStart);
+    socket.on('round:end', onRoundEnd);
+    socket.on('match:end', onMatchEnd);
+    socket.on('game:error', onError);
+    socket.on('opponent:left', onOpponentLeft);
 
-  const handleMessage = (m: WsServerMessage) => {
-    switch (m.t) {
-      case 'game:queued':
-        setQueuePos(m.position);
-        break;
-      case 'match:found': {
-        // Pairing done on the lobby socket: move to the room socket.
-        const room = connect(
-          wsUrl(`/ws/room/id/${m.roomId}`, { token: m.token, name }),
-          handleMessage,
-          () => handleClose(room),
-        );
-        const stale = connRef.current;
-        connRef.current = room;
-        stale?.close();
-        break;
-      }
-      case 'room:code':
-        setQueuePos(-1);
-        navigator.clipboard?.writeText(m.code).catch(() => {});
-        setError(`Room code ${m.code} copied to clipboard — share it!`);
-        break;
-      case 'match:start': {
-        const { t: _t, ...info } = m;
-        myId.current = info.youAre;
-        setMatchInfo(info);
-        setRoundEnd(null);
-        setMatchEnd(null);
-        setPhase('playing');
-        break;
-      }
-      case 'round:start': {
-        const { t: _t, ...info } = m;
-        setRound(info);
-        setRoundEnd(null);
-        setRoundReceivedAt(Date.now());
-        setError('');
-        break;
-      }
-      case 'round:end': {
-        const { t: _t, ...info } = m;
-        setRoundEnd(info);
-        break;
-      }
-      case 'match:end': {
-        const { t: _t, ...info } = m;
-        setMatchEnd(info);
-        setPhase('ended');
-        break;
-      }
-      case 'game:error':
-        setError(m.message);
-        break;
-    }
-  };
-
-  const openConn = (url: string) => {
-    const c = connect(url, handleMessage, () => handleClose(c));
-    const stale = connRef.current;
-    connRef.current = c;
-    stale?.close();
-  };
-
-  const resetMatchState = () => {
-    setRound(null);
-    setRoundEnd(null);
-    setMatchEnd(null);
-    setMatchInfo(null);
-  };
-
-  const quickPlay = () => {
-    setError('');
-    closeMsgRef.current = 'Connection lost. Try again.';
-    openConn(wsUrl('/ws/quickplay', { name }));
-    setPhase('queued');
-  };
-
-  const createPrivate = () => {
-    setError('');
-    closeMsgRef.current = 'Connection lost. Try again.';
-    openConn(wsUrl('/ws/room/new', { name }));
-    setPhase('queued');
-    // Room code arrives via `room:code`; waiting text is shown meanwhile.
-  };
-
-  const joinPrivate = (code: string) => {
-    setError('');
-    // Optimistic: show the waiting screen immediately. A rejected upgrade
-    // (unknown/full code) closes the socket → handleClose sends us home.
-    closeMsgRef.current = `Could not join room "${code}".`;
-    openConn(wsUrl(`/ws/room/${code.trim().toUpperCase()}`, { name }));
-    setPhase('queued');
-  };
-
-  const submitExpression = (expression: string) => {
-    connRef.current?.send({ t: 'round:submit', expression });
-  };
-
-  const leaveMatch = () => {
-    // Closing notifies the server: opponent wins by forfeit (same as before).
-    closeConn();
-    setPhase('home');
-    resetMatchState();
-    setError('');
-  };
-
-  const backHome = () => {
-    closeConn();
-    setPhase('home');
-    resetMatchState();
-    setError('');
-  };
+    return () => {
+      socket.off('game:queued', onQueued);
+      socket.off('match:start', onMatchStart);
+      socket.off('round:start', onRoundStart);
+      socket.off('round:end', onRoundEnd);
+      socket.off('match:end', onMatchEnd);
+      socket.off('game:error', onError);
+      socket.off('opponent:left', onOpponentLeft);
+    };
+  }, []);
 
   useEffect(() => {
     localStorage.setItem('pd:name', name);
   }, [name]);
+
+  const quickPlay = useCallback(() => {
+    setError('');
+    socket.emit('game:queue_join', { name });
+    setPhase('queued');
+  }, [name]);
+
+  const createPrivate = useCallback(() => {
+    setError('');
+    socket.emit('game:create_private', { name }, (res) => {
+      setQueuePos(-1);
+      setPhase('queued');
+      if (res?.code) {
+        navigator.clipboard?.writeText(res.code).catch(() => {});
+        setError(`Room code ${res.code} copied to clipboard — share it!`);
+      }
+    });
+  }, [name]);
+
+  const joinPrivate = useCallback(
+    (code: string) => {
+      setError('');
+      // Optimistic: show the waiting screen immediately. Do NOT set the phase
+      // from the ack — the server sends match:start after join_private, and
+      // the ack arrives AFTER it, so re-setting 'queued' here would strand
+      // the guest on the waiting screen while the host is already playing.
+      setPhase('queued');
+      socket.emit('game:join_private', { name, code }, (res) => {
+        if (!res?.joined) {
+          setPhase('home');
+          setError(`Could not join room "${code}".`);
+        }
+      });
+    },
+    [name],
+  );
+
+  const submitExpression = useCallback((expression: string) => {
+    socket.emit('round:submit', { expression }, () => {});
+  }, []);
+
+  const leaveMatch = useCallback(() => {
+    socket.emit('game:queue_leave');
+    socket.disconnect();
+    socket.connect();
+    setPhase('home');
+    setRound(null);
+    setRoundEnd(null);
+    setMatchEnd(null);
+    setMatchInfo(null);
+    setError('');
+  }, []);
+
+  const backHome = useCallback(() => {
+    setPhase('home');
+    setRound(null);
+    setRoundEnd(null);
+    setMatchEnd(null);
+    setMatchInfo(null);
+    setError('');
+  }, []);
 
   let content: ReactNode;
   if (phase === 'playing' && matchInfo && round) {
@@ -210,7 +171,7 @@ export default function App() {
         onCreatePrivate={createPrivate}
         onJoinPrivate={joinPrivate}
         onCancelQueue={() => {
-          closeConn();
+          socket.emit('game:queue_leave');
           setPhase('home');
         }}
       />

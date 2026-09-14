@@ -5,8 +5,7 @@
   "workspaces": [
     "shared",
     "server",
-    "client",
-    "worker"
+    "client"
   ],
   "scripts": {
     "dev:server": "npm run dev --workspace server",

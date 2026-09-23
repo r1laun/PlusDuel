@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>PlusDuel — Play</title>
+<style>
+  :root { --pd-orange: #FF5C00; }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    font-family: ui-monospace, 'Courier New', monospace;
+    background: #FFFFFF;
+    color: #000;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .pd-frame {
+    border: 2px dotted #000;
+    border-radius: 32px;
+    padding: 40px 32px;
+    max-width: 520px;
+    width: 100%;
+    text-align: center;
+  }
+  .pd-logo { font-size: 48px; letter-spacing: 0.02em; }
+  .pd-logo__plus { color: var(--pd-orange); }
+  .pd-tagline {
+    font-size: 15px;
+    font-style: italic;
+    opacity: 0.75;
+    margin: 8px 0 24px;
+  }
+  .pd-play {
+    display: block;
+    font-family: inherit;
+    font-size: 22px;
+    text-decoration: none;
+    background: #000;
+    color: #fff;
+    border: 2px dotted #fff;
+    border-radius: 999px;
+    padding: 18px 24px;
+    margin-bottom: 16px;
+  }
+  .pd-play:hover { opacity: 0.85; }
+  .pd-play span { color: var(--pd-orange); }
+  .pd-note { font-size: 13px; opacity: 0.6; }
+  @media (max-width: 480px) {
+    .pd-frame { padding: 24px 16px; }
+    .pd-logo { font-size: 36px; }
+  }
+</style>
+</head>
+<body>
+  <div class="pd-frame">
+    <div class="pd-logo"><span class="pd-logo__plus">Plus</span>Duel</div>
+    <p class="pd-tagline">Real-time 1v1 math duels — build the target from every digit, faster than your opponent.</p>
+    <a class="pd-play" href="https://plusduel.onrender.com/" target="_blank" rel="noopener">PLAY <span>PLUSDUEL</span></a>
+    <p class="pd-note">Live game opens on plusduel.onrender.com</p>
+  </div>
+</body>
+</html>

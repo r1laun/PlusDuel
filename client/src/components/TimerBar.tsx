@@ -5,18 +5,34 @@ interface Props {
   receivedAt: number;
 }
 
-/** Server-authoritative countdown rendered from local receipt time (skew-tolerant). */
+/**
+ * Server-authoritative countdown rendered from local receipt time (skew-tolerant).
+ * Uses setInterval instead of requestAnimationFrame: rAF pauses in background
+ * tabs, freezing a player's visible timer; intervals keep ticking (≥1s throttle).
+ */
 export default function TimerBar({ timeLimitMs, receivedAt }: Props) {
   const [remaining, setRemaining] = useState(timeLimitMs);
-  const raf = useRef<number>(0);
+  const interval = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
+    setRemaining(timeLimitMs);
     const tick = () => {
       setRemaining(Math.max(0, timeLimitMs - (Date.now() - receivedAt)));
-      raf.current = requestAnimationFrame(tick);
     };
-    raf.current = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf.current);
+    tick();
+    interval.current = setInterval(tick, 100);
+    // Mobile browsers (iOS Safari) suspend background timers entirely; recompute
+    // immediately when the tab becomes visible so the bar never looks frozen.
+    const onVisible = () => {
+      if (!document.hidden) tick();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('pageshow', onVisible);
+    return () => {
+      if (interval.current) clearInterval(interval.current);
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('pageshow', onVisible);
+    };
   }, [timeLimitMs, receivedAt]);
 
   const pct = Math.min(100, (remaining / timeLimitMs) * 100);

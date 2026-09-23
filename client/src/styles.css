@@ -43,13 +43,17 @@ body {
 
 /* ---------- Logo ---------- */
 
-.logo {
-  margin: 48px 0 4px;
-  text-align: center;
-  font-size: 26px;
-  font-weight: 800;
-  letter-spacing: -0.02em;
-  color: var(--text);
+.logo-img {
+  width: 200px;
+  max-width: 60vw;
+  margin: 48px auto 4px;
+  font-size: 0;
+  line-height: 0;
+}
+.logo-img img {
+  width: 100%;
+  height: auto;
+  display: block;
 }
 .logo em {
   font-style: normal;

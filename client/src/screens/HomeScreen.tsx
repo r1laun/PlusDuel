@@ -28,7 +28,7 @@ export default function HomeScreen({
   return (
     <div className="screen home">
       <h1 className="logo-img">
-        <img src="/logo.png" alt="PlusDuel" />
+        <img src="/logo-site.png" alt="PlusDuel" />
       </h1>
       <p className="site-name">
         <em>Plus</em>Duel

@@ -113,13 +113,6 @@ export default function PlayScreen({
           <div className="pd-status">Next round…</div>
         </div>
       )}
-
-      <div className="pd-row">
-        <div className="pd-info-box">Use each digit once</div>
-        <div className="pd-info-box">
-          {matchInfo.roundsToWin === 3 ? 'Best of 5' : `Best of ${matchInfo.roundsToWin * 2 - 1}`}
-        </div>
-      </div>
     </div>
   );
 }

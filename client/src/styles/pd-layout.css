@@ -41,3 +41,27 @@
   gap: var(--pd-gap);
 }
 .pd-actions > * { flex: 1; max-width: 200px; }
+
+/* ---------- Small screens (phones ≤480px) ---------- */
+@media (max-width: 480px) {
+  /* Ужать рамку и панели — больше места контенту */
+  .pd-frame { padding: 16px; }
+  .pd-panel { padding: 20px 16px; }
+
+  /* Логотип и слоган не распирают первый экран */
+  .pd-logo { font-size: 36px; }
+  .pd-tagline { font-size: 13px; }
+
+  /* Кнопки режима (Training/Match) — в столбик, во всю ширину */
+  .pd-row { flex-direction: column; }
+
+  /* Уровни 3×2 вместо 6 в ряд — крупные тапы */
+  .pd-level-grid { grid-template-columns: repeat(3, 1fr); }
+  .pd-level-grid .pd-key { padding: 14px 0; }
+
+  /* Код комнаты не вылезает за края */
+  .pd-room-code__value { font-size: 34px; }
+
+  /* Таргет раунда чуть компактнее */
+  .pd-frame > .pd-display { font-size: 26px; }
+}

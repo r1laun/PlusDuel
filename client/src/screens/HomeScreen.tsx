@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { playClick, tap } from '../sound/click';
 
 interface Props {
   name: string;
@@ -48,7 +49,10 @@ export default function HomeScreen({
               {roomCode && (
                 <button
                   className="pd-room-code"
-                  onClick={() => navigator.clipboard?.writeText(roomCode).catch(() => {})}
+                  onClick={() => {
+                    playClick();
+                    navigator.clipboard?.writeText(roomCode).catch(() => {});
+                  }}
                   title="Click to copy"
                 >
                   <span className="pd-room-code__label">YOUR ROOM CODE</span>
@@ -60,7 +64,7 @@ export default function HomeScreen({
           ) : (
             <p className="pd-status">Looking for an opponent…</p>
           )}
-          <button className="pd-btn pd-btn--primary" onClick={onCancelQueue}>
+          <button className="pd-btn pd-btn--primary" onClick={tap(onCancelQueue)}>
             Cancel
           </button>
         </div>
@@ -82,7 +86,7 @@ export default function HomeScreen({
               />
             </div>
 
-            <button className="pd-btn pd-btn--primary" onClick={onQuickPlay}>
+            <button className="pd-btn pd-btn--primary" onClick={tap(onQuickPlay)}>
               Quick play
             </button>
           </div>
@@ -90,7 +94,7 @@ export default function HomeScreen({
           <hr className="pd-divider" />
 
           <div className="pd-panel">
-            <button className="pd-btn pd-btn--outline" onClick={onCreatePrivate}>
+            <button className="pd-btn pd-btn--outline" onClick={tap(onCreatePrivate)}>
               Create a private room
             </button>
 
@@ -107,7 +111,10 @@ export default function HomeScreen({
               <button
                 className="pd-btn pd-btn--outline pd-btn--sm"
                 disabled={code.trim().length < 4}
-                onClick={() => onJoinPrivate(code)}
+                onClick={() => {
+                  playClick();
+                  onJoinPrivate(code);
+                }}
               >
                 Join
               </button>
@@ -117,14 +124,20 @@ export default function HomeScreen({
           <hr className="pd-divider" />
 
           <div className="pd-panel">
-            <button className="pd-btn pd-btn--outline" onClick={onSolo}>
+            <button className="pd-btn pd-btn--outline" onClick={tap(onSolo)}>
               Practice solo
             </button>
           </div>
 
           <hr className="pd-divider" />
 
-          <button className="pd-btn pd-btn--outline" onClick={() => setShowRules((s) => !s)}>
+          <button
+            className="pd-btn pd-btn--outline"
+            onClick={() => {
+              playClick();
+              setShowRules((s) => !s);
+            }}
+          >
             {showRules ? 'Hide rules' : 'Rules'}
           </button>
 

@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import type { DragEvent } from 'react';
+import { playClick } from '../sound/click';
 
 interface ValidationState {
   valid: boolean;
@@ -52,9 +53,22 @@ export default function ExpressionInput({
 }: Props) {
   const tokens = useMemo(() => tokenize(expr), [expr]);
 
-  const append = (text: string) => setExpr((prev) => prev + text);
-  const backspace = () => setExpr((prev) => prev.slice(0, -1));
-  const clear = () => setExpr(() => '');
+  const append = (text: string) => {
+    playClick();
+    setExpr((prev) => prev + text);
+  };
+  const backspace = () => {
+    playClick();
+    setExpr((prev) => prev.slice(0, -1));
+  };
+  const clear = () => {
+    playClick();
+    setExpr(() => '');
+  };
+  const submit = () => {
+    playClick();
+    onSubmit();
+  };
 
   const handleDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -74,7 +88,7 @@ export default function ExpressionInput({
           value={expr}
           onChange={(e) => setExpr(() => e.target.value)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' && validation.valid && !disabled) onSubmit();
+            if (e.key === 'Enter' && validation.valid && !disabled) submit();
           }}
           placeholder="e.g. 5×(3+2)"
           disabled={disabled}
@@ -158,7 +172,7 @@ export default function ExpressionInput({
         </button>
         <button
           className={`pd-key pd-key--confirm${disabled || !validation.valid ? ' pd-key--disabled' : ''}`}
-          onClick={onSubmit}
+          onClick={submit}
           disabled={disabled || !validation.valid}
         >
           Submit

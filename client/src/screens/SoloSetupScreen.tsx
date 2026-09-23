@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { LEVELS } from '@plusduel/shared';
 import type { SoloMode } from '../solo/engine';
+import { playClick, tap } from '../sound/click';
 
 interface Props {
   onStart: (mode: SoloMode, level: number) => void;
@@ -21,13 +22,19 @@ export default function SoloSetupScreen({ onStart, onBack }: Props) {
         <div className="pd-row">
           <button
             className={`pd-btn pd-btn--outline${mode === 'endless' ? ' pd-btn--active' : ''}`}
-            onClick={() => setMode('endless')}
+            onClick={() => {
+              playClick();
+              setMode('endless');
+            }}
           >
             Training
           </button>
           <button
             className={`pd-btn pd-btn--outline${mode === 'match' ? ' pd-btn--active' : ''}`}
-            onClick={() => setMode('match')}
+            onClick={() => {
+              playClick();
+              setMode('match');
+            }}
           >
             Match
           </button>
@@ -46,7 +53,10 @@ export default function SoloSetupScreen({ onStart, onBack }: Props) {
             <button
               key={l.level}
               className={`pd-key${l.level === level ? ' pd-key--active' : ''}`}
-              onClick={() => setLevel(l.level)}
+              onClick={() => {
+                playClick();
+                setLevel(l.level);
+              }}
             >
               {l.level}
             </button>
@@ -57,10 +67,16 @@ export default function SoloSetupScreen({ onStart, onBack }: Props) {
         </p>
       </div>
 
-      <button className="pd-btn pd-btn--primary" onClick={() => onStart(mode, level)}>
+      <button
+        className="pd-btn pd-btn--primary"
+        onClick={() => {
+          playClick();
+          onStart(mode, level);
+        }}
+      >
         Start
       </button>
-      <button className="pd-btn pd-btn--outline" onClick={onBack}>
+      <button className="pd-btn pd-btn--outline" onClick={tap(onBack)}>
         Back
       </button>
     </div>

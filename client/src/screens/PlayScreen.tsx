@@ -7,6 +7,7 @@ import type {
 import ExpressionInput from '../components/ExpressionInput';
 import TimerBar from '../components/TimerBar';
 import { useLocalValidation } from '../hooks/useLocalValidation';
+import { playClick } from '../sound/click';
 
 interface Props {
   myId: string;
@@ -53,6 +54,11 @@ export default function PlayScreen({
 
   const iWon = roundEnd?.winnerId === myId;
 
+  const leave = () => {
+    playClick();
+    onLeave();
+  };
+
   return (
     <div className="pd-frame">
       <div className="pd-topbar">
@@ -61,9 +67,9 @@ export default function PlayScreen({
           role="button"
           tabIndex={0}
           title="Leave match"
-          onClick={onLeave}
+          onClick={leave}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') onLeave();
+            if (e.key === 'Enter' || e.key === ' ') leave();
           }}
         >
           EXT

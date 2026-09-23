@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { MatchEndPayload, MatchStartPayload } from '@plusduel/shared';
+import { tap } from '../sound/click';
 
 interface Props {
   myId: string;
@@ -51,7 +52,7 @@ export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) 
           <span className="pd-scoreboard__score">{oppScore.toFixed(1)}</span>
         </div>
       </div>
-      <button className="pd-btn pd-btn--primary" onClick={onHome}>
+      <button className="pd-btn pd-btn--primary" onClick={tap(onHome)}>
         Back to lobby{countdown > 0 ? ` (${countdown})` : ''}
       </button>
     </div>

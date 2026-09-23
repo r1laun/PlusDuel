@@ -11,6 +11,7 @@ import { socket } from './socket';
 import HomeScreen from './screens/HomeScreen';
 import { useSoloGame } from './hooks/useSoloGame';
 import { SOLO_YOU } from './solo/engine';
+import { playClick } from './sound/click';
 // Split the duel UI (and its validation chain) out of the initial bundle —
 // it loads on demand when a match starts, keeping first paint light.
 const PlayScreen = lazy(() => import('./screens/PlayScreen'));
@@ -201,7 +202,13 @@ export default function App() {
     content = (
       <div className="pd-frame">
         <p className="pd-status">Generating round…</p>
-        <button className="pd-btn pd-btn--outline" onClick={leaveSolo}>
+        <button
+          className="pd-btn pd-btn--outline"
+          onClick={() => {
+            playClick();
+            leaveSolo();
+          }}
+        >
           Back
         </button>
       </div>

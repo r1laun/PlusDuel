@@ -8,6 +8,7 @@ interface Props {
   queuePos: number;
   error: string;
   roomCode: string;
+  serverUp: boolean;
   onQuickPlay: () => void;
   onCreatePrivate: () => void;
   onJoinPrivate: (code: string) => void;
@@ -22,6 +23,7 @@ export default function HomeScreen({
   queuePos,
   error,
   roomCode,
+  serverUp,
   onQuickPlay,
   onCreatePrivate,
   onJoinPrivate,
@@ -40,6 +42,9 @@ export default function HomeScreen({
       <p className="pd-tagline">Real-time 1v1 math duels — build the target from every digit, faster than your opponent.</p>
 
       {error && <div className="pd-status">{error}</div>}
+      {!serverUp && !queued && (
+        <div className="pd-status">Multiplayer server unreachable — Practice solo works offline.</div>
+      )}
 
       {queued ? (
         <div className="pd-panel">

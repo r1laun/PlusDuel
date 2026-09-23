@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build && cp sitemap.xml dist/sitemap.xml && cp robots.txt dist/robots.txt",
+    "build:itch": "tsc --noEmit && VITE_SOCKET_URL=https://plusduel.onrender.com vite build --base=./ && (cd dist && zip -qr ../plusduel-itch.zip .)",
     "preview": "vite preview",
     "typecheck": "tsc --noEmit"
   },

@@ -12,6 +12,7 @@ import HomeScreen from './screens/HomeScreen';
 import { useSoloGame } from './hooks/useSoloGame';
 import { SOLO_YOU } from './solo/engine';
 import { playClick } from './sound/click';
+import { safeGet, safeSet } from './storage';
 // Split the duel UI (and its validation chain) out of the initial bundle —
 // it loads on demand when a match starts, keeping first paint light.
 const PlayScreen = lazy(() => import('./screens/PlayScreen'));
@@ -22,7 +23,7 @@ type Phase = 'home' | 'queued' | 'playing' | 'ended' | 'solo-setup' | 'solo';
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>('home');
-  const [name, setName] = useState(() => localStorage.getItem('pd:name') ?? '');
+  const [name, setName] = useState(() => safeGet('pd:name'));
   const [queuePos, setQueuePos] = useState(0);
   const [matchInfo, setMatchInfo] = useState<MatchStartPayload | null>(null);
   const [round, setRound] = useState<RoundStartPayload | null>(null);
@@ -31,6 +32,8 @@ export default function App() {
   const [matchEnd, setMatchEnd] = useState<MatchEndPayload | null>(null);
   const [error, setError] = useState('');
   const [roomCode, setRoomCode] = useState('');
+  // Optimistic: assume the server is up until a connect error proves otherwise.
+  const [serverUp, setServerUp] = useState(true);
   const myId = useRef<string>(socket.id ?? '');
   const solo = useSoloGame();
 
@@ -59,6 +62,9 @@ export default function App() {
     const onError = (p: ErrorPayload) => setError(p.message);
     const onQueued = (p: { position: number }) => setQueuePos(p.position);
     const onOpponentLeft = () => setError('Opponent left the match.');
+    const onConnect = () => setServerUp(true);
+    const onConnectError = () => setServerUp(false);
+    const onDisconnect = () => setServerUp(false);
 
     socket.on('game:queued', onQueued);
     socket.on('match:start', onMatchStart);
@@ -67,6 +73,9 @@ export default function App() {
     socket.on('match:end', onMatchEnd);
     socket.on('game:error', onError);
     socket.on('opponent:left', onOpponentLeft);
+    socket.on('connect', onConnect);
+    socket.on('connect_error', onConnectError);
+    socket.on('disconnect', onDisconnect);
 
     return () => {
       socket.off('game:queued', onQueued);
@@ -76,11 +85,14 @@ export default function App() {
       socket.off('match:end', onMatchEnd);
       socket.off('game:error', onError);
       socket.off('opponent:left', onOpponentLeft);
+      socket.off('connect', onConnect);
+      socket.off('connect_error', onConnectError);
+      socket.off('disconnect', onDisconnect);
     };
   }, []);
 
   useEffect(() => {
-    localStorage.setItem('pd:name', name);
+    safeSet('pd:name', name);
   }, [name]);
 
   const quickPlay = useCallback(() => {
@@ -253,6 +265,7 @@ export default function App() {
         queuePos={queuePos}
         error={error}
         roomCode={roomCode}
+        serverUp={serverUp}
         onQuickPlay={quickPlay}
         onCreatePrivate={createPrivate}
         onJoinPrivate={joinPrivate}

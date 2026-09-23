@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState, lazy, Suspense } from 'react';
 import type { ReactNode } from 'react';
 import type {
   ErrorPayload,
@@ -9,7 +9,9 @@ import type {
 } from '@plusduel/shared';
 import { socket } from './socket';
 import HomeScreen from './screens/HomeScreen';
-import PlayScreen from './screens/PlayScreen';
+// Split the duel UI (and its validation chain) out of the initial bundle —
+// it loads on demand when a match starts, keeping first paint light.
+const PlayScreen = lazy(() => import('./screens/PlayScreen'));
 import EndScreen from './screens/EndScreen';
 
 type Phase = 'home' | 'queued' | 'playing' | 'ended';
@@ -138,17 +140,25 @@ export default function App() {
   let content: ReactNode;
   if (phase === 'playing' && matchInfo && round) {
     content = (
-      <PlayScreen
-        key={matchInfo.roomCode ?? 'duel'}
-        myId={myId.current}
-        matchInfo={matchInfo}
-        round={round}
-        roundReceivedAt={roundReceivedAt}
-        roundEnd={roundEnd}
-        error={error}
-        onSubmit={submitExpression}
-        onLeave={leaveMatch}
-      />
+      <Suspense
+        fallback={
+          <div className="pd-frame">
+            <p className="pd-status">Loading duel…</p>
+          </div>
+        }
+      >
+        <PlayScreen
+          key={matchInfo.roomCode ?? 'duel'}
+          myId={myId.current}
+          matchInfo={matchInfo}
+          round={round}
+          roundReceivedAt={roundReceivedAt}
+          roundEnd={roundEnd}
+          error={error}
+          onSubmit={submitExpression}
+          onLeave={leaveMatch}
+        />
+      </Suspense>
     );
   } else if (phase === 'ended' && matchEnd) {
     content = (

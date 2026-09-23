@@ -18,6 +18,9 @@ interface Props {
   onSubmit: () => void;
 }
 
+/** The digit row always renders 5 slots; rounds with fewer digits pad with empties. */
+const DIGIT_SLOTS = 5;
+
 /** Split expression into display tokens: digit-runs stay together, each op is its own chip. */
 function tokenize(expr: string): { text: string; isDigitRun: boolean }[] {
   const tokens: { text: string; isDigitRun: boolean }[] = [];
@@ -59,11 +62,13 @@ export default function ExpressionInput({
     if (text) append(text);
   };
 
+  const keyClass = disabled ? 'pd-key pd-key--disabled' : 'pd-key';
+
   return (
-    <div className="input-area">
+    <div>
       {!isTouch && (
         <input
-          className="text-input"
+          className="pd-input"
           value={expr}
           onChange={(e) => setExpr(() => e.target.value)}
           onKeyDown={(e) => {
@@ -74,34 +79,31 @@ export default function ExpressionInput({
           autoFocus
           spellCheck={false}
           autoComplete="off"
+          aria-label="Expression"
         />
       )}
       <div
-        className={`expression-bar${validation.valid ? ' valid' : ''}${validation.checked && !validation.valid ? ' invalid' : ''}`}
+        className={`pd-info-box${validation.checked && validation.valid ? ' pd-info-box--accent' : ''}`}
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
       >
         {tokens.length === 0 ? (
-          <span className="placeholder">{isTouch ? 'Tap tiles to build your answer' : 'Use each digit once'}</span>
+          <span>{isTouch ? 'Tap tiles to build your answer' : 'Use each digit once'}</span>
         ) : (
-          tokens.map((t, i) => (
-            <span key={i} className={`token ${t.isDigitRun ? '' : 'op'}`}>
-              {pretty(t.text)}
-            </span>
-          ))
+          tokens.map((t, i) => <span key={i}>{pretty(t.text)}</span>)
         )}
       </div>
 
-      <div className={`validation-line ${validation.checked ? (validation.valid ? 'ok' : 'bad') : ''}`}>
+      <div className={`pd-status${validation.checked && validation.valid ? ' pd-status--accent' : ''}`}>
         {validation.checked && (validation.valid ? 'Valid — ready to submit' : validation.reason ?? '')}
       </div>
 
-      <div className="pad">
-        <div className="ops-row" role="group" aria-label="operators">
+      <div>
+        <div className="pd-keypad" role="group" aria-label="operators">
           {symbols.map((s) => (
             <button
               key={s}
-              className="tile op"
+              className={keyClass}
               disabled={disabled}
               draggable={!disabled}
               onDragStart={(e) => e.dataTransfer.setData('text/plain', s)}
@@ -110,37 +112,53 @@ export default function ExpressionInput({
               {s}
             </button>
           ))}
-        </div>
-
-        <div className="digits-row-pad" role="group" aria-label="digits">
-          {digits.map((d, i) => (
-            <button
-              key={`${i}-${d}`}
-              className="tile"
-              disabled={disabled}
-              draggable={!disabled}
-              onDragStart={(e) => e.dataTransfer.setData('text/plain', String(d))}
-              onClick={() => !disabled && append(String(d))}
-            >
-              {d}
-            </button>
-          ))}
-        </div>
-
-        <div className="actions">
-          <button className="btn ghost" onClick={backspace} disabled={disabled || !expr}>
+          <button
+            className={keyClass}
+            onClick={backspace}
+            disabled={disabled || !expr}
+            aria-label="Backspace"
+          >
             ⌫
           </button>
-          <button className="btn ghost" onClick={clear} disabled={disabled || !expr}>
+          <button className={keyClass} onClick={clear} disabled={disabled || !expr}>
             Clear
           </button>
           <button
-            className="btn primary"
+            className={`pd-key pd-key--confirm${disabled || !validation.valid ? ' pd-key--disabled' : ''}`}
             onClick={onSubmit}
             disabled={disabled || !validation.valid}
           >
             Submit
           </button>
+        </div>
+
+        <div className="pd-digit-row" role="group" aria-label="digits">
+          {Array.from({ length: DIGIT_SLOTS }, (_, i) => {
+            const d = digits[i];
+            if (d === undefined) {
+              return (
+                <button
+                  key={`empty-${i}`}
+                  className="pd-key pd-key--empty"
+                  disabled
+                  tabIndex={-1}
+                  aria-hidden="true"
+                />
+              );
+            }
+            return (
+              <button
+                key={`${i}-${d}`}
+                className={disabled ? 'pd-key pd-key--active pd-key--disabled' : 'pd-key pd-key--active'}
+                disabled={disabled}
+                draggable={!disabled}
+                onDragStart={(e) => e.dataTransfer.setData('text/plain', String(d))}
+                onClick={() => !disabled && append(String(d))}
+              >
+                {d}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

@@ -32,6 +32,7 @@ export default function HomeScreen({
         <span className="pd-logo__plus">Plus</span>
         <span className="pd-logo__dual">Duel</span>
       </div>
+      <p className="pd-tagline">Real-time 1v1 math duels — build the target from every digit, faster than your opponent.</p>
 
       {error && <div className="pd-status">{error}</div>}
 

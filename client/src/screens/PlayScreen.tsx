@@ -7,7 +7,7 @@ import type {
 import ExpressionInput from '../components/ExpressionInput';
 import TimerBar from '../components/TimerBar';
 import { useLocalValidation } from '../hooks/useLocalValidation';
-import { playClick } from '../sound/click';
+import { playClick, playRoundLose, playRoundWin } from '../sound/click';
 
 interface Props {
   myId: string;
@@ -53,6 +53,12 @@ export default function PlayScreen({
   }, [active, validation.valid, expr, onSubmit]);
 
   const iWon = roundEnd?.winnerId === myId;
+
+  useEffect(() => {
+    if (!roundEnd) return;
+    if (roundEnd.winnerId === myId) playRoundWin();
+    else playRoundLose();
+  }, [roundEnd, myId]);
 
   const leave = () => {
     playClick();

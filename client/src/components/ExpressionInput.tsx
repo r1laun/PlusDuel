@@ -1,6 +1,6 @@
 import { useMemo } from 'react';
 import type { DragEvent } from 'react';
-import { playClick } from '../sound/click';
+import { playDelete, playKey, playSubmit } from '../sound/click';
 
 interface ValidationState {
   valid: boolean;
@@ -54,19 +54,19 @@ export default function ExpressionInput({
   const tokens = useMemo(() => tokenize(expr), [expr]);
 
   const append = (text: string) => {
-    playClick();
+    playKey();
     setExpr((prev) => prev + text);
   };
   const backspace = () => {
-    playClick();
+    playDelete();
     setExpr((prev) => prev.slice(0, -1));
   };
   const clear = () => {
-    playClick();
+    playDelete();
     setExpr(() => '');
   };
   const submit = () => {
-    playClick();
+    playSubmit();
     onSubmit();
   };
 

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { MatchEndPayload, MatchStartPayload } from '@plusduel/shared';
-import { tap } from '../sound/click';
+import { tap, playMatchDraw, playMatchLose, playMatchWin } from '../sound/click';
 
 interface Props {
   myId: string;
@@ -17,6 +17,12 @@ export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) 
   useEffect(() => {
     const t = setInterval(() => setCountdown((c) => Math.max(0, c - 1)), 1000);
     return () => clearInterval(t);
+  }, []);
+
+  useEffect(() => {
+    if (draw) playMatchDraw();
+    else if (won) playMatchWin();
+    else playMatchLose();
   }, []);
 
   useEffect(() => {

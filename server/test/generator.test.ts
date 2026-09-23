@@ -6,7 +6,7 @@ describe('generateRound', () => {
     for (const level of [1, 2, 3, 4, 5, 6]) {
       const round = generateRound(level);
       const cfg = configForLevel(level);
-      expect(round.digits.length).toBeLessThanOrEqual(6);
+      expect(round.digits.length).toBeLessThanOrEqual(5);
       expect(round.digits.length).toBeGreaterThanOrEqual(cfg.minDigits);
       const check = validateExpression(round.solution, round.digits, round.target);
       if (!check.valid) {

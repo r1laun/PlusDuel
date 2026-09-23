@@ -5,8 +5,9 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': {
-        target: 'http://localhost:8888',
+      '/socket.io': {
+        target: 'http://localhost:3001',
+        ws: true,
       },
     },
   },

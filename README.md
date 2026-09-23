@@ -8,7 +8,7 @@
 
   <a href="https://www.typescriptlang.org"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-strict-3178C6?logo=typescript&logoColor=white"></a>
   <a href="https://nodejs.org"><img alt="Node" src="https://img.shields.io/badge/Node.js-22-339933?logo=nodedotjs&logoColor=white"></a>
-  <a href="https://www.netlify.com"><img alt="Netlify" src="https://img.shields.io/badge/Hosted_on-Netlify-00C7B7?logo=netlify&logoColor=white"></a>
+  <a href="https://socket.io"><img alt="Socket.io" src="https://img.shields.io/badge/Realtime-Socket.io-010101?logo=socketdotio"></a>
   <a href="https://mathjs.org"><img alt="Exact arithmetic" src="https://img.shields.io/badge/Arithmetic-exact/Fraction.js-6f2fdb?logo=mathdotcom"></a>
 
 </p>
@@ -33,7 +33,7 @@ First valid expression wins the round. Wrong answer? You lose nothing but time �
 - **Exact rational math** — `fraction.js`, no floats; `√` and `!` must land on exact integers
 - Every digit used exactly once; digit multiset must match the round exactly
 
-Two-tier validation: the client checks instantly for zero-latency UX, the API re-validates every submission before declaring a winner. The server is the source of truth.
+Two-tier validation: the client checks instantly for zero-latency UX, the server re-validates every submission before declaring a winner. The server is the source of truth.
 
 ## Playing
 
@@ -45,12 +45,12 @@ Two-tier validation: the client checks instantly for zero-latency UX, the API re
 
 | Layer    | Tech |
 | -------- | ---- |
-| Client   | React 19, Vite, HTTP polling (1s) |
-| Server   | Netlify Functions (single `api` endpoint), Netlify Blobs for room/queue state |
-| Shared   | TypeScript: exact-arithmetic validator (math.js AST), solvable round generator, difficulty/scoring, stateless match engine |
-| Testing  | Vitest (45 unit + engine flow tests), TypeScript strict |
+| Client   | React 19, Vite, socket.io-client |
+| Server   | Node.js, Socket.io, in-memory room/match state machine |
+| Shared   | TypeScript: exact-arithmetic validator (math.js AST), solvable round generator, difficulty/scoring |
+| Testing  | Vitest (35 unit + E2E bot match), TypeScript strict |
 
-One Netlify site serves everything: the CDN hosts the static client, `/.netlify/functions/api` (redirected from `/api/*`) runs the game. Functions are stateless — round timeouts, between-round gaps and opponent forfeits resolve lazily on every poll/submit instead of via timers. Local dev: `npx netlify dev` (API on `:8888`, Vite proxies `/api` there).
+Single-process production build: the Node server compiles and serves the web client from one origin — no proxy or CORS setup, WebSockets included.
 
 ---
 

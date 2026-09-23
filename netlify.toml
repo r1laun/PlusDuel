@@ -5,15 +5,6 @@
 [build.environment]
   NODE_VERSION = "22"
 
-[functions]
-  directory = "netlify/functions"
-
-# Game API → single Function (must come before the SPA fallback).
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/api/:splat"
-  status = 200
-
 # SPA fallback: all routes serve index.html (client handles routing)
 [[redirects]]
   from = "/*"

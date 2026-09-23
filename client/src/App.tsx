@@ -178,5 +178,5 @@ export default function App() {
     );
   }
 
-  return <div className="pd-app">{content}</div>;
+  return <main className="pd-app">{content}</main>;
 }

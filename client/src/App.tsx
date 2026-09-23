@@ -26,6 +26,7 @@ export default function App() {
   const [roundEnd, setRoundEnd] = useState<RoundEndPayload | null>(null);
   const [matchEnd, setMatchEnd] = useState<MatchEndPayload | null>(null);
   const [error, setError] = useState('');
+  const [roomCode, setRoomCode] = useState('');
   const myId = useRef<string>(socket.id ?? '');
 
   useEffect(() => {
@@ -36,6 +37,7 @@ export default function App() {
       setMatchInfo(p);
       setRoundEnd(null);
       setMatchEnd(null);
+      setRoomCode('');
       setPhase('playing');
     };
     const onRoundStart = (p: RoundStartPayload) => {
@@ -88,8 +90,9 @@ export default function App() {
       setQueuePos(-1);
       setPhase('queued');
       if (res?.code) {
+        setRoomCode(res.code);
         navigator.clipboard?.writeText(res.code).catch(() => {});
-        setError(`Room code ${res.code} copied to clipboard — share it!`);
+        setError('Room code copied to clipboard — share it!');
       }
     });
   }, [name]);
@@ -97,6 +100,7 @@ export default function App() {
   const joinPrivate = useCallback(
     (code: string) => {
       setError('');
+      setRoomCode('');
       // Optimistic: show the waiting screen immediately. Do NOT set the phase
       // from the ack — the server sends match:start after join_private, and
       // the ack arrives AFTER it, so re-setting 'queued' here would strand
@@ -125,6 +129,7 @@ export default function App() {
     setRoundEnd(null);
     setMatchEnd(null);
     setMatchInfo(null);
+    setRoomCode('');
     setError('');
   }, []);
 
@@ -134,6 +139,7 @@ export default function App() {
     setRoundEnd(null);
     setMatchEnd(null);
     setMatchInfo(null);
+    setRoomCode('');
     setError('');
   }, []);
 
@@ -177,11 +183,13 @@ export default function App() {
         queued={phase === 'queued'}
         queuePos={queuePos}
         error={error}
+        roomCode={roomCode}
         onQuickPlay={quickPlay}
         onCreatePrivate={createPrivate}
         onJoinPrivate={joinPrivate}
         onCancelQueue={() => {
           socket.emit('game:queue_leave');
+          setRoomCode('');
           setPhase('home');
         }}
       />

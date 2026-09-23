@@ -133,6 +133,40 @@
   margin: 20px 0;
 }
 
+/* ---------- Room code (private lobby) ---------- */
+.pd-room-code {
+  display: block;
+  width: 100%;
+  font-family: inherit;
+  cursor: pointer;
+  background: var(--pd-white);
+  border: var(--pd-border-w) dotted var(--pd-orange);
+  border-radius: var(--pd-radius-md);
+  padding: 16px 20px;
+  text-align: center;
+}
+.pd-room-code__label {
+  display: block;
+  font-size: 12px;
+  color: var(--pd-orange);
+  opacity: 0.8;
+}
+.pd-room-code__value {
+  display: block;
+  font-size: 42px;
+  color: var(--pd-orange);
+  letter-spacing: 0.18em;
+  line-height: 1.2;
+}
+.pd-room-code__hint {
+  display: block;
+  font-size: 12px;
+  font-style: italic;
+  color: var(--pd-orange);
+  opacity: 0.7;
+}
+.pd-room-code:hover { background: rgba(255, 92, 0, 0.06); }
+
 /* ---------- Row layout ---------- */
 .pd-row { display: flex; gap: var(--pd-gap); }
 .pd-row > * { flex: 1; }

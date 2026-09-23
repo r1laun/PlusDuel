@@ -6,6 +6,7 @@ interface Props {
   queued: boolean;
   queuePos: number;
   error: string;
+  roomCode: string;
   onQuickPlay: () => void;
   onCreatePrivate: () => void;
   onJoinPrivate: (code: string) => void;
@@ -18,6 +19,7 @@ export default function HomeScreen({
   queued,
   queuePos,
   error,
+  roomCode,
   onQuickPlay,
   onCreatePrivate,
   onJoinPrivate,
@@ -39,7 +41,20 @@ export default function HomeScreen({
       {queued ? (
         <div className="pd-panel">
           {queuePos === -1 ? (
-            <p className="pd-status">Room open — share your code.</p>
+            <>
+              <p className="pd-status">Room open — share your code.</p>
+              {roomCode && (
+                <button
+                  className="pd-room-code"
+                  onClick={() => navigator.clipboard?.writeText(roomCode).catch(() => {})}
+                  title="Click to copy"
+                >
+                  <span className="pd-room-code__label">YOUR ROOM CODE</span>
+                  <span className="pd-room-code__value">{roomCode}</span>
+                  <span className="pd-room-code__hint">tap to copy</span>
+                </button>
+              )}
+            </>
           ) : (
             <p className="pd-status">Looking for an opponent…</p>
           )}

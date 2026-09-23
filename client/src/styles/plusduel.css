@@ -124,7 +124,15 @@
 .pd-btn--primary:hover { opacity: 0.85; }
 .pd-btn--outline { background: var(--pd-white); color: var(--pd-black); }
 .pd-btn--sm { width: auto; padding: 10px 20px; }
+.pd-btn--active { border-color: var(--pd-orange); color: var(--pd-orange); }
 .pd-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---------- Solo setup: level picker ---------- */
+.pd-level-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 10px;
+}
 
 /* ---------- Divider ---------- */
 .pd-divider {

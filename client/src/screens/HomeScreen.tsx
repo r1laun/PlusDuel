@@ -11,6 +11,7 @@ interface Props {
   onCreatePrivate: () => void;
   onJoinPrivate: (code: string) => void;
   onCancelQueue: () => void;
+  onSolo: () => void;
 }
 
 export default function HomeScreen({
@@ -24,6 +25,7 @@ export default function HomeScreen({
   onCreatePrivate,
   onJoinPrivate,
   onCancelQueue,
+  onSolo,
 }: Props) {
   const [code, setCode] = useState('');
   const [showRules, setShowRules] = useState(false);
@@ -110,6 +112,14 @@ export default function HomeScreen({
                 Join
               </button>
             </div>
+          </div>
+
+          <hr className="pd-divider" />
+
+          <div className="pd-panel">
+            <button className="pd-btn pd-btn--outline" onClick={onSolo}>
+              Practice solo
+            </button>
           </div>
 
           <hr className="pd-divider" />

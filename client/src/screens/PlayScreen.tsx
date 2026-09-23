@@ -17,6 +17,7 @@ interface Props {
   error: string;
   onSubmit: (expression: string) => void;
   onLeave: () => void;
+  soloStats?: { solved: number; failed: number; score: number };
 }
 
 const OP_SYMBOLS = ['+', '−', '×', '÷', '(', ')', '^', '√', '!'];
@@ -30,6 +31,7 @@ export default function PlayScreen({
   error,
   onSubmit,
   onLeave,
+  soloStats,
 }: Props) {
   const [expr, setExpr] = useState('');
   const isTouch = useMemo(
@@ -111,6 +113,11 @@ export default function PlayScreen({
             </>
           )}
           <div className="pd-status">Next round…</div>
+          {soloStats && (
+            <div className="pd-status">
+              Solved {soloStats.solved} · Missed {soloStats.failed} · {soloStats.score.toFixed(1)} pts
+            </div>
+          )}
         </div>
       )}
     </div>

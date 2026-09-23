@@ -9,12 +9,15 @@ import type {
 } from '@plusduel/shared';
 import { socket } from './socket';
 import HomeScreen from './screens/HomeScreen';
+import { useSoloGame } from './hooks/useSoloGame';
+import { SOLO_YOU } from './solo/engine';
 // Split the duel UI (and its validation chain) out of the initial bundle —
 // it loads on demand when a match starts, keeping first paint light.
 const PlayScreen = lazy(() => import('./screens/PlayScreen'));
+const SoloSetupScreen = lazy(() => import('./screens/SoloSetupScreen'));
 import EndScreen from './screens/EndScreen';
 
-type Phase = 'home' | 'queued' | 'playing' | 'ended';
+type Phase = 'home' | 'queued' | 'playing' | 'ended' | 'solo-setup' | 'solo';
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>('home');
@@ -28,6 +31,7 @@ export default function App() {
   const [error, setError] = useState('');
   const [roomCode, setRoomCode] = useState('');
   const myId = useRef<string>(socket.id ?? '');
+  const solo = useSoloGame();
 
   useEffect(() => {
     socket.connect();
@@ -92,7 +96,6 @@ export default function App() {
       if (res?.code) {
         setRoomCode(res.code);
         navigator.clipboard?.writeText(res.code).catch(() => {});
-        setError('Room code copied to clipboard — share it!');
       }
     });
   }, [name]);
@@ -143,8 +146,67 @@ export default function App() {
     setError('');
   }, []);
 
+  const leaveSolo = useCallback(() => {
+    solo.leave();
+    setPhase('home');
+  }, [solo.leave]);
+
   let content: ReactNode;
-  if (phase === 'playing' && matchInfo && round) {
+  if (phase === 'solo-setup') {
+    content = (
+      <Suspense
+        fallback={
+          <div className="pd-frame">
+            <p className="pd-status">Loading practice…</p>
+          </div>
+        }
+      >
+        <SoloSetupScreen
+          onStart={(mode, level) => {
+            solo.start(mode, level);
+            setPhase('solo');
+          }}
+          onBack={() => setPhase('home')}
+        />
+      </Suspense>
+    );
+  } else if (phase === 'solo' && solo.matchEnd && solo.matchInfo) {
+    content = (
+      <EndScreen myId={SOLO_YOU} matchEnd={solo.matchEnd} matchInfo={solo.matchInfo} onHome={leaveSolo} />
+    );
+  } else if (phase === 'solo' && solo.matchInfo && solo.round) {
+    content = (
+      <Suspense
+        fallback={
+          <div className="pd-frame">
+            <p className="pd-status">Loading practice…</p>
+          </div>
+        }
+      >
+        <PlayScreen
+          key="solo"
+          myId={SOLO_YOU}
+          matchInfo={solo.matchInfo}
+          round={solo.round}
+          roundReceivedAt={solo.roundReceivedAt}
+          roundEnd={solo.roundEnd}
+          error={solo.error}
+          onSubmit={solo.submit}
+          onLeave={leaveSolo}
+          soloStats={solo.stats}
+        />
+      </Suspense>
+    );
+  } else if (phase === 'solo') {
+    content = (
+      <div className="pd-frame">
+        <p className="pd-status">Generating round…</p>
+        <button className="pd-btn pd-btn--outline" onClick={leaveSolo}>
+          Back
+        </button>
+      </div>
+    );
+  } else if (phase === 'playing' && matchInfo && round) {
     content = (
       <Suspense
         fallback={
@@ -192,6 +254,7 @@ export default function App() {
           setRoomCode('');
           setPhase('home');
         }}
+        onSolo={() => setPhase('solo-setup')}
       />
     );
   }

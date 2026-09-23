@@ -48,7 +48,7 @@ Two-tier validation: the client checks instantly for zero-latency UX, the server
 | Client   | React 19, Vite, socket.io-client |
 | Server   | Node.js, Socket.io, in-memory room/match state machine |
 | Shared   | TypeScript: exact-arithmetic validator (math.js AST), solvable round generator, difficulty/scoring |
-| Testing  | Vitest (33 unit + E2E bot match), TypeScript strict |
+| Testing  | Vitest (35 unit + E2E bot match), TypeScript strict |
 
 Single-process production build: the Node server compiles and serves the web client from one origin — no proxy or CORS setup, WebSockets included.
 

@@ -133,9 +133,13 @@ function serveStatic(req: import('node:http').IncomingMessage, res: import('node
 
   const ext = finalPath.slice(finalPath.lastIndexOf('.')).toLowerCase();
   const noCache = ext === '.html' || ext === '.xml' || ext === '.txt';
+  const hashed = /\/assets\/[^/]+-[A-Za-z0-9_-]{8,}\.(?:css|js)$/.test(finalPath);
+  const cacheControl = noCache ? 'no-cache'
+    : hashed ? 'public, max-age=31536000, immutable'
+    : 'public, max-age=3600';
   res.writeHead(200, {
     'content-type': MIME[ext] ?? 'application/octet-stream',
-    'cache-control': noCache ? 'no-cache' : 'public, max-age=31536000, immutable',
+    'cache-control': cacheControl,
   });
   if (req.method === 'HEAD') return res.end();
   res.end(readFileSync(finalPath));

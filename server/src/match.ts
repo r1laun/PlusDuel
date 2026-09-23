@@ -159,7 +159,7 @@ export class Room {
     };
     for (const p of this.players) p.socket.emit('round:end', payload);
 
-    if (this.players[0].roundWins >= ROUNDS_TO_WIN || this.players[1].roundWins >= ROUNDS_TO_WIN) {
+    if (this.matchOver()) {
       this.finish();
       return;
     }
@@ -179,16 +179,29 @@ export class Room {
       winsByPlayer: this.wins(),
     };
     for (const p of this.players) p.socket.emit('round:end', payload);
+    if (this.matchOver()) {
+      this.finish();
+      return;
+    }
     this.nextRoundTimer = setTimeout(() => this.beginRound(), BETWEEN_ROUNDS_MS);
+  }
+
+  /** Match ends at 3 round wins — or after 5 rounds (draw if tied). */
+  private matchOver(): boolean {
+    return (
+      this.players[0].roundWins >= ROUNDS_TO_WIN ||
+      this.players[1].roundWins >= ROUNDS_TO_WIN ||
+      this.roundIndex >= BEST_OF
+    );
   }
 
   private finish(): void {
     this.destroy();
-    const winner =
-      this.players[0].roundWins > this.players[1].roundWins ? this.players[0] : this.players[1];
+    const [a, b] = this.players;
+    const winner = a.roundWins === b.roundWins ? null : a.roundWins > b.roundWins ? a : b;
     for (const p of this.players) {
       p.socket.emit('match:end', {
-        winnerId: winner.socket.id,
+        winnerId: winner?.socket.id ?? null,
         reason: 'rounds',
         scoresByPlayer: this.scores(),
         winsByPlayer: this.wins(),

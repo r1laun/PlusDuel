@@ -96,8 +96,8 @@ export default function ExpressionInput({
         )}
       </div>
 
-      <div className={`pd-status${validation.checked && validation.valid ? ' pd-status--accent' : ''}`}>
-        {validation.checked && (validation.valid ? 'Valid — ready to submit' : validation.reason ?? '')}
+      <div className="pd-status">
+        {validation.checked && !validation.valid ? (validation.reason ?? '') : ''}
       </div>
 
       <div className="pd-digit-row" role="group" aria-label="digits">

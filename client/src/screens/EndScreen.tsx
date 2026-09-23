@@ -10,7 +10,8 @@ interface Props {
 
 export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) {
   const [countdown, setCountdown] = useState(10);
-  const won = matchEnd.winnerId === myId;
+  const draw = matchEnd.winnerId === null && matchEnd.reason !== 'forfeit';
+  const won = !draw && matchEnd.winnerId === myId;
 
   useEffect(() => {
     const t = setInterval(() => setCountdown((c) => Math.max(0, c - 1)), 1000);
@@ -28,13 +29,15 @@ export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) 
 
   return (
     <div className="pd-frame">
-      <h1 className="pd-title--victory">{won ? 'Victory' : 'Defeat'}</h1>
+      <h1 className="pd-title--victory">{draw ? 'Draw' : won ? 'Victory' : 'Defeat'}</h1>
       <div className="pd-status">
         {matchEnd.reason === 'forfeit'
           ? 'Match ended by forfeit.'
-          : won
-            ? 'You won the match.'
-            : `${opponentName} won the match.`}
+          : draw
+            ? 'Nobody reached 3 wins in 5 rounds — draw.'
+            : won
+              ? 'You won the match.'
+              : `${opponentName} won the match.`}
       </div>
       <div className="pd-panel">
         <div className="pd-scoreboard__row">

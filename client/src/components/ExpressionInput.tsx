@@ -64,8 +64,10 @@ export default function ExpressionInput({
 
   const keyClass = disabled ? 'pd-key pd-key--disabled' : 'pd-key';
 
+  // Order follows the play flow: type (desktop) → built expression →
+  // validation feedback → digit tiles → operator keypad with Submit last.
   return (
-    <div>
+    <>
       {!isTouch && (
         <input
           className="pd-input"
@@ -98,70 +100,68 @@ export default function ExpressionInput({
         {validation.checked && (validation.valid ? 'Valid — ready to submit' : validation.reason ?? '')}
       </div>
 
-      <div>
-        <div className="pd-keypad" role="group" aria-label="operators">
-          {symbols.map((s) => (
-            <button
-              key={s}
-              className={keyClass}
-              disabled={disabled}
-              draggable={!disabled}
-              onDragStart={(e) => e.dataTransfer.setData('text/plain', s)}
-              onClick={() => !disabled && append(s)}
-            >
-              {s}
-            </button>
-          ))}
-          <button
-            className={keyClass}
-            onClick={backspace}
-            disabled={disabled || !expr}
-            aria-label="Backspace"
-          >
-            ⌫
-          </button>
-          <button className={keyClass} onClick={clear} disabled={disabled || !expr}>
-            Clear
-          </button>
-          <button
-            className={`pd-key pd-key--confirm${disabled || !validation.valid ? ' pd-key--disabled' : ''}`}
-            onClick={onSubmit}
-            disabled={disabled || !validation.valid}
-          >
-            Submit
-          </button>
-        </div>
-
-        <div className="pd-digit-row" role="group" aria-label="digits">
-          {Array.from({ length: DIGIT_SLOTS }, (_, i) => {
-            const d = digits[i];
-            if (d === undefined) {
-              return (
-                <button
-                  key={`empty-${i}`}
-                  className="pd-key pd-key--empty"
-                  disabled
-                  tabIndex={-1}
-                  aria-hidden="true"
-                />
-              );
-            }
+      <div className="pd-digit-row" role="group" aria-label="digits">
+        {Array.from({ length: DIGIT_SLOTS }, (_, i) => {
+          const d = digits[i];
+          if (d === undefined) {
             return (
               <button
-                key={`${i}-${d}`}
-                className={disabled ? 'pd-key pd-key--active pd-key--disabled' : 'pd-key pd-key--active'}
-                disabled={disabled}
-                draggable={!disabled}
-                onDragStart={(e) => e.dataTransfer.setData('text/plain', String(d))}
-                onClick={() => !disabled && append(String(d))}
-              >
-                {d}
-              </button>
+                key={`empty-${i}`}
+                className="pd-key pd-key--empty"
+                disabled
+                tabIndex={-1}
+                aria-hidden="true"
+              />
             );
-          })}
-        </div>
+          }
+          return (
+            <button
+              key={`${i}-${d}`}
+              className={disabled ? 'pd-key pd-key--active pd-key--disabled' : 'pd-key pd-key--active'}
+              disabled={disabled}
+              draggable={!disabled}
+              onDragStart={(e) => e.dataTransfer.setData('text/plain', String(d))}
+              onClick={() => !disabled && append(String(d))}
+            >
+              {d}
+            </button>
+          );
+        })}
       </div>
-    </div>
+
+      <div className="pd-keypad" role="group" aria-label="operators">
+        {symbols.map((s) => (
+          <button
+            key={s}
+            className={keyClass}
+            disabled={disabled}
+            draggable={!disabled}
+            onDragStart={(e) => e.dataTransfer.setData('text/plain', s)}
+            onClick={() => !disabled && append(s)}
+          >
+            {s}
+          </button>
+        ))}
+        <button
+          className={keyClass}
+          onClick={backspace}
+          disabled={disabled || !expr}
+          aria-label="Backspace"
+        >
+          ⌫
+        </button>
+        <button className={keyClass} onClick={clear} disabled={disabled || !expr}>
+          Clear
+        </button>
+        <button
+          className={`pd-key pd-key--confirm${disabled || !validation.valid ? ' pd-key--disabled' : ''}`}
+          onClick={onSubmit}
+          disabled={disabled || !validation.valid}
+        >
+          Submit
+        </button>
+      </div>
+    </>
   );
 }
 

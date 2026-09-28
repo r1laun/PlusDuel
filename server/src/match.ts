@@ -3,10 +3,14 @@ import {
   difficultyCoefficient,
   generateRound,
   roundScore,
+  titleFor,
   validateExpression,
+  type MatchScore,
+  type RatingChange,
   type ServerToClientEvents,
 } from '@plusduel/shared';
 import type { Socket } from 'socket.io';
+import { applyRatedResult, type RatingRecord } from './ratings.js';
 
 export const BEST_OF = 5;
 export const ROUNDS_TO_WIN = Math.ceil(BEST_OF / 2);
@@ -15,6 +19,7 @@ const BETWEEN_ROUNDS_MS = 3500;
 export interface Player {
   socket: Socket<ServerToClientEvents, any>;
   name: string;
+  playerId: string;
   score: number;
   roundWins: number;
 }
@@ -42,12 +47,22 @@ export class Room {
   private roundData: RoundData | null = null;
   private timer: ReturnType<typeof setTimeout> | null = null;
   private nextRoundTimer: ReturnType<typeof setTimeout> | null = null;
+  private readonly rated: boolean;
+  private readonly recordA: RatingRecord | null;
+  private readonly recordB: RatingRecord | null;
 
-  constructor(a: Player, b: Player, opts: { code?: string; startLevel?: number } = {}) {
+  constructor(
+    a: Player,
+    b: Player,
+    opts: { code?: string; startLevel?: number; rated?: boolean; recordA?: RatingRecord; recordB?: RatingRecord } = {},
+  ) {
     this.id = `room-${++roomSeq}`;
     this.code = opts.code ?? Math.random().toString(36).slice(2, 6).toUpperCase();
     this.players = [a, b];
     this.level = opts.startLevel ?? 1;
+    this.rated = opts.rated ?? false;
+    this.recordA = opts.recordA ?? null;
+    this.recordB = opts.recordB ?? null;
   }
 
   sideOf(socketId: string): 0 | 1 | null {
@@ -91,6 +106,7 @@ export class Room {
     const side = this.sideOf(quitterSocketId);
     const winnerSide: 0 | 1 | null = side === null ? null : ((1 - side) as 0 | 1);
     const winnerId = winnerSide === null ? null : this.players[winnerSide].socket.id;
+    const ratings = this.settleRating(winnerSide === null ? null : winnerSide === 0 ? 1 : 0);
     for (const p of this.players) {
       if (p.socket.id !== quitterSocketId || winnerId === null) {
         p.socket.emit('match:end', {
@@ -98,6 +114,7 @@ export class Room {
           reason: 'forfeit',
           scoresByPlayer: this.scores(),
           winsByPlayer: this.wins(),
+          ...(ratings ? { ratingsByPlayer: ratings } : {}),
         });
       }
     }
@@ -199,14 +216,29 @@ export class Room {
     this.destroy();
     const [a, b] = this.players;
     const winner = a.roundWins === b.roundWins ? null : a.roundWins > b.roundWins ? a : b;
+    const ratings = this.settleRating(winner === null ? 0.5 : winner === a ? 1 : 0);
     for (const p of this.players) {
       p.socket.emit('match:end', {
         winnerId: winner?.socket.id ?? null,
         reason: 'rounds',
         scoresByPlayer: this.scores(),
         winsByPlayer: this.wins(),
+        ...(ratings ? { ratingsByPlayer: ratings } : {}),
       });
     }
+  }
+
+  /**
+   * Apply the Elo result for rated rooms. scoreA is from player A's perspective.
+   * Returns rating changes keyed by socket id, or null for unrated rooms.
+   */
+  private settleRating(scoreA: MatchScore | null): Record<string, RatingChange> | null {
+    if (!this.rated || !this.recordA || !this.recordB || scoreA === null) return null;
+    const res = applyRatedResult(this.recordA, this.recordB, scoreA);
+    return {
+      [this.players[0].socket.id]: { ...res.a, title: titleFor(res.a.after) },
+      [this.players[1].socket.id]: { ...res.b, title: titleFor(res.b.after) },
+    };
   }
 
   private scores(): Record<string, number> {

@@ -39,11 +39,13 @@ const hub = new Hub();
 
 io.on('connection', (socket) => {
   let name = randomName();
+  let playerId = '';
 
-  const makePlayer = (): Player => ({ socket, name, score: 0, roundWins: 0 });
+  const makePlayer = (): Player => ({ socket, name, playerId, score: 0, roundWins: 0 });
 
-  socket.on('game:queue_join', ({ name: requested }) => {
+  socket.on('game:queue_join', ({ name: requested, playerId: requestedId }) => {
     name = sanitizeName(requested) ?? randomName();
+    playerId = typeof requestedId === 'string' ? requestedId.trim().slice(0, 64) : '';
     hub.enqueue(makePlayer());
   });
 
@@ -76,6 +78,10 @@ io.on('connection', (socket) => {
     }
     room.submit(socket.id, expression);
     ack?.({ received: true });
+  });
+
+  socket.on('rankings:get', (ack) => {
+    ack?.(hub.rankingsFor(playerId));
   });
 
   socket.on('disconnect', () => {

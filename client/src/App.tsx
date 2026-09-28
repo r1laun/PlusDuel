@@ -4,6 +4,7 @@ import type {
   ErrorPayload,
   MatchEndPayload,
   MatchStartPayload,
+  RankingsPayload,
   RoundEndPayload,
   RoundStartPayload,
 } from '@plusduel/shared';
@@ -12,7 +13,7 @@ import HomeScreen from './screens/HomeScreen';
 import { useSoloGame } from './hooks/useSoloGame';
 import { SOLO_YOU } from './solo/engine';
 import { playClick } from './sound/click';
-import { safeGet, safeSet } from './storage';
+import { safeGet, safeSet, getPlayerId } from './storage';
 // Split the duel UI (and its validation chain) out of the initial bundle —
 // it loads on demand when a match starts, keeping first paint light.
 const PlayScreen = lazy(() => import('./screens/PlayScreen'));
@@ -34,11 +35,19 @@ export default function App() {
   const [roomCode, setRoomCode] = useState('');
   // Optimistic: assume the server is up until a connect error proves otherwise.
   const [serverUp, setServerUp] = useState(true);
+  const [rankings, setRankings] = useState<RankingsPayload | null>(null);
   const myId = useRef<string>(socket.id ?? '');
   const solo = useSoloGame();
 
+  const refreshRankings = useCallback(() => {
+    socket.emit('rankings:get', (res) => {
+      if (res) setRankings(res);
+    });
+  }, []);
+
   useEffect(() => {
     socket.connect();
+    refreshRankings();
 
     const onMatchStart = (p: MatchStartPayload) => {
       myId.current = p.youAre;
@@ -97,7 +106,7 @@ export default function App() {
 
   const quickPlay = useCallback(() => {
     setError('');
-    socket.emit('game:queue_join', { name });
+    socket.emit('game:queue_join', { name, playerId: getPlayerId() });
     setPhase('queued');
   }, [name]);
 
@@ -147,7 +156,8 @@ export default function App() {
     setMatchInfo(null);
     setRoomCode('');
     setError('');
-  }, []);
+    refreshRankings();
+  }, [refreshRankings]);
 
   const backHome = useCallback(() => {
     setPhase('home');
@@ -157,12 +167,14 @@ export default function App() {
     setMatchInfo(null);
     setRoomCode('');
     setError('');
-  }, []);
+    refreshRankings();
+  }, [refreshRankings]);
 
   const leaveSolo = useCallback(() => {
     solo.leave();
     setPhase('home');
-  }, [solo.leave]);
+    refreshRankings();
+  }, [solo.leave, refreshRankings]);
 
   let content: ReactNode;
   if (phase === 'solo-setup') {
@@ -266,6 +278,7 @@ export default function App() {
         error={error}
         roomCode={roomCode}
         serverUp={serverUp}
+        rankings={rankings}
         onQuickPlay={quickPlay}
         onCreatePrivate={createPrivate}
         onJoinPrivate={joinPrivate}

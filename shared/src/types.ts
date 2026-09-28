@@ -1,3 +1,5 @@
+import type { LeaderboardEntry } from './rating.js';
+
 export type PlayerId = string;
 
 export interface PlayerPublic {
@@ -39,11 +41,24 @@ export interface MatchStartPayload {
   roundsToWin: number;
 }
 
+export interface RatingChange {
+  before: number;
+  after: number;
+  title: string;
+}
+
 export interface MatchEndPayload {
   winnerId: PlayerId | null;
   reason: 'rounds' | 'forfeit';
   scoresByPlayer: Record<PlayerId, number>;
   winsByPlayer: Record<PlayerId, number>;
+  /** Present for rated matches; keyed by socket id. */
+  ratingsByPlayer?: Record<PlayerId, RatingChange>;
+}
+
+export interface RankingsPayload {
+  top: LeaderboardEntry[];
+  you: LeaderboardEntry | null;
 }
 
 export interface ErrorPayload {

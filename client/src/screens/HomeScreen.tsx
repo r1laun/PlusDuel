@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import type { RankingsPayload } from '@plusduel/shared';
 import { playClick, tap } from '../sound/click';
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
   error: string;
   roomCode: string;
   serverUp: boolean;
+  rankings: RankingsPayload | null;
   onQuickPlay: () => void;
   onCreatePrivate: () => void;
   onJoinPrivate: (code: string) => void;
@@ -24,6 +26,7 @@ export default function HomeScreen({
   error,
   roomCode,
   serverUp,
+  rankings,
   onQuickPlay,
   onCreatePrivate,
   onJoinPrivate,
@@ -132,6 +135,35 @@ export default function HomeScreen({
             <button className="pd-btn pd-btn--outline" onClick={tap(onSolo)}>
               Practice solo
             </button>
+          </div>
+
+          <hr className="pd-divider" />
+
+          <div className="pd-panel">
+            <p className="pd-status">Leaderboard — Quick play</p>
+            {rankings?.you && (
+              <p className="pd-status pd-status--you">
+                You: {rankings.you.rating} · {rankings.you.title}
+              </p>
+            )}
+            {rankings && rankings.top.length > 0 ? (
+              rankings.top.map((e, i) => (
+                <div
+                  key={e.playerId}
+                  className={`pd-scoreboard__row${rankings.you && e.playerId === rankings.you.playerId ? ' pd-scoreboard__row--you' : ''}`}
+                >
+                  <span>
+                    #{i + 1} {e.name}
+                  </span>
+                  <div className="pd-scoreboard__bar" />
+                  <span className="pd-scoreboard__score">
+                    {e.rating} · {e.title}
+                  </span>
+                </div>
+              ))
+            ) : (
+              <p className="pd-status">No ranked matches yet — play Quick play!</p>
+            )}
           </div>
 
           <hr className="pd-divider" />

@@ -33,6 +33,8 @@ export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) 
   const myScore = matchEnd.scoresByPlayer[myId] ?? 0;
   const oppId = matchInfo?.opponent.id;
   const oppScore = oppId ? (matchEnd.scoresByPlayer[oppId] ?? 0) : 0;
+  const rating = matchEnd.ratingsByPlayer?.[myId];
+  const delta = rating ? rating.after - rating.before : null;
 
   return (
     <div className="pd-frame">
@@ -47,6 +49,11 @@ export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) 
               : `${opponentName} won the match.`}
       </div>
       <div className="pd-panel">
+        {rating && delta !== null && (
+          <div className="pd-info-box pd-info-box--accent">
+            Elo {rating.after} ({delta >= 0 ? `+${delta}` : delta}) · {rating.title}
+          </div>
+        )}
         <div className="pd-scoreboard__row">
           <span>You</span>
           <div className="pd-scoreboard__bar" />

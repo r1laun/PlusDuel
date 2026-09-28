@@ -3,19 +3,20 @@ import type {
   MatchEndPayload,
   MatchStartPayload,
   PlayerPublic,
+  RankingsPayload,
   RoundEndPayload,
   RoundStartPayload,
 } from './types.js';
 
 export interface ClientToServerEvents {
-  'game:queue_join': (p: { name: string }) => void;
+  'game:queue_join': (p: { name: string; playerId?: string }) => void;
   'game:queue_leave': () => void;
   'game:create_private': (p: { name: string }, ack?: (res: { code: string }) => void) => void;
   'game:join_private': (
     p: { name: string; code: string },
-    ack?: (res: { joined: boolean }) => void,
-  ) => void;
+    ack?: (res: { joined: boolean }) => void) => void;
   'round:submit': (p: { expression: string }, ack?: (res: { received: boolean }) => void) => void;
+  'rankings:get': (ack?: (res: RankingsPayload) => void) => void;
 }
 
 export interface ServerToClientEvents {

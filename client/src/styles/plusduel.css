@@ -88,6 +88,9 @@
   padding: 10px 20px;
   display: inline-block;
 }
+.pd-status--you {
+  color: var(--pd-orange);
+}
 
 /* ---------- Input field ---------- */
 .pd-field { display: flex; align-items: center; gap: var(--pd-gap); }
@@ -269,3 +272,5 @@
   margin: 0 8px;
 }
 .pd-scoreboard__score { min-width: 40px; text-align: right; }
+.pd-scoreboard__row--you { color: var(--pd-orange); }
+.pd-scoreboard__row--you .pd-scoreboard__bar { border-color: var(--pd-orange); }

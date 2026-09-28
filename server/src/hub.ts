@@ -1,13 +1,16 @@
 import { Room, type Player } from './match.js';
+import { RatingsStore } from './ratings.js';
 
 /**
  * Matchmaking hub: FIFO queue for random duels + code-based private rooms.
+ * Quick-play matches are rated; private rooms are not.
  */
 export class Hub {
   private queue: Player[] = [];
   private rooms = new Map<string, Room>(); // by room id
   private waitingByCode = new Map<string, WaitingRoom>();
   private socketRoom = new Map<string, string>(); // socket id -> room id
+  readonly ratings = new RatingsStore();
 
   enqueue(player: Player): void {
     this.leaveEverything(player.socket.id);
@@ -72,8 +75,18 @@ export class Hub {
     return roomId ? this.rooms.get(roomId) : undefined;
   }
 
+  rankingsFor(playerId: string): { top: ReturnType<RatingsStore['top']>; you: ReturnType<RatingsStore['entry']> | null } {
+    const rec = this.ratings.peek(playerId);
+    return {
+      top: this.ratings.top(10),
+      you: rec && rec.games > 0 ? this.ratings.entry(rec) : null,
+    };
+  }
+
   private startRoom(a: Player, b: Player): void {
-    const room = new Room(a, b);
+    const recordA = this.ratings.for(a.playerId, a.name);
+    const recordB = this.ratings.for(b.playerId, b.name);
+    const room = new Room(a, b, { rated: true, recordA, recordB });
     this.rooms.set(room.id, room);
     this.socketRoom.set(a.socket.id, room.id);
     this.socketRoom.set(b.socket.id, room.id);

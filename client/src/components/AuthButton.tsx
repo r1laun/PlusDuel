@@ -5,9 +5,10 @@ import { playClick } from '../sound/click';
 
 interface Props {
   session: Session | null;
+  compact?: boolean;
 }
 
-export default function AuthButton({ session }: Props) {
+export default function AuthButton({ session, compact }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   // Clear the error on the next successful session change.
@@ -61,8 +62,12 @@ export default function AuthButton({ session }: Props) {
 
   return (
     <>
-      <button className="pd-btn pd-btn--outline" onClick={signIn} disabled={busy}>
-        {busy ? 'Opening Google…' : 'Sign in with Google'}
+      <button
+        className={`pd-btn pd-btn--outline${compact ? ' pd-btn--sm' : ''}`}
+        onClick={signIn}
+        disabled={busy}
+      >
+        {busy ? 'Opening Google…' : compact ? 'Sign in' : 'Sign in with Google'}
       </button>
       {error && <div className="pd-status">{error}</div>}
     </>

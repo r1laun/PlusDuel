@@ -42,6 +42,9 @@ export default function HomeScreen({
 
   return (
     <div className="pd-frame">
+      <div className="pd-header">
+        <AuthButton session={session} compact />
+      </div>
       <div className="pd-logo">
         <span className="pd-logo__plus">Plus</span>
         <span className="pd-logo__dual">Duel</span>
@@ -106,7 +109,6 @@ export default function HomeScreen({
                 Practice solo
               </button>
             </div>
-            <AuthButton session={session} />
           </div>
 
           <hr className="pd-divider" />

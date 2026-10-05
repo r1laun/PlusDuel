@@ -42,6 +42,13 @@
   margin: 0 auto;
 }
 
+/* ---------- Header (auth button top-right) ---------- */
+.pd-header {
+  display: flex;
+  justify-content: flex-end;
+}
+.pd-header .pd-btn { width: auto; }
+
 /* ---------- Panel (карточка) ---------- */
 .pd-panel {
   border: var(--pd-border-w) dotted var(--pd-black);

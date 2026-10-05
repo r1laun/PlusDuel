@@ -98,9 +98,14 @@ export default function HomeScreen({
               />
             </div>
 
-            <button className="pd-btn pd-btn--primary" onClick={tap(onQuickPlay)}>
-              Quick play
-            </button>
+            <div className="pd-row">
+              <button className="pd-btn pd-btn--primary" onClick={tap(onQuickPlay)}>
+                Quick play
+              </button>
+              <button className="pd-btn pd-btn--outline" onClick={tap(onSolo)}>
+                Practice solo
+              </button>
+            </div>
             <AuthButton session={session} />
           </div>
 
@@ -132,14 +137,6 @@ export default function HomeScreen({
                 Join
               </button>
             </div>
-          </div>
-
-          <hr className="pd-divider" />
-
-          <div className="pd-panel">
-            <button className="pd-btn pd-btn--outline" onClick={tap(onSolo)}>
-              Practice solo
-            </button>
           </div>
 
           <hr className="pd-divider" />

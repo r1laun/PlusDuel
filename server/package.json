@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@plusduel/shared": "*",
+    "@supabase/supabase-js": "^2.117.2",
     "socket.io": "^4.8.0"
   },
   "devDependencies": {

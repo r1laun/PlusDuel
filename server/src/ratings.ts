@@ -40,6 +40,10 @@ export class RatingsStore {
     return this.records.get(playerId.trim().slice(0, 64));
   }
 
+  drop(playerId: string): void {
+    this.records.delete(playerId.trim().slice(0, 64));
+  }
+
   /**
    * Apply a rated result. scoreA is from A's perspective (1 / 0.5 / 0).
    * Returns per-player {before, after}.
@@ -73,8 +77,7 @@ function toEntry(r: RatingRecord): LeaderboardEntry {
   };
 }
 
-/** Standalone result application (used by Room without touching the store). */
-export function applyRatedResult(
+/** Standalone result application (used by Room without touching the store). */export function applyRatedResult(
   a: RatingRecord,
   b: RatingRecord,
   scoreA: MatchScore,
@@ -98,4 +101,29 @@ export function applyRatedResult(
     b.draws += 1;
   }
   return { a: { before: beforeA, after: afterA }, b: { before: beforeB, after: afterB } };
+}
+
+/**
+ * Merge a guest record into an account record on first sign-in (pure).
+ * New account adopts the guest stats; existing account keeps the better
+ * rating and sums the game counters. Name always follows the latest nickname.
+ */
+export function mergeRecords(
+  acct: RatingRecord | null,
+  guest: RatingRecord | null,
+  name: string,
+): RatingRecord | null {
+  if (!guest || guest.games === 0) return acct ? { ...acct, name } : null;
+  if (!acct) {
+    return { ...guest, name };
+  }
+  return {
+    playerId: acct.playerId,
+    name,
+    rating: Math.max(acct.rating, guest.rating),
+    games: acct.games + guest.games,
+    wins: acct.wins + guest.wins,
+    losses: acct.losses + guest.losses,
+    draws: acct.draws + guest.draws,
+  };
 }

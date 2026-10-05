@@ -7,6 +7,7 @@ import type {
   RoundEndPayload,
   RoundStartPayload,
 } from './types.js';
+import type { LeaderboardEntry } from './rating.js';
 
 export interface ClientToServerEvents {
   'game:queue_join': (p: { name: string; playerId?: string }) => void;
@@ -17,6 +18,10 @@ export interface ClientToServerEvents {
     ack?: (res: { joined: boolean }) => void) => void;
   'round:submit': (p: { expression: string }, ack?: (res: { received: boolean }) => void) => void;
   'rankings:get': (ack?: (res: RankingsPayload) => void) => void;
+  'account:link': (
+    p: { devicePlayerId: string },
+    ack?: (res: { entry: LeaderboardEntry | null }) => void,
+  ) => void;
 }
 
 export interface ServerToClientEvents {

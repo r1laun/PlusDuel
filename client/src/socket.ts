@@ -11,3 +11,8 @@ export const socket: GameSocket = io(socketUrl ?? '/', {
   autoConnect: false,
   transports: ['websocket', 'polling'],
 });
+
+/** Attach (or clear) the Supabase JWT used by the server auth middleware. */
+export function setSocketToken(token: string | null): void {
+  socket.auth = token ? { token } : {};
+}

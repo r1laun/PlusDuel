@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import type { RankingsPayload } from '@plusduel/shared';
+import type { Session } from '@supabase/supabase-js';
 import { playClick, tap } from '../sound/click';
+import AuthButton from '../components/AuthButton';
 
 interface Props {
   name: string;
@@ -11,6 +13,7 @@ interface Props {
   roomCode: string;
   serverUp: boolean;
   rankings: RankingsPayload | null;
+  session: Session | null;
   onQuickPlay: () => void;
   onCreatePrivate: () => void;
   onJoinPrivate: (code: string) => void;
@@ -27,6 +30,7 @@ export default function HomeScreen({
   roomCode,
   serverUp,
   rankings,
+  session,
   onQuickPlay,
   onCreatePrivate,
   onJoinPrivate,
@@ -97,6 +101,7 @@ export default function HomeScreen({
             <button className="pd-btn pd-btn--primary" onClick={tap(onQuickPlay)}>
               Quick play
             </button>
+            <AuthButton session={session} />
           </div>
 
           <hr className="pd-divider" />

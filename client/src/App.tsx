@@ -8,12 +8,14 @@ import type {
   RoundEndPayload,
   RoundStartPayload,
 } from '@plusduel/shared';
-import { socket } from './socket';
+import { socket, setSocketToken } from './socket';
 import HomeScreen from './screens/HomeScreen';
 import { useSoloGame } from './hooks/useSoloGame';
 import { SOLO_YOU } from './solo/engine';
 import { playClick } from './sound/click';
 import { safeGet, safeSet, getPlayerId } from './storage';
+import { accessToken, supabase } from './auth/supabase';
+import type { Session } from '@supabase/supabase-js';
 // Split the duel UI (and its validation chain) out of the initial bundle —
 // it loads on demand when a match starts, keeping first paint light.
 const PlayScreen = lazy(() => import('./screens/PlayScreen'));
@@ -36,6 +38,7 @@ export default function App() {
   // Optimistic: assume the server is up until a connect error proves otherwise.
   const [serverUp, setServerUp] = useState(true);
   const [rankings, setRankings] = useState<RankingsPayload | null>(null);
+  const [session, setSession] = useState<Session | null>(null);
   const myId = useRef<string>(socket.id ?? '');
   const solo = useSoloGame();
 
@@ -45,8 +48,46 @@ export default function App() {
     });
   }, []);
 
+  const connectSocket = useCallback(async () => {
+    setSocketToken(await accessToken());
+    if (!socket.connected) socket.connect();
+  }, []);
+
+  // Supabase session (null = guest). No-ops entirely when auth isn't configured.
   useEffect(() => {
-    socket.connect();
+    const sb = supabase();
+    if (!sb) return;
+    sb.auth.getSession().then(({ data }) => setSession(data.session));
+    const { data: sub } = sb.auth.onAuthStateChange((_event, s) => setSession(s));
+    return () => {
+      sub.subscription.unsubscribe();
+    };
+  }, []);
+
+  // Reconnect with the right identity on sign-in/out transitions only.
+  const sessionRef = useRef<Session | null>(null);
+  useEffect(() => {
+    const prev = sessionRef.current;
+    sessionRef.current = session;
+    if (session && !prev) {
+      // Signed in: reconnect authed, then migrate guest Elo once.
+      void (async () => {
+        setSocketToken(session.access_token);
+        socket.disconnect();
+        socket.connect();
+        socket.emit('account:link', { devicePlayerId: getPlayerId() }, () => refreshRankings());
+      })();
+    } else if (!session && prev) {
+      // Signed out: drop the authed connection, continue as guest.
+      setSocketToken(null);
+      socket.disconnect();
+      socket.connect();
+      refreshRankings();
+    }
+  }, [session, refreshRankings]);
+
+  useEffect(() => {
+    void connectSocket();
     refreshRankings();
 
     const onMatchStart = (p: MatchStartPayload) => {
@@ -148,7 +189,7 @@ export default function App() {
   const leaveMatch = useCallback(() => {
     socket.emit('game:queue_leave');
     socket.disconnect();
-    socket.connect();
+    void connectSocket();
     setPhase('home');
     setRound(null);
     setRoundEnd(null);
@@ -279,6 +320,7 @@ export default function App() {
         roomCode={roomCode}
         serverUp={serverUp}
         rankings={rankings}
+        session={session}
         onQuickPlay={quickPlay}
         onCreatePrivate={createPrivate}
         onJoinPrivate={joinPrivate}

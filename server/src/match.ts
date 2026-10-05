@@ -50,11 +50,19 @@ export class Room {
   private readonly rated: boolean;
   private readonly recordA: RatingRecord | null;
   private readonly recordB: RatingRecord | null;
+  private readonly onSettled: ((a: RatingRecord, b: RatingRecord) => void) | null;
 
   constructor(
     a: Player,
     b: Player,
-    opts: { code?: string; startLevel?: number; rated?: boolean; recordA?: RatingRecord; recordB?: RatingRecord } = {},
+    opts: {
+      code?: string;
+      startLevel?: number;
+      rated?: boolean;
+      recordA?: RatingRecord;
+      recordB?: RatingRecord;
+      onSettled?: (a: RatingRecord, b: RatingRecord) => void;
+    } = {},
   ) {
     this.id = `room-${++roomSeq}`;
     this.code = opts.code ?? Math.random().toString(36).slice(2, 6).toUpperCase();
@@ -63,6 +71,7 @@ export class Room {
     this.rated = opts.rated ?? false;
     this.recordA = opts.recordA ?? null;
     this.recordB = opts.recordB ?? null;
+    this.onSettled = opts.onSettled ?? null;
   }
 
   sideOf(socketId: string): 0 | 1 | null {
@@ -235,6 +244,12 @@ export class Room {
   private settleRating(scoreA: MatchScore | null): Record<string, RatingChange> | null {
     if (!this.rated || !this.recordA || !this.recordB || scoreA === null) return null;
     const res = applyRatedResult(this.recordA, this.recordB, scoreA);
+    // Persist async (DB write); never blocks or breaks the match flow.
+    try {
+      this.onSettled?.(this.recordA, this.recordB);
+    } catch {
+      /* persistence is best-effort */
+    }
     return {
       [this.players[0].socket.id]: { ...res.a, title: titleFor(res.a.after) },
       [this.players[1].socket.id]: { ...res.b, title: titleFor(res.b.after) },

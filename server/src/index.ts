@@ -6,6 +6,7 @@ import { Server, type Socket } from 'socket.io';
 import type { ClientToServerEvents, ServerToClientEvents } from '@plusduel/shared';
 import { Hub } from './hub.js';
 import type { Player } from './match.js';
+import { verifyToken } from './supabase.js';
 
 const PORT = Number(process.env.PORT ?? 3001);
 const ORIGINS = (process.env.CORS_ORIGIN ?? 'http://localhost:5173').split(',');
@@ -37,6 +38,21 @@ const io = new Server<ClientToServerEvents, ServerToClientEvents>(httpServer, {
 
 const hub = new Hub();
 
+// Attach the Supabase user id when a valid JWT rides the handshake.
+// No/invalid token → guest path, never rejected.
+io.use(async (socket, next) => {
+  try {
+    const token = socket.handshake.auth?.token;
+    if (typeof token === 'string' && token.length > 0) {
+      const userId = await verifyToken(token);
+      if (userId) socket.data.userId = userId;
+    }
+  } catch {
+    /* guest */
+  }
+  next();
+});
+
 io.on('connection', (socket) => {
   let name = randomName();
   let playerId = '';
@@ -45,7 +61,10 @@ io.on('connection', (socket) => {
 
   socket.on('game:queue_join', ({ name: requested, playerId: requestedId }) => {
     name = sanitizeName(requested) ?? randomName();
-    playerId = typeof requestedId === 'string' ? requestedId.trim().slice(0, 64) : '';
+    // Signed-in sockets always play under their account id — the client
+    // device id is only used for the one-time guest → account link.
+    const deviceId = typeof requestedId === 'string' ? requestedId.trim().slice(0, 64) : '';
+    playerId = typeof socket.data.userId === 'string' && socket.data.userId ? `acct:${socket.data.userId}` : deviceId;
     hub.enqueue(makePlayer());
   });
 
@@ -80,8 +99,17 @@ io.on('connection', (socket) => {
     ack?.({ received: true });
   });
 
-  socket.on('rankings:get', (ack) => {
-    ack?.(hub.rankingsFor(playerId));
+  socket.on('rankings:get', async (ack) => {
+    ack?.(await hub.rankingsFor(playerId));
+  });
+
+  socket.on('account:link', async ({ devicePlayerId }, ack) => {
+    if (typeof socket.data.userId !== 'string' || !socket.data.userId) {
+      ack?.({ entry: null });
+      return;
+    }
+    const entry = await hub.linkAccount(socket.data.userId, devicePlayerId ?? '', name);
+    ack?.({ entry });
   });
 
   socket.on('disconnect', () => {

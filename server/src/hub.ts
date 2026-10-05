@@ -1,9 +1,12 @@
+import type { LeaderboardEntry } from '@plusduel/shared';
 import { Room, type Player } from './match.js';
-import { RatingsStore } from './ratings.js';
+import { RatingsStore, mergeRecords, type RatingRecord } from './ratings.js';
+import { SupabaseRatingsDb, freshRecord, isSupabaseConfigured, type RatingsDb } from './supabase.js';
 
 /**
  * Matchmaking hub: FIFO queue for random duels + code-based private rooms.
  * Quick-play matches are rated; private rooms are not.
+ * Authed accounts (`acct:`) persist in Supabase; guests live in memory.
  */
 export class Hub {
   private queue: Player[] = [];
@@ -11,6 +14,11 @@ export class Hub {
   private waitingByCode = new Map<string, WaitingRoom>();
   private socketRoom = new Map<string, string>(); // socket id -> room id
   readonly ratings = new RatingsStore();
+  private readonly db: RatingsDb | null;
+
+  constructor(db?: RatingsDb | null) {
+    this.db = db ?? (isSupabaseConfigured() ? new SupabaseRatingsDb() : null);
+  }
 
   enqueue(player: Player): void {
     this.leaveEverything(player.socket.id);
@@ -19,7 +27,7 @@ export class Hub {
     if (this.queue.length >= 2) {
       const a = this.queue.shift()!;
       const b = this.queue.shift()!;
-      this.startRoom(a, b);
+      void this.startRatedRoom(a, b);
     }
   }
 
@@ -75,22 +83,106 @@ export class Hub {
     return roomId ? this.rooms.get(roomId) : undefined;
   }
 
-  rankingsFor(playerId: string): { top: ReturnType<RatingsStore['top']>; you: ReturnType<RatingsStore['entry']> | null } {
-    const rec = this.ratings.peek(playerId);
-    return {
-      top: this.ratings.top(10),
-      you: rec && rec.games > 0 ? this.ratings.entry(rec) : null,
-    };
+  async rankingsFor(playerId: string): Promise<{ top: LeaderboardEntry[]; you: LeaderboardEntry | null }> {
+    const [dbTop, memTop] = await Promise.all([
+      this.db ? this.db.top(10).catch(() => [] as LeaderboardEntry[]) : Promise.resolve([] as LeaderboardEntry[]),
+      Promise.resolve(this.ratings.top(10)),
+    ]);
+    const top = [...dbTop, ...memTop]
+      .sort((x, y) => y.rating - x.rating || x.games - y.games)
+      .slice(0, 10);
+    let you: LeaderboardEntry | null = null;
+    if (playerId.startsWith('acct:') && this.db) {
+      try {
+        const rec = await this.db.load(playerId);
+        if (rec && rec.games > 0) you = this.ratings.entry(rec);
+      } catch {
+        /* offline ladder */
+      }
+    } else {
+      const rec = this.ratings.peek(playerId);
+      if (rec && rec.games > 0) you = this.ratings.entry(rec);
+    }
+    return { top, you };
   }
 
-  private startRoom(a: Player, b: Player): void {
-    const recordA = this.ratings.for(a.playerId, a.name);
-    const recordB = this.ratings.for(b.playerId, b.name);
-    const room = new Room(a, b, { rated: true, recordA, recordB });
+  /**
+   * Move a guest record into the signed-in account (first sign-in).
+   * Returns the merged leaderboard entry, or null when there is nothing to move.
+   */
+  async linkAccount(userId: string, devicePlayerId: string, name: string): Promise<LeaderboardEntry | null> {
+    if (!this.db) return null;
+    const acctId = `acct:${userId}`;
+    const guestId = devicePlayerId.trim().slice(0, 64);
+    const guest = guestId && !guestId.startsWith('acct:') ? (this.ratings.peek(guestId) ?? null) : null;
+    let acct: RatingRecord | null = null;
+    try {
+      acct = await this.db.load(acctId);
+    } catch {
+      return null;
+    }
+    const merged = mergeRecords(acct, guest, name);
+    if (!merged) return null;
+    merged.playerId = acctId;
+    merged.name = name;
+    try {
+      await this.db.save(merged);
+      if (guest) this.ratings.drop(guestId);
+    } catch {
+      return null;
+    }
+    return this.ratings.entry(merged);
+  }
+
+  private async startRatedRoom(a: Player, b: Player): Promise<void> {
+    const [recordA, recordB] = await Promise.all([this.resolveRecord(a), this.resolveRecord(b)]);
+    if (!a.socket.connected || !b.socket.connected) {
+      // A side vanished while records loaded — requeue whoever is still here.
+      for (const p of [a, b]) {
+        if (p.socket.connected) this.enqueue(p);
+      }
+      return;
+    }
+    const room = new Room(a, b, {
+      rated: true,
+      recordA,
+      recordB,
+      onSettled: (ra, rb) => {
+        void this.persist(ra, rb, a, b);
+      },
+    });
     this.rooms.set(room.id, room);
     this.socketRoom.set(a.socket.id, room.id);
     this.socketRoom.set(b.socket.id, room.id);
     room.start();
+  }
+
+  private async resolveRecord(p: Player): Promise<RatingRecord> {
+    if (p.playerId.startsWith('acct:') && this.db) {
+      try {
+        const rec = await this.db.load(p.playerId);
+        if (rec) {
+          rec.name = p.name;
+          return rec;
+        }
+        return freshRecord(p.playerId, p.name);
+      } catch {
+        /* fall through to memory */
+      }
+    }
+    return this.ratings.for(p.playerId, p.name);
+  }
+
+  private async persist(ra: RatingRecord, rb: RatingRecord, a: Player, b: Player): Promise<void> {
+    if (!this.db) return;
+    try {
+      await Promise.all([
+        a.playerId.startsWith('acct:') ? this.db.save(ra) : Promise.resolve(),
+        b.playerId.startsWith('acct:') ? this.db.save(rb) : Promise.resolve(),
+      ]);
+    } catch (e) {
+      console.error('[ratings] persist failed:', e);
+    }
   }
 
   private dropRoom(room: Room): void {

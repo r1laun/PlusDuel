@@ -12,3 +12,11 @@ createRoot(document.getElementById('root')!).render(
     </LanguageProvider>
   </React.StrictMode>,
 );
+
+// App-shell caching for the Play Store (TWA) build. Dev builds skip it so
+// hot-reload never serves a stale shell. Failures are silent by design.
+if ('serviceWorker' in navigator && import.meta.env.PROD) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  });
+}

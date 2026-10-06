@@ -131,6 +131,7 @@ const MIME: Record<string, string> = {
   '.ico': 'image/x-icon',
   '.woff2': 'font/woff2',
   '.map': 'application/json',
+  '.webmanifest': 'application/manifest+json',
 };
 
 function serveStatic(req: import('node:http').IncomingMessage, res: import('node:http').ServerResponse) {

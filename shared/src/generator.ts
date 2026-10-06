@@ -1,5 +1,6 @@
 import Fraction from 'fraction.js';
 import { configForLevel } from './difficulty.js';
+import { validateExpression } from './validator/index.js';
 
 export interface GeneratedRound {
   digits: number[];
@@ -70,12 +71,15 @@ function combine(a: Item, b: Item): Item[] {
     const rsub = y.sub(x);
     if (safeLen(rsub)) out.push({ value: rsub, expr: `(${b.expr}-${a.expr})` });
 
-    // small integer powers both ways
+    // small integer powers both ways.
+    // NOTE: fraction.js stores the sign separately in `.s` while `.n` is the
+    // magnitude — so the guard must reject negative exponents explicitly,
+    // otherwise `x^(negative)` gets the value of `x^|negative|`.
     for (const [base, e, expr] of [
       [x, y, `${a.expr}^${b.expr}`],
       [y, x, `${b.expr}^${a.expr}`],
     ] as const) {
-      if (e.d === 1n && e.n >= 0n && e.n <= 6n && base.d === 1n && base.n <= 100n && base.n >= -100n) {
+      if (e.d === 1n && e.s !== -1n && e.n <= 6n && base.d === 1n && base.n <= 100n && base.n >= -100n) {
         const v = base.pow(Number(e.n));
         if (safeLen(v)) out.push({ value: v, expr: `(${expr})` });
       }
@@ -170,6 +174,17 @@ function enumerateComposedExact(digits: number[], targetMin: number, targetMax: 
 }
 
 /**
+ * Build the round payload, verifying the solution through the same validator
+ * the game uses. Returns null when the pick fails validation (caller retries).
+ */
+function makeRound(digits: number[], pick: { value: Fraction; expr: string }): GeneratedRound | null {
+  const expr = pick.expr.replace(/^\((.*)\)$/, '$1');
+  const target = Number(pick.value.s * pick.value.n);
+  if (!validateExpression(expr, digits, target).valid) return null;
+  return { digits, target, solution: expr };
+}
+
+/**
  * Generate a guaranteed-solvable round for a level:
  * sample digits, enumerate reachable exact-integer targets in range, pick one.
  * Falls back to smaller digit counts if a level's full size is unruly.
@@ -186,12 +201,8 @@ export function generateRound(level: number): GeneratedRound {
     if (candidates.length === 0) continue;
 
     const pick = candidates[Math.floor(Math.random() * candidates.length)]!;
-    const expr = pick.expr.replace(/^\((.*)\)$/, '$1');
-    return {
-      digits,
-      target: Number(pick.value.s * pick.value.n),
-      solution: expr,
-    };
+    const round = makeRound(digits, pick);
+    if (round) return round;
   }
 
   // If truncated search found nothing, retry with a smaller digit count.
@@ -204,12 +215,8 @@ export function generateRound(level: number): GeneratedRound {
       const candidates = enumerateComposedExact(digits, cfg.targetMin, cfg.targetMax);
       if (candidates.length > 0) {
         const pick = candidates[Math.floor(Math.random() * candidates.length)]!;
-        const expr = pick.expr.replace(/^\((.*)\)$/, '$1');
-        return {
-          digits,
-          target: Number(pick.value.s * pick.value.n),
-          solution: expr,
-        };
+        const round = makeRound(digits, pick);
+        if (round) return round;
       }
     }
   }

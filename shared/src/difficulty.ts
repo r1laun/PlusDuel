@@ -8,12 +8,12 @@ export interface LevelConfig {
 }
 
 export const LEVELS: LevelConfig[] = [
-  { level: 1, minDigits: 3, maxDigits: 4, targetMin: 1, targetMax: 100, timeLimitSec: 60 },
-  { level: 2, minDigits: 4, maxDigits: 5, targetMin: 1, targetMax: 200, timeLimitSec: 75 },
-  { level: 3, minDigits: 5, maxDigits: 5, targetMin: 1, targetMax: 400, timeLimitSec: 90 },
-  { level: 4, minDigits: 5, maxDigits: 5, targetMin: 10, targetMax: 800, timeLimitSec: 90 },
-  { level: 5, minDigits: 5, maxDigits: 5, targetMin: 20, targetMax: 999, timeLimitSec: 75 },
-  { level: 6, minDigits: 5, maxDigits: 5, targetMin: 50, targetMax: 999, timeLimitSec: 60 },
+  { level: 1, minDigits: 2, maxDigits: 3, targetMin: 1, targetMax: 30, timeLimitSec: 90 },
+  { level: 2, minDigits: 3, maxDigits: 3, targetMin: 1, targetMax: 60, timeLimitSec: 90 },
+  { level: 3, minDigits: 3, maxDigits: 4, targetMin: 1, targetMax: 100, timeLimitSec: 75 },
+  { level: 4, minDigits: 4, maxDigits: 4, targetMin: 1, targetMax: 150, timeLimitSec: 75 },
+  { level: 5, minDigits: 4, maxDigits: 5, targetMin: 1, targetMax: 200, timeLimitSec: 75 },
+  { level: 6, minDigits: 5, maxDigits: 5, targetMin: 1, targetMax: 300, timeLimitSec: 60 },
 ];
 
 export const MAX_LEVEL = LEVELS.length;

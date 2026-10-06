@@ -20,6 +20,8 @@ export interface Player {
   socket: Socket<ServerToClientEvents, any>;
   name: string;
   playerId: string;
+  /** Remote address at connect time — anti-farming (same network plays unrated). */
+  ip: string;
   score: number;
   roundWins: number;
 }
@@ -89,6 +91,7 @@ export class Room {
         youAre: p.socket.id,
         bestOf: BEST_OF,
         roundsToWin: ROUNDS_TO_WIN,
+        rated: this.rated,
       });
     });
     this.beginRound();

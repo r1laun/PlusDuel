@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { Session } from '@supabase/supabase-js';
 import { isAuthConfigured, supabase } from '../auth/supabase';
+import { useLang } from '../i18n';
 import { playClick } from '../sound/click';
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 export default function AuthButton({ session, compact }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
+  const { t } = useLang();
   // Clear the error on the next successful session change.
   useEffect(() => {
     if (session) setError('');
@@ -29,7 +31,7 @@ export default function AuthButton({ session, compact }: Props) {
       options: { redirectTo: window.location.origin },
     });
     setBusy(false);
-    if (error) setError('Sign-in failed — try again.');
+    if (error) setError(t('authFailed'));
   };
 
   const signOut = async () => {
@@ -52,7 +54,7 @@ export default function AuthButton({ session, compact }: Props) {
             {String(label).slice(0, 20)}
           </span>
           <button className="pd-btn pd-btn--outline pd-btn--sm" onClick={signOut} disabled={busy}>
-            Sign out
+            {t('signOut')}
           </button>
         </div>
         {error && <div className="pd-status">{error}</div>}
@@ -67,7 +69,7 @@ export default function AuthButton({ session, compact }: Props) {
         onClick={signIn}
         disabled={busy}
       >
-        {busy ? 'Opening Google…' : compact ? 'Sign in' : 'Sign in with Google'}
+        {busy ? t('signingIn') : compact ? t('signIn') : t('signInGoogle')}
       </button>
       {error && <div className="pd-status">{error}</div>}
     </>

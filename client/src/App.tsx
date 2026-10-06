@@ -15,6 +15,7 @@ import { SOLO_YOU } from './solo/engine';
 import { playClick } from './sound/click';
 import { safeGet, safeSet, getPlayerId } from './storage';
 import { accessToken, supabase } from './auth/supabase';
+import { useLang } from './i18n';
 import type { Session } from '@supabase/supabase-js';
 // Split the duel UI (and its validation chain) out of the initial bundle —
 // it loads on demand when a match starts, keeping first paint light.
@@ -41,6 +42,10 @@ export default function App() {
   const [session, setSession] = useState<Session | null>(null);
   const myId = useRef<string>(socket.id ?? '');
   const solo = useSoloGame();
+  const { t } = useLang();
+  // Handlers registered once (socket effect) always use the current language.
+  const tRef = useRef(t);
+  tRef.current = t;
 
   const refreshRankings = useCallback(() => {
     socket.emit('rankings:get', (res) => {
@@ -111,7 +116,7 @@ export default function App() {
     };
     const onError = (p: ErrorPayload) => setError(p.message);
     const onQueued = (p: { position: number }) => setQueuePos(p.position);
-    const onOpponentLeft = () => setError('Opponent left the match.');
+    const onOpponentLeft = () => setError(tRef.current('opponentLeft'));
     const onConnect = () => setServerUp(true);
     const onConnectError = () => setServerUp(false);
     const onDisconnect = () => setServerUp(false);
@@ -175,7 +180,7 @@ export default function App() {
       socket.emit('game:join_private', { name, code }, (res) => {
         if (!res?.joined) {
           setPhase('home');
-          setError(`Could not join room "${code}".`);
+          setError(tRef.current('joinFail', { code }));
         }
       });
     },
@@ -223,7 +228,7 @@ export default function App() {
       <Suspense
         fallback={
           <div className="pd-frame">
-            <p className="pd-status">Loading practice…</p>
+            <p className="pd-status">{t('loadingPractice')}</p>
           </div>
         }
       >
@@ -245,7 +250,7 @@ export default function App() {
       <Suspense
         fallback={
           <div className="pd-frame">
-            <p className="pd-status">Loading practice…</p>
+            <p className="pd-status">{t('loadingPractice')}</p>
           </div>
         }
       >
@@ -266,7 +271,7 @@ export default function App() {
   } else if (phase === 'solo') {
     content = (
       <div className="pd-frame">
-        <p className="pd-status">Generating round…</p>
+        <p className="pd-status">{t('generating')}</p>
         <button
           className="pd-btn pd-btn--outline"
           onClick={() => {
@@ -274,7 +279,7 @@ export default function App() {
             leaveSolo();
           }}
         >
-          Back
+          {t('back')}
         </button>
       </div>
     );
@@ -283,7 +288,7 @@ export default function App() {
       <Suspense
         fallback={
           <div className="pd-frame">
-            <p className="pd-status">Loading duel…</p>
+            <p className="pd-status">{t('loadingDuel')}</p>
           </div>
         }
       >

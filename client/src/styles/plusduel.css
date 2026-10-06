@@ -42,10 +42,12 @@
   margin: 0 auto;
 }
 
-/* ---------- Header (auth button top-right) ---------- */
+/* ---------- Header (lang + auth buttons top-right) ---------- */
 .pd-header {
   display: flex;
   justify-content: flex-end;
+  gap: 8px;
+  align-items: center;
 }
 .pd-header .pd-btn { width: auto; }
 
@@ -65,6 +67,8 @@
   align-items: baseline;
   font-size: 48px;
   font-weight: 400;
+  direction: ltr;
+  unicode-bidi: isolate;
 }
 .pd-logo__plus { color: var(--pd-orange); }
 .pd-logo__dual { color: var(--pd-black); }

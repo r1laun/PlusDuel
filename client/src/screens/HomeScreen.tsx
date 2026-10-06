@@ -2,6 +2,7 @@ import { useState } from 'react';
 import type { RankingsPayload } from '@plusduel/shared';
 import type { Session } from '@supabase/supabase-js';
 import { playClick, tap } from '../sound/click';
+import { useLang } from '../i18n';
 import AuthButton from '../components/AuthButton';
 
 interface Props {
@@ -39,28 +40,37 @@ export default function HomeScreen({
 }: Props) {
   const [code, setCode] = useState('');
   const [showRules, setShowRules] = useState(false);
+  const { t, titleLabel, label: langLabel, cycle: cycleLang } = useLang();
 
   return (
     <div className="pd-frame">
       <div className="pd-header">
+        <button
+          className="pd-btn pd-btn--outline pd-btn--sm"
+          onClick={cycleLang}
+          title="Language"
+          aria-label="Language"
+        >
+          {langLabel}
+        </button>
         <AuthButton session={session} compact />
       </div>
       <div className="pd-logo">
         <span className="pd-logo__plus">Plus</span>
         <span className="pd-logo__dual">Duel</span>
       </div>
-      <p className="pd-tagline">Real-time 1v1 math duels — build the target from every digit, faster than your opponent.</p>
+      <p className="pd-tagline">{t('tagline')}</p>
 
       {error && <div className="pd-status">{error}</div>}
       {!serverUp && !queued && (
-        <div className="pd-status">Multiplayer server unreachable — Practice solo works offline.</div>
+        <div className="pd-status">{t('serverDown')}</div>
       )}
 
       {queued ? (
         <div className="pd-panel">
           {queuePos === -1 ? (
             <>
-              <p className="pd-status">Room open — share your code.</p>
+              <p className="pd-status">{t('roomOpen')}</p>
               {roomCode && (
                 <button
                   className="pd-room-code"
@@ -68,19 +78,19 @@ export default function HomeScreen({
                     playClick();
                     navigator.clipboard?.writeText(roomCode).catch(() => {});
                   }}
-                  title="Click to copy"
+                  title={t('clickToCopy')}
                 >
-                  <span className="pd-room-code__label">YOUR ROOM CODE</span>
+                  <span className="pd-room-code__label">{t('yourCode')}</span>
                   <span className="pd-room-code__value">{roomCode}</span>
-                  <span className="pd-room-code__hint">tap to copy</span>
+                  <span className="pd-room-code__hint">{t('tapToCopy')}</span>
                 </button>
               )}
             </>
           ) : (
-            <p className="pd-status">Looking for an opponent…</p>
+            <p className="pd-status">{t('looking')}</p>
           )}
           <button className="pd-btn pd-btn--primary" onClick={tap(onCancelQueue)}>
-            Cancel
+            {t('cancel')}
           </button>
         </div>
       ) : (
@@ -88,14 +98,14 @@ export default function HomeScreen({
           <div className="pd-panel">
             <div className="pd-field">
               <label className="pd-label" htmlFor="pd-name">
-                Nickname
+                {t('nickname')}
               </label>
               <input
                 id="pd-name"
                 className="pd-input"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="Anonymous"
+                placeholder={t('anonymous')}
                 maxLength={20}
                 autoComplete="off"
               />
@@ -103,10 +113,10 @@ export default function HomeScreen({
 
             <div className="pd-row">
               <button className="pd-btn pd-btn--primary" onClick={tap(onQuickPlay)}>
-                Quick play
+                {t('quickPlay')}
               </button>
               <button className="pd-btn pd-btn--outline" onClick={tap(onSolo)}>
-                Practice solo
+                {t('practiceSolo')}
               </button>
             </div>
           </div>
@@ -115,7 +125,7 @@ export default function HomeScreen({
 
           <div className="pd-panel">
             <button className="pd-btn pd-btn--outline" onClick={tap(onCreatePrivate)}>
-              Create a private room
+              {t('createPrivate')}
             </button>
 
             <div className="pd-field">
@@ -123,10 +133,10 @@ export default function HomeScreen({
                 className="pd-input"
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase())}
-                placeholder="Code"
+                placeholder={t('codePh')}
                 maxLength={6}
                 autoComplete="off"
-                aria-label="Room code"
+                aria-label={t('codePh')}
               />
               <button
                 className="pd-btn pd-btn--outline pd-btn--sm"
@@ -136,7 +146,7 @@ export default function HomeScreen({
                   onJoinPrivate(code);
                 }}
               >
-                Join
+                {t('join')}
               </button>
             </div>
           </div>
@@ -144,10 +154,10 @@ export default function HomeScreen({
           <hr className="pd-divider" />
 
           <div className="pd-panel">
-            <p className="pd-status">Leaderboard — Quick play</p>
+            <p className="pd-status">{t('leaderboard')}</p>
             {rankings?.you && (
               <p className="pd-status pd-status--you">
-                You: {rankings.you.rating} · {rankings.you.title}
+                {t('youLine', { rating: rankings.you.rating, title: titleLabel(rankings.you.title) })}
               </p>
             )}
             {rankings && rankings.top.length > 0 ? (
@@ -161,12 +171,12 @@ export default function HomeScreen({
                   </span>
                   <div className="pd-scoreboard__bar" />
                   <span className="pd-scoreboard__score">
-                    {e.rating} · {e.title}
+                    {e.rating} · {titleLabel(e.title)}
                   </span>
                 </div>
               ))
             ) : (
-              <p className="pd-status">No ranked matches yet — play Quick play!</p>
+              <p className="pd-status">{t('noRanked')}</p>
             )}
           </div>
 
@@ -179,16 +189,16 @@ export default function HomeScreen({
               setShowRules((s) => !s);
             }}
           >
-            {showRules ? 'Hide rules' : 'Rules'}
+            {showRules ? t('hideRules') : t('rules')}
           </button>
 
           {showRules && (
             <div className="pd-panel">
-              <p className="pd-status">Build the target using every digit exactly once.</p>
-              <p className="pd-status">First correct answer wins the round.</p>
-              <p className="pd-status">Timeout wins nobody — a sample solution is shown.</p>
-              <p className="pd-status">Best of 5 — first to 3 round wins; tied after 5 → draw.</p>
-              <p className="pd-status">Operators + − × ÷ ( ) ^ √ !, concatenation allowed.</p>
+              <p className="pd-status">{t('rule1')}</p>
+              <p className="pd-status">{t('rule2')}</p>
+              <p className="pd-status">{t('rule3')}</p>
+              <p className="pd-status">{t('rule4')}</p>
+              <p className="pd-status">{t('rule5')}</p>
             </div>
           )}
         </>

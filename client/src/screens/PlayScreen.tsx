@@ -7,6 +7,7 @@ import type {
 import ExpressionInput from '../components/ExpressionInput';
 import TimerBar from '../components/TimerBar';
 import { useLocalValidation } from '../hooks/useLocalValidation';
+import { useLang } from '../i18n';
 import { playClick, playRoundLose, playRoundWin } from '../sound/click';
 
 interface Props {
@@ -35,6 +36,7 @@ export default function PlayScreen({
   soloStats,
 }: Props) {
   const [expr, setExpr] = useState('');
+  const { t } = useLang();
   const isTouch = useMemo(
     () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches,
     [],
@@ -72,7 +74,7 @@ export default function PlayScreen({
           className="pd-badge"
           role="button"
           tabIndex={0}
-          title="Leave match"
+          title={t('leaveTitle')}
           onClick={leave}
           onKeyDown={(e) => {
             if (e.key === 'Enter' || e.key === ' ') leave();
@@ -89,6 +91,8 @@ export default function PlayScreen({
       </div>
 
       <div className="pd-display">{round.target}</div>
+
+      {matchInfo.rated === false && <div className="pd-status">{t('unrated')}</div>}
 
       {error && <div className="pd-status">{error}</div>}
 
@@ -107,7 +111,7 @@ export default function PlayScreen({
         <div className="pd-panel">
           {roundEnd!.winnerId === null ? (
             <>
-              <div className="pd-status">Timeout</div>
+              <div className="pd-status">{t('timeout')}</div>
               {roundEnd!.sampleSolution && (
                 <div className="pd-info-box pd-info-box--accent">
                   {pretty(roundEnd!.sampleSolution)} = {round.target}
@@ -117,17 +121,17 @@ export default function PlayScreen({
           ) : (
             <>
               <div className={`pd-status${iWon ? ' pd-status--accent' : ''}`}>
-                {iWon ? 'You won' : `${matchInfo.opponent.name} won`}
+                {iWon ? t('youWon') : t('oppWon', { name: matchInfo.opponent.name })}
               </div>
               <div className="pd-info-box pd-info-box--accent">
                 {pretty(roundEnd!.winningExpression ?? '')} = {round.target}
               </div>
             </>
           )}
-          <div className="pd-status">Next round…</div>
+          <div className="pd-status">{t('nextRound')}</div>
           {soloStats && (
             <div className="pd-status">
-              Solved {soloStats.solved} · Missed {soloStats.failed} · {soloStats.score.toFixed(1)} pts
+              {t('soloLine', { solved: soloStats.solved, failed: soloStats.failed, score: soloStats.score.toFixed(1) })}
             </div>
           )}
         </div>

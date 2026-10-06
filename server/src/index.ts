@@ -56,8 +56,9 @@ io.use(async (socket, next) => {
 io.on('connection', (socket) => {
   let name = randomName();
   let playerId = '';
+  const ip = typeof socket.handshake.address === 'string' ? socket.handshake.address : '';
 
-  const makePlayer = (): Player => ({ socket, name, playerId, score: 0, roundWins: 0 });
+  const makePlayer = (): Player => ({ socket, name, playerId, ip, score: 0, roundWins: 0 });
 
   socket.on('game:queue_join', ({ name: requested, playerId: requestedId }) => {
     name = sanitizeName(requested) ?? randomName();

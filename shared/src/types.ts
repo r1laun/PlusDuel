@@ -39,6 +39,8 @@ export interface MatchStartPayload {
   youAre: PlayerId;
   bestOf: number;
   roundsToWin: number;
+  /** False for same-network quick-play (no Elo moves). Absent = rated/legacy. */
+  rated?: boolean;
 }
 
 export interface RatingChange {

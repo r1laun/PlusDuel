@@ -6,7 +6,9 @@ import { SupabaseRatingsDb, freshRecord, isSupabaseConfigured, type RatingsDb } 
 /**
  * Matchmaking hub: FIFO queue for random duels + code-based private rooms.
  * Quick-play matches are rated; private rooms are not.
- * Authed accounts (`acct:`) persist in Supabase; guests live in memory.
+ * All rated records persist in Supabase (guests under device ids, accounts
+ * under `acct:` ids); the in-memory store is only a fallback when the DB
+ * is unreachable or unconfigured.
  */
 export class Hub {
   private queue: Player[] = [];
@@ -22,6 +24,15 @@ export class Hub {
 
   enqueue(player: Player): void {
     this.leaveEverything(player.socket.id);
+    // Same player queuing twice (two tabs, one browser) can never be matched
+    // against themselves — reject the duplicate instead of farming Elo.
+    if (
+      player.playerId &&
+      this.queue.some((p) => p.socket.id !== player.socket.id && p.playerId === player.playerId)
+    ) {
+      player.socket.emit('game:error', { message: 'Already queued on another tab.' });
+      return;
+    }
     this.queue.push(player);
     player.socket.emit('game:queued', { position: this.queue.length });
     if (this.queue.length >= 2) {
@@ -92,14 +103,15 @@ export class Hub {
       .sort((x, y) => y.rating - x.rating || x.games - y.games)
       .slice(0, 10);
     let you: LeaderboardEntry | null = null;
-    if (playerId.startsWith('acct:') && this.db) {
+    if (this.db && playerId) {
       try {
         const rec = await this.db.load(playerId);
         if (rec && rec.games > 0) you = this.ratings.entry(rec);
       } catch {
         /* offline ladder */
       }
-    } else {
+    }
+    if (!you) {
       const rec = this.ratings.peek(playerId);
       if (rec && rec.games > 0) you = this.ratings.entry(rec);
     }
@@ -114,7 +126,16 @@ export class Hub {
     if (!this.db) return null;
     const acctId = `acct:${userId}`;
     const guestId = devicePlayerId.trim().slice(0, 64);
-    const guest = guestId && !guestId.startsWith('acct:') ? (this.ratings.peek(guestId) ?? null) : null;
+    // Guest record may live in the DB (persisted matches) or in memory (fallback).
+    let guest: RatingRecord | null = null;
+    if (guestId && !guestId.startsWith('acct:')) {
+      try {
+        guest = await this.db.load(guestId);
+      } catch {
+        guest = null;
+      }
+      guest ??= this.ratings.peek(guestId) ?? null;
+    }
     let acct: RatingRecord | null = null;
     try {
       acct = await this.db.load(acctId);
@@ -127,6 +148,8 @@ export class Hub {
     merged.name = name;
     try {
       await this.db.save(merged);
+      // Remove the guest row everywhere so it can't double-count in the ladder.
+      if (guestId) await this.db.remove(guestId).catch(() => {});
       if (guest) this.ratings.drop(guestId);
     } catch {
       return null;
@@ -135,7 +158,11 @@ export class Hub {
   }
 
   private async startRatedRoom(a: Player, b: Player): Promise<void> {
-    const [recordA, recordB] = await Promise.all([this.resolveRecord(a), this.resolveRecord(b)]);
+    // Same network (one person, two devices) plays for fun — no Elo moves.
+    const sameNet = !!a.ip && a.ip === b.ip;
+    const [recordA, recordB] = sameNet
+      ? [null, null]
+      : await Promise.all([this.resolveRecord(a), this.resolveRecord(b)]);
     if (!a.socket.connected || !b.socket.connected) {
       // A side vanished while records loaded — requeue whoever is still here.
       for (const p of [a, b]) {
@@ -144,9 +171,8 @@ export class Hub {
       return;
     }
     const room = new Room(a, b, {
-      rated: true,
-      recordA,
-      recordB,
+      rated: !sameNet,
+      ...(recordA && recordB ? { recordA, recordB } : {}),
       onSettled: (ra, rb) => {
         void this.persist(ra, rb, a, b);
       },
@@ -158,7 +184,7 @@ export class Hub {
   }
 
   private async resolveRecord(p: Player): Promise<RatingRecord> {
-    if (p.playerId.startsWith('acct:') && this.db) {
+    if (p.playerId && this.db) {
       try {
         const rec = await this.db.load(p.playerId);
         if (rec) {
@@ -177,8 +203,8 @@ export class Hub {
     if (!this.db) return;
     try {
       await Promise.all([
-        a.playerId.startsWith('acct:') ? this.db.save(ra) : Promise.resolve(),
-        b.playerId.startsWith('acct:') ? this.db.save(rb) : Promise.resolve(),
+        a.playerId ? this.db.save(ra) : Promise.resolve(),
+        b.playerId ? this.db.save(rb) : Promise.resolve(),
       ]);
     } catch (e) {
       console.error('[ratings] persist failed:', e);

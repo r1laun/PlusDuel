@@ -1,5 +1,6 @@
 import { useMemo } from 'react';
 import type { DragEvent } from 'react';
+import { useLang } from '../i18n';
 import { playDelete, playKey, playSubmit } from '../sound/click';
 
 interface ValidationState {
@@ -52,6 +53,7 @@ export default function ExpressionInput({
   onSubmit,
 }: Props) {
   const tokens = useMemo(() => tokenize(expr), [expr]);
+  const { t } = useLang();
 
   const append = (text: string) => {
     playKey();
@@ -90,12 +92,12 @@ export default function ExpressionInput({
           onKeyDown={(e) => {
             if (e.key === 'Enter' && validation.valid && !disabled) submit();
           }}
-          placeholder="e.g. 5×(3+2)"
+          placeholder={t('exprPh')}
           disabled={disabled}
           autoFocus
           spellCheck={false}
           autoComplete="off"
-          aria-label="Expression"
+          aria-label={t('exprPh')}
         />
       )}
       <div
@@ -104,7 +106,7 @@ export default function ExpressionInput({
         onDrop={handleDrop}
       >
         {tokens.length === 0 ? (
-          <span>{isTouch ? 'Tap tiles to build your answer' : 'Use each digit once'}</span>
+          <span>{isTouch ? t('hintTouch') : t('hintDesktop')}</span>
         ) : (
           tokens.map((t, i) => <span key={i}>{pretty(t.text)}</span>)
         )}
@@ -168,14 +170,14 @@ export default function ExpressionInput({
           ⌫
         </button>
         <button className={keyClass} onClick={clear} disabled={disabled || !expr}>
-          Clear
+          {t('clear')}
         </button>
         <button
           className={`pd-key pd-key--confirm${disabled || !validation.valid ? ' pd-key--disabled' : ''}`}
           onClick={submit}
           disabled={disabled || !validation.valid}
         >
-          Submit
+          {t('submit')}
         </button>
       </div>
     </>

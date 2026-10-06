@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { MatchEndPayload, MatchStartPayload } from '@plusduel/shared';
+import { useLang } from '../i18n';
 import { tap, playMatchDraw, playMatchLose, playMatchWin } from '../sound/click';
 
 interface Props {
@@ -11,6 +12,7 @@ interface Props {
 
 export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) {
   const [countdown, setCountdown] = useState(10);
+  const { t, titleLabel } = useLang();
   const draw = matchEnd.winnerId === null && matchEnd.reason !== 'forfeit';
   const won = !draw && matchEnd.winnerId === myId;
 
@@ -38,24 +40,24 @@ export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) 
 
   return (
     <div className="pd-frame">
-      <h1 className="pd-title--victory">{draw ? 'Draw' : won ? 'Victory' : 'Defeat'}</h1>
+      <h1 className="pd-title--victory">{draw ? t('draw') : won ? t('victory') : t('defeat')}</h1>
       <div className="pd-status">
         {matchEnd.reason === 'forfeit'
-          ? 'Match ended by forfeit.'
+          ? t('forfeitMsg')
           : draw
-            ? 'Nobody reached 3 wins in 5 rounds — draw.'
+            ? t('drawMsg')
             : won
-              ? 'You won the match.'
-              : `${opponentName} won the match.`}
+              ? t('wonMsg')
+              : t('oppWonMsg', { name: opponentName })}
       </div>
       <div className="pd-panel">
         {rating && delta !== null && (
           <div className="pd-info-box pd-info-box--accent">
-            Elo {rating.after} ({delta >= 0 ? `+${delta}` : delta}) · {rating.title}
+            Elo {rating.after} ({delta >= 0 ? `+${delta}` : delta}) · {titleLabel(rating.title)}
           </div>
         )}
         <div className="pd-scoreboard__row">
-          <span>You</span>
+          <span>{t('you')}</span>
           <div className="pd-scoreboard__bar" />
           <span className="pd-scoreboard__score">{myScore.toFixed(1)}</span>
         </div>
@@ -66,7 +68,7 @@ export default function EndScreen({ myId, matchEnd, matchInfo, onHome }: Props) 
         </div>
       </div>
       <button className="pd-btn pd-btn--primary" onClick={tap(onHome)}>
-        Back to lobby{countdown > 0 ? ` (${countdown})` : ''}
+        {t('backLobby')}{countdown > 0 ? ` (${countdown})` : ''}
       </button>
     </div>
   );

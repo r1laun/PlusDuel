@@ -64,6 +64,7 @@ const ar = {
   'signIn': 'دخول',
   'signInGoogle': 'الدخول عبر Google',
   'signOut': 'خروج',
+  'themeToggle': 'السمة',
   'title.Novice': 'مبتدئ',
   'title.Club': 'نادي',
   'title.Gold': 'ذهبي',

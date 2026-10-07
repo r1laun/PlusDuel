@@ -64,6 +64,7 @@ const zh = {
   'signIn': '登录',
   'signInGoogle': '使用 Google 登录',
   'signOut': '退出',
+  'themeToggle': '主题',
   'title.Novice': '新手',
   'title.Club': '业余',
   'title.Gold': '黄金',

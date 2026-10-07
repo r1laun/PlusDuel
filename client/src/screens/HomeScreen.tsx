@@ -4,6 +4,7 @@ import type { Session } from '@supabase/supabase-js';
 import { playClick, tap } from '../sound/click';
 import { useLang } from '../i18n';
 import AuthButton from '../components/AuthButton';
+import ThemeButton from '../components/ThemeButton';
 
 interface Props {
   name: string;
@@ -45,14 +46,17 @@ export default function HomeScreen({
   return (
     <div className="pd-frame">
       <div className="pd-header">
-        <button
-          className="pd-btn pd-btn--outline pd-btn--sm"
-          onClick={cycleLang}
-          title="Language"
-          aria-label="Language"
-        >
-          {langLabel}
-        </button>
+        <div className="pd-header__group">
+          <button
+            className="pd-btn pd-btn--outline pd-btn--sm"
+            onClick={cycleLang}
+            title="Language"
+            aria-label="Language"
+          >
+            {langLabel}
+          </button>
+          <ThemeButton />
+        </div>
         <AuthButton session={session} compact />
       </div>
       <div className="pd-logo">

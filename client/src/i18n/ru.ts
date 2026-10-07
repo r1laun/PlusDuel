@@ -64,6 +64,7 @@ const ru = {
   'signIn': 'Войти',
   'signInGoogle': 'Войти через Google',
   'signOut': 'Выйти',
+  'themeToggle': 'Тема',
   'title.Novice': 'Новичок',
   'title.Club': 'Боец',
   'title.Gold': 'Золото',

@@ -64,6 +64,7 @@ const es = {
   'signIn': 'Entrar',
   'signInGoogle': 'Entrar con Google',
   'signOut': 'Salir',
+  'themeToggle': 'Tema',
   'title.Novice': 'Novato',
   'title.Club': 'Club',
   'title.Gold': 'Oro',

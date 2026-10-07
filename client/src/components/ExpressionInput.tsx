@@ -133,7 +133,7 @@ export default function ExpressionInput({
           return (
             <button
               key={`${i}-${d}`}
-              className={disabled ? 'pd-key pd-key--active pd-key--disabled' : 'pd-key pd-key--active'}
+              className={disabled ? 'pd-key pd-key--disabled' : 'pd-key'}
               disabled={disabled}
               draggable={!disabled}
               onDragStart={(e) => e.dataTransfer.setData('text/plain', String(d))}

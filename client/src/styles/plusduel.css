@@ -1,49 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
 /* =========================================================
    PlusDuel - Design System CSS
-   Стиль: dot-matrix / LED, пунктирные обводки, ч/б + акцент
+   Стиль по мокапу: JetBrains Mono, тёплая бумага, сплошные
+   карточки 1.5px, пунктирные кнопки, залитые плитки цифр.
+   Светлая тема + тёмная через data-theme (дефолт - системная).
    ========================================================= */
 
-@font-face {
-  font-family: 'CityLight Dots';
-  src: url('./fonts/CityLightDots.woff2') format('woff2'),
-       url('./fonts/CityLightDots.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 :root {
-  --pd-black: #000000;
-  --pd-white: #FFFFFF;
-  --pd-orange: #FF5C00;
-  --pd-border-w: 2px;
+  --pd-bg: #faf9f6;
+  --pd-surface: #ffffff;
+  --pd-ink: #141414;
+  --pd-muted: #5d5d58;
+  --pd-line: #d9d6cf;
+  --pd-orange: #ff5c00;
+  --pd-tint: #fff0e6;
+  --pd-on-ink: #ffffff;
+  --pd-border-w: 1.5px;
   --pd-radius-lg: 32px;   /* внешний фрейм, крупные панели */
   --pd-radius-md: 20px;   /* карточки, клавиши крупные */
   --pd-radius-pill: 999px; /* инпуты, кнопки, дисплеи */
-  --pd-font: 'CityLight Dots', ui-monospace, 'Courier New', monospace;
+  --pd-radius-sm: 12px;   /* плитки, мелкие клавиши */
+  --pd-font: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --pd-gap: 12px;
+}
+
+:root[data-theme='dark'] {
+  --pd-bg: #121211;
+  --pd-surface: #1b1b19;
+  --pd-ink: #f3f1ec;
+  --pd-muted: #a3a19a;
+  --pd-line: #34332f;
+  --pd-orange: #ff7a2e;
+  --pd-tint: #2c1b10;
+  --pd-on-ink: #121211;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --pd-bg: #121211;
+    --pd-surface: #1b1b19;
+    --pd-ink: #f3f1ec;
+    --pd-muted: #a3a19a;
+    --pd-line: #34332f;
+    --pd-orange: #ff7a2e;
+    --pd-tint: #2c1b10;
+    --pd-on-ink: #121211;
+  }
 }
 
 * { box-sizing: border-box; }
 
 .pd-app {
   font-family: var(--pd-font);
-  color: var(--pd-black);
-  background: var(--pd-white);
-  letter-spacing: 0.02em;
+  color: var(--pd-ink);
+  background: var(--pd-bg);
+  letter-spacing: 0;
+  min-height: 100vh;
 }
+
+button { cursor: pointer; }
+button, input { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--pd-orange); outline-offset: 2px; }
 
 /* ---------- Frame / Screen wrapper ---------- */
 .pd-frame {
-  border: var(--pd-border-w) dotted var(--pd-black);
-  border-radius: var(--pd-radius-lg);
   padding: 24px;
   max-width: 680px;
   margin: 0 auto;
 }
 
-/* ---------- Header (lang left, auth right - pinned LTR so the lang
-   button stays top-left even in RTL locales) ---------- */
+/* ---------- Header (lang + theme left, auth right - pinned LTR so the
+   buttons stay put even in RTL locales) ---------- */
 .pd-header {
   display: flex;
   justify-content: space-between;
@@ -51,13 +79,18 @@
   align-items: center;
   direction: ltr;
 }
+.pd-header__group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
 .pd-header .pd-btn { width: auto; }
 
 /* ---------- Panel (карточка) ---------- */
 .pd-panel {
-  border: var(--pd-border-w) dotted var(--pd-black);
+  border: var(--pd-border-w) solid var(--pd-line);
   border-radius: var(--pd-radius-md);
-  background: var(--pd-white);
+  background: var(--pd-surface);
   padding: 32px 28px;
 }
 .pd-panel + .pd-panel { margin-top: var(--pd-gap); }
@@ -68,31 +101,32 @@
   justify-content: center;
   align-items: baseline;
   font-size: 48px;
-  font-weight: 400;
+  font-weight: 700;
+  letter-spacing: -0.03em;
   direction: ltr;
   unicode-bidi: isolate;
 }
 .pd-logo__plus { color: var(--pd-orange); }
-.pd-logo__dual { color: var(--pd-black); }
+.pd-logo__dual { color: var(--pd-ink); }
 .pd-tagline {
   text-align: center;
-  font-size: 15px;
-  font-style: italic;
-  color: var(--pd-black);
-  opacity: 0.75;
-  margin: 4px 0 16px;
+  font-size: 14px;
+  color: var(--pd-muted);
+  margin: 8px auto 24px;
+  max-width: 34ch;
 }
 
 /* ---------- Text / status ---------- */
 .pd-title--victory {
   color: var(--pd-orange);
   font-size: 42px;
+  font-weight: 700;
   text-align: center;
 }
 .pd-status {
   text-align: center;
-  font-size: 16px;
-  color: var(--pd-black);
+  font-size: 15px;
+  color: var(--pd-ink);
 }
 .pd-status--accent {
   border: var(--pd-border-w) dotted var(--pd-orange);
@@ -107,40 +141,50 @@
 
 /* ---------- Input field ---------- */
 .pd-field { display: flex; align-items: center; gap: var(--pd-gap); }
-.pd-label { white-space: nowrap; }
+.pd-label { white-space: nowrap; color: var(--pd-muted); font-size: 15px; }
 .pd-input {
   flex: 1;
   font-family: inherit;
   font-size: 16px;
-  border: var(--pd-border-w) dotted var(--pd-black);
+  border: var(--pd-border-w) dashed var(--pd-ink);
   border-radius: var(--pd-radius-pill);
   padding: 12px 20px;
-  background: var(--pd-white);
+  min-height: 52px;
+  background: transparent;
+  color: var(--pd-ink);
   outline: none;
 }
-.pd-input::placeholder { color: rgba(0,0,0,0.4); }
+.pd-input::placeholder { color: var(--pd-muted); }
 
 /* ---------- Buttons ---------- */
 .pd-btn {
   font-family: inherit;
   font-size: 16px;
+  font-weight: 500;
   border-radius: var(--pd-radius-pill);
-  border: var(--pd-border-w) dotted var(--pd-black);
+  border: var(--pd-border-w) dashed var(--pd-ink);
   padding: 14px 24px;
+  min-height: 52px;
   width: 100%;
   cursor: pointer;
-  background: var(--pd-white);
-  color: var(--pd-black);
+  background: transparent;
+  color: var(--pd-ink);
 }
 .pd-btn--primary {
-  background: var(--pd-black);
-  color: var(--pd-white);
-  border-color: var(--pd-white); /* пунктир виден на чёрном фоне */
+  background: var(--pd-ink);
+  color: var(--pd-on-ink);
+  border: var(--pd-border-w) solid var(--pd-ink);
+  font-weight: 700;
 }
 .pd-btn--primary:hover { opacity: 0.85; }
-.pd-btn--outline { background: var(--pd-white); color: var(--pd-black); }
-.pd-btn--sm { width: auto; padding: 10px 20px; }
-.pd-btn--active { border-color: var(--pd-orange); color: var(--pd-orange); }
+.pd-btn--outline { background: transparent; color: var(--pd-ink); }
+.pd-btn--sm { width: auto; padding: 10px 20px; min-height: 0; }
+.pd-btn--active {
+  border: 2px solid var(--pd-orange);
+  background: var(--pd-tint);
+  color: var(--pd-ink);
+  font-weight: 700;
+}
 .pd-btn:disabled { opacity: 0.4; cursor: not-allowed; }
 
 /* ---------- Solo setup: level picker ---------- */
@@ -153,8 +197,8 @@
 /* ---------- Divider ---------- */
 .pd-divider {
   border: none;
-  border-top: var(--pd-border-w) dotted var(--pd-black);
-  margin: 20px 0;
+  border-top: 1px solid var(--pd-line);
+  margin: 16px 0;
 }
 
 /* ---------- Room code (private lobby) ---------- */
@@ -163,8 +207,8 @@
   width: 100%;
   font-family: inherit;
   cursor: pointer;
-  background: var(--pd-white);
-  border: var(--pd-border-w) dotted var(--pd-orange);
+  background: transparent;
+  border: var(--pd-border-w) dashed var(--pd-orange);
   border-radius: var(--pd-radius-md);
   padding: 16px 20px;
   text-align: center;
@@ -178,6 +222,7 @@
 .pd-room-code__value {
   display: block;
   font-size: 42px;
+  font-weight: 700;
   color: var(--pd-orange);
   letter-spacing: 0.18em;
   line-height: 1.2;
@@ -185,11 +230,10 @@
 .pd-room-code__hint {
   display: block;
   font-size: 12px;
-  font-style: italic;
   color: var(--pd-orange);
   opacity: 0.7;
 }
-.pd-room-code:hover { background: rgba(255, 92, 0, 0.06); }
+.pd-room-code:hover { background: var(--pd-tint); }
 
 /* ---------- Row layout ---------- */
 .pd-row { display: flex; gap: var(--pd-gap); }
@@ -198,25 +242,30 @@
 /* ---------- Top bar (badges + display) ---------- */
 .pd-topbar { display: flex; align-items: center; gap: var(--pd-gap); }
 .pd-badge {
-  border: var(--pd-border-w) dotted var(--pd-black);
+  border: var(--pd-border-w) dashed var(--pd-ink);
   border-radius: var(--pd-radius-md);
   padding: 10px 16px;
   font-size: 14px;
   text-align: center;
+  color: var(--pd-muted);
 }
 .pd-display {
   flex: 1;
-  border: var(--pd-border-w) dotted var(--pd-black);
-  border-radius: var(--pd-radius-pill);
+  border: var(--pd-border-w) solid var(--pd-ink);
+  border-radius: var(--pd-radius-md);
+  background: var(--pd-surface);
   padding: 12px 20px;
   text-align: center;
+  font-size: 28px;
+  font-weight: 700;
 }
-.pd-display--accent { color: var(--pd-orange); }
+.pd-display--accent { color: var(--pd-orange); font-size: 16px; font-weight: 500; }
 
 /* ---------- Info row (hint / timer / rules / best-of) ---------- */
 .pd-info-box {
-  border: var(--pd-border-w) dotted var(--pd-black);
-  border-radius: var(--pd-radius-md);
+  border: 1.5px solid var(--pd-ink);
+  border-radius: 14px;
+  background: var(--pd-surface);
   padding: 14px 18px;
   text-align: center;
   font-size: 14px;
@@ -224,6 +273,7 @@
 .pd-info-box--accent {
   border-color: var(--pd-orange);
   color: var(--pd-orange);
+  background: var(--pd-tint);
 }
 
 /* ---------- Keypad ---------- */
@@ -234,39 +284,59 @@
 }
 .pd-key {
   font-family: inherit;
-  font-size: 18px;
-  border: var(--pd-border-w) dotted var(--pd-black);
-  border-radius: var(--pd-radius-md);
-  background: var(--pd-white);
-  color: var(--pd-black);
-  padding: 16px 0;
+  font-size: 20px;
+  font-weight: 500;
+  border: var(--pd-border-w) dashed var(--pd-ink);
+  border-radius: var(--pd-radius-sm);
+  background: transparent;
+  color: var(--pd-ink);
+  padding: 12px 0;
+  min-height: 48px;
   cursor: pointer;
 }
 .pd-key--active {
-  border-color: var(--pd-orange);
-  color: var(--pd-orange);
+  border: 2px solid var(--pd-orange);
+  background: var(--pd-tint);
+  color: var(--pd-ink);
+  font-weight: 700;
 }
 .pd-key--disabled {
-  color: rgba(0,0,0,0.3);
-  border-color: rgba(0,0,0,0.3);
+  opacity: 0.25;
   cursor: not-allowed;
 }
-.pd-key--confirm { border-color: var(--pd-orange); }
+.pd-key--confirm {
+  background: var(--pd-ink);
+  border: var(--pd-border-w) solid var(--pd-ink);
+  color: var(--pd-on-ink);
+  font-weight: 700;
+}
 .pd-key--wide { grid-column: span 1; }
 
-/* Ряд цифр: всегда 5 слотов, независимо от кол-ва цифр в раунде (1-5) */
+/* Ряд цифр: всегда 5 слотов, независимо от кол-ва цифр в раунде (1-5).
+   Залитые тёмные плитки как в мокапе. */
 .pd-digit-row {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
 }
+.pd-digit-row .pd-key {
+  background: var(--pd-ink);
+  border: var(--pd-border-w) solid var(--pd-ink);
+  color: var(--pd-on-ink);
+  font-weight: 700;
+  font-size: 26px;
+  border-radius: var(--pd-radius-sm);
+  padding: 12px 0;
+}
 /* Пустой слот (цифр в раунде меньше 5) - неактивная заглушка "><" */
 .pd-key--empty {
-  border-color: rgba(0,0,0,0.3);
-  color: rgba(0,0,0,0.3);
+  background: transparent !important;
+  border-style: dashed !important;
+  border-color: var(--pd-line) !important;
+  color: var(--pd-muted) !important;
   cursor: default;
   pointer-events: none;
-  background: var(--pd-white);
+  font-weight: 400 !important;
 }
 .pd-key--empty::before { content: '><'; }
 
@@ -281,7 +351,7 @@
 }
 .pd-scoreboard__bar {
   flex: 1;
-  border-top: var(--pd-border-w) dashed var(--pd-black);
+  border-top: 1.5px dashed var(--pd-line);
   margin: 0 8px;
 }
 .pd-scoreboard__score { min-width: 40px; text-align: right; }

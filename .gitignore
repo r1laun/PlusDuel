@@ -1,6 +1,9 @@
 node_modules/
 dist/
 plusduel-itch.zip
+# Play Store signing secrets - NEVER commit (lose = can't update the app)
+PlusDuel - Google Play package/
+*.keystore
 *.log
 .DS_Store
 .env

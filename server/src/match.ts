@@ -20,8 +20,6 @@ export interface Player {
   socket: Socket<ServerToClientEvents, any>;
   name: string;
   playerId: string;
-  /** Remote address at connect time — anti-farming (same network plays unrated). */
-  ip: string;
   score: number;
   roundWins: number;
 }
@@ -102,7 +100,7 @@ export class Room {
     const side = this.sideOf(socketId);
     if (side === null) return;
 
-    // Server is source of truth — re-validate regardless of client claims.
+    // Server is source of truth - re-validate regardless of client claims.
     const result = validateExpression(expression, this.roundData.digits, this.roundData.target);
     if (!result.valid) {
       this.players[side].socket.emit('game:error', {
@@ -215,7 +213,7 @@ export class Room {
     this.nextRoundTimer = setTimeout(() => this.beginRound(), BETWEEN_ROUNDS_MS);
   }
 
-  /** Match ends at 3 round wins — or after 5 rounds (draw if tied). */
+  /** Match ends at 3 round wins - or after 5 rounds (draw if tied). */
   private matchOver(): boolean {
     return (
       this.players[0].roundWins >= ROUNDS_TO_WIN ||

@@ -63,5 +63,5 @@ if (!a.winner || a.winner !== b.winner) {
   console.error('SMOKE FAILED: inconsistent winners', a, b);
   process.exit(1);
 }
-console.log(`\nSMOKE OK — played ${a.rounds} rounds, consistent winner declared.`);
+console.log(`\nSMOKE OK - played ${a.rounds} rounds, consistent winner declared.`);
 process.exit(0);

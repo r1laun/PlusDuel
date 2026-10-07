@@ -17,7 +17,7 @@ import { safeGet, safeSet, getPlayerId } from './storage';
 import { accessToken, supabase } from './auth/supabase';
 import { useLang } from './i18n';
 import type { Session } from '@supabase/supabase-js';
-// Split the duel UI (and its validation chain) out of the initial bundle —
+// Split the duel UI (and its validation chain) out of the initial bundle -
 // it loads on demand when a match starts, keeping first paint light.
 const PlayScreen = lazy(() => import('./screens/PlayScreen'));
 const SoloSetupScreen = lazy(() => import('./screens/SoloSetupScreen'));
@@ -173,7 +173,7 @@ export default function App() {
       setError('');
       setRoomCode('');
       // Optimistic: show the waiting screen immediately. Do NOT set the phase
-      // from the ack — the server sends match:start after join_private, and
+      // from the ack - the server sends match:start after join_private, and
       // the ack arrives AFTER it, so re-setting 'queued' here would strand
       // the guest on the waiting screen while the host is already playing.
       setPhase('queued');

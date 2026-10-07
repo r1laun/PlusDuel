@@ -73,7 +73,7 @@ function combine(a: Item, b: Item): Item[] {
 
     // small integer powers both ways.
     // NOTE: fraction.js stores the sign separately in `.s` while `.n` is the
-    // magnitude — so the guard must reject negative exponents explicitly,
+    // magnitude - so the guard must reject negative exponents explicitly,
     // otherwise `x^(negative)` gets the value of `x^|negative|`.
     for (const [base, e, expr] of [
       [x, y, `${a.expr}^${b.expr}`],
@@ -85,7 +85,7 @@ function combine(a: Item, b: Item): Item[] {
       }
     }
   } catch {
-    /* overflow in fraction lib — skip */
+    /* overflow in fraction lib - skip */
   }
 
   return out;
@@ -221,6 +221,6 @@ export function generateRound(level: number): GeneratedRound {
     }
   }
 
-  // Deterministic last-resort — always solvable.
+  // Deterministic last-resort - always solvable.
   return { digits: [2, 3, 5], target: 25, solution: '5*(3+2)' };
 }

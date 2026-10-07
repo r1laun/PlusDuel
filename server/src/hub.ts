@@ -25,7 +25,7 @@ export class Hub {
   enqueue(player: Player): void {
     this.leaveEverything(player.socket.id);
     // Same player queuing twice (two tabs, one browser) can never be matched
-    // against themselves — reject the duplicate instead of farming Elo.
+    // against themselves - reject the duplicate instead of farming Elo.
     if (
       player.playerId &&
       this.queue.some((p) => p.socket.id !== player.socket.id && p.playerId === player.playerId)
@@ -158,21 +158,18 @@ export class Hub {
   }
 
   private async startRatedRoom(a: Player, b: Player): Promise<void> {
-    // Same network (one person, two devices) plays for fun — no Elo moves.
-    const sameNet = !!a.ip && a.ip === b.ip;
-    const [recordA, recordB] = sameNet
-      ? [null, null]
-      : await Promise.all([this.resolveRecord(a), this.resolveRecord(b)]);
+    const [recordA, recordB] = await Promise.all([this.resolveRecord(a), this.resolveRecord(b)]);
     if (!a.socket.connected || !b.socket.connected) {
-      // A side vanished while records loaded — requeue whoever is still here.
+      // A side vanished while records loaded - requeue whoever is still here.
       for (const p of [a, b]) {
         if (p.socket.connected) this.enqueue(p);
       }
       return;
     }
     const room = new Room(a, b, {
-      rated: !sameNet,
-      ...(recordA && recordB ? { recordA, recordB } : {}),
+      rated: true,
+      recordA,
+      recordB,
       onSettled: (ra, rb) => {
         void this.persist(ra, rb, a, b);
       },

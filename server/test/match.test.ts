@@ -23,7 +23,7 @@ beforeEach(() => vi.useFakeTimers());
 afterEach(() => vi.useRealTimers());
 
 describe('Room match length', () => {
-  it('ends in a draw after 5 timeouts — no round 6', () => {
+  it('ends in a draw after 5 timeouts - no round 6', () => {
     const a = fakePlayer('a', 'A');
     const b = fakePlayer('b', 'B');
     new Room(a.player, b.player).start();

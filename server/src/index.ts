@@ -56,13 +56,12 @@ io.use(async (socket, next) => {
 io.on('connection', (socket) => {
   let name = randomName();
   let playerId = '';
-  const ip = typeof socket.handshake.address === 'string' ? socket.handshake.address : '';
 
-  const makePlayer = (): Player => ({ socket, name, playerId, ip, score: 0, roundWins: 0 });
+  const makePlayer = (): Player => ({ socket, name, playerId, score: 0, roundWins: 0 });
 
   socket.on('game:queue_join', ({ name: requested, playerId: requestedId }) => {
     name = sanitizeName(requested) ?? randomName();
-    // Signed-in sockets always play under their account id — the client
+    // Signed-in sockets always play under their account id - the client
     // device id is only used for the one-time guest → account link.
     const deviceId = typeof requestedId === 'string' ? requestedId.trim().slice(0, 64) : '';
     playerId = typeof socket.data.userId === 'string' && socket.data.userId ? `acct:${socket.data.userId}` : deviceId;
@@ -195,5 +194,5 @@ httpServer.listen(PORT, () => {
   console.log(`PlusDuel server listening on :${PORT}`);
   console.log(existsSync(join(CLIENT_DIST, 'index.html'))
     ? `Serving client from ${CLIENT_DIST}`
-    : `Client build not found at ${CLIENT_DIST} — run "npm run build:client" or use the dev server.`);
+    : `Client build not found at ${CLIENT_DIST} - run "npm run build:client" or use the dev server.`);
 });

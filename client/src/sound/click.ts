@@ -1,7 +1,7 @@
 /**
  * Tiny synthesized game sounds (Web Audio API, no assets).
  * Created lazily on the first user gesture, so autoplay policies don't apply.
- * Everything is wrapped in try/catch — no Audio API must never break the game.
+ * Everything is wrapped in try/catch - no Audio API must never break the game.
  */
 
 let ctx: AudioContext | null = null;
@@ -43,26 +43,26 @@ function play(seq: Array<[Wave, number, number, number]>, vol = 0.06): void {
     if (!ac) return;
     for (const [wave, freq, at, dur] of seq) tone(ac, wave, freq, at, dur, vol);
   } catch {
-    /* silent — sound is decorative */
+    /* silent - sound is decorative */
   }
 }
 
-/** Menu buttons, toggles, copy — the default UI click. */
+/** Menu buttons, toggles, copy - the default UI click. */
 export function playClick(): void {
   play([['square', 660, 0, 0.06]]);
 }
 
-/** Calculator keys (digits, operators) — softer blip. */
+/** Calculator keys (digits, operators) - softer blip. */
 export function playKey(): void {
   play([['triangle', 520, 0, 0.05]], 0.05);
 }
 
-/** Backspace / Clear — low blip. */
+/** Backspace / Clear - low blip. */
 export function playDelete(): void {
   play([['square', 330, 0, 0.05]], 0.05);
 }
 
-/** Submit answer — rising two-tone confirm. */
+/** Submit answer - rising two-tone confirm. */
 export function playSubmit(): void {
   play([
     ['square', 660, 0, 0.06],
@@ -70,7 +70,7 @@ export function playSubmit(): void {
   ]);
 }
 
-/** Round won — quick major arpeggio. */
+/** Round won - quick major arpeggio. */
 export function playRoundWin(): void {
   play([
     ['triangle', 523, 0, 0.09],
@@ -79,7 +79,7 @@ export function playRoundWin(): void {
   ], 0.07);
 }
 
-/** Round lost / timeout — descending tone. */
+/** Round lost / timeout - descending tone. */
 export function playRoundLose(): void {
   play([
     ['sawtooth', 330, 0, 0.1],
@@ -87,7 +87,7 @@ export function playRoundLose(): void {
   ], 0.05);
 }
 
-/** Match victory — bright fanfare. */
+/** Match victory - bright fanfare. */
 export function playMatchWin(): void {
   play([
     ['triangle', 523, 0, 0.1],
@@ -97,7 +97,7 @@ export function playMatchWin(): void {
   ], 0.07);
 }
 
-/** Match defeat — low descent. */
+/** Match defeat - low descent. */
 export function playMatchLose(): void {
   play([
     ['sawtooth', 262, 0, 0.14],
@@ -106,7 +106,7 @@ export function playMatchLose(): void {
   ], 0.05);
 }
 
-/** Draw — neutral two-tone. */
+/** Draw - neutral two-tone. */
 export function playMatchDraw(): void {
   play([
     ['triangle', 440, 0, 0.1],

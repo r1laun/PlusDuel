@@ -42,7 +42,7 @@ interface SoloState {
 }
 
 /**
- * Fully local single-player game — no socket. Mirrors the server Room flow
+ * Fully local single-player game - no socket. Mirrors the server Room flow
  * (round → pause → next, best-of-5 in match mode) and exposes the same
  * payload shapes so PlayScreen/EndScreen are reused as-is.
  */
@@ -60,7 +60,7 @@ export function useSoloGame() {
   });
 
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-  // Mutable game data lives in a ref — timer callbacks must see fresh values.
+  // Mutable game data lives in a ref - timer callbacks must see fresh values.
   const game = useRef<{
     mode: SoloMode;
     level: number;

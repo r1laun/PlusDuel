@@ -34,7 +34,7 @@ export function validateExpression(
     const parts: string[] = [];
     if (missing.length) parts.push(`unused digit(s): ${missing.join(', ')}`);
     if (extra.length) parts.push(`digit(s) not in round set or reused: ${extra.join(', ')}`);
-    return { valid: false, reason: parts.join(' — ') || 'Digits do not match round set' };
+    return { valid: false, reason: parts.join(' - ') || 'Digits do not match round set' };
   }
 
   let ast;

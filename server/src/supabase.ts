@@ -2,7 +2,7 @@ import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { START_RATING, type LeaderboardEntry } from '@plusduel/shared';
 import type { RatingRecord } from './ratings.js';
 
-/** Minimal DB surface the Hub needs — real impl below, fakes in tests. */
+/** Minimal DB surface the Hub needs - real impl below, fakes in tests. */
 export interface RatingsDb {
   load(playerId: string): Promise<RatingRecord | null>;
   save(rec: RatingRecord): Promise<void>;

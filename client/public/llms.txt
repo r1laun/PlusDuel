@@ -17,4 +17,4 @@
 
 - No account required; nicknames are guest-only and stored locally.
 - A match needs two live players; a single client waiting in queue will not start a round.
-- Static pages only: the game state lives in a WebSocket session, not in URLs — there are no per-match pages to crawl.
+- Static pages only: the game state lives in a WebSocket session, not in URLs - there are no per-match pages to crawl.

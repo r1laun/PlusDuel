@@ -1,5 +1,5 @@
 /* =========================================================
-   PlusDuel — Design System CSS
+   PlusDuel - Design System CSS
    Стиль: dot-matrix / LED, пунктирные обводки, ч/б + акцент
    ========================================================= */
 
@@ -42,7 +42,7 @@
   margin: 0 auto;
 }
 
-/* ---------- Header (lang left, auth right — pinned LTR so the lang
+/* ---------- Header (lang left, auth right - pinned LTR so the lang
    button stays top-left even in RTL locales) ---------- */
 .pd-header {
   display: flex;
@@ -260,7 +260,7 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
 }
-/* Пустой слот (цифр в раунде меньше 5) — неактивная заглушка "><" */
+/* Пустой слот (цифр в раунде меньше 5) - неактивная заглушка "><" */
 .pd-key--empty {
   border-color: rgba(0,0,0,0.3);
   color: rgba(0,0,0,0.3);

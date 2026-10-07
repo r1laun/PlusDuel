@@ -1,7 +1,7 @@
 /* =========================================================
-   PlusDuel — layout rhythm (project-owned)
+   PlusDuel - layout rhythm (project-owned)
    Только структура и отступы. Никаких новых цветов,
-   радиусов и шрифтов — всё на переменных из plusduel.css.
+   радиусов и шрифтов - всё на переменных из plusduel.css.
    ========================================================= */
 
 /* Единый вертикальный шаг между блоками экрана и внутри панелей */
@@ -13,7 +13,7 @@
 .pd-frame h1,
 .pd-frame p { margin-bottom: 0; }
 
-/* Таргет — главное число раунда: крупный кегль, тот же стиль */
+/* Таргет - главное число раунда: крупный кегль, тот же стиль */
 .pd-frame > .pd-display { font-size: 32px; }
 
 /* Инпут вне flex-контейнера должен занимать всю ширину */
@@ -22,7 +22,7 @@
 /* EXT-бейдж кликабелен */
 .pd-topbar .pd-badge[role='button'] { cursor: pointer; }
 
-/* Акцентная пилюля в панели (напр. "You won") — по центру, а не слева:
+/* Акцентная пилюля в панели (напр. "You won") - по центру, а не слева:
    inline-block из дизайн-системы иначе прижимается к левому краю */
 .pd-panel > .pd-status--accent {
   display: block;
@@ -31,10 +31,10 @@
   margin-right: auto;
 }
 
-/* Операторы 3×3 — симметричная сетка вместо хвоста 5+5+2 */
+/* Операторы 3×3 - симметричная сетка вместо хвоста 5+5+2 */
 .pd-keypad { grid-template-columns: repeat(3, 1fr); }
 
-/* Тройка экшенов (delete/clear/submit) — центрированный ряд равных клавиш */
+/* Тройка экшенов (delete/clear/submit) - центрированный ряд равных клавиш */
 .pd-actions {
   display: flex;
   justify-content: center;
@@ -44,7 +44,7 @@
 
 /* ---------- Small screens (phones ≤480px) ---------- */
 @media (max-width: 480px) {
-  /* Ужать рамку и панели — больше места контенту */
+  /* Ужать рамку и панели - больше места контенту */
   .pd-frame { padding: 16px; }
   .pd-panel { padding: 20px 16px; }
 
@@ -52,10 +52,10 @@
   .pd-logo { font-size: 36px; }
   .pd-tagline { font-size: 13px; }
 
-  /* Кнопки режима (Training/Match) — в столбик, во всю ширину */
+  /* Кнопки режима (Training/Match) - в столбик, во всю ширину */
   .pd-row { flex-direction: column; }
 
-  /* Уровни 3×2 вместо 6 в ряд — крупные тапы */
+  /* Уровни 3×2 вместо 6 в ряд - крупные тапы */
   .pd-level-grid { grid-template-columns: repeat(3, 1fr); }
   .pd-level-grid .pd-key { padding: 14px 0; }
 

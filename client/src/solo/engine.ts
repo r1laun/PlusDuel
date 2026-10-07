@@ -7,13 +7,13 @@ import type {
 
 export type SoloMode = 'endless' | 'match';
 
-/** Synthetic ids — no socket involved in solo. */
+/** Synthetic ids - no socket involved in solo. */
 export const SOLO_YOU = 'solo-you';
 export const SOLO_CLOCK = 'solo-clock';
 
 /**
  * Match rules mirror server/src/match.ts (BEST_OF / ROUNDS_TO_WIN /
- * BETWEEN_ROUNDS_MS). Kept in sync manually — solo never talks to the server.
+ * BETWEEN_ROUNDS_MS). Kept in sync manually - solo never talks to the server.
  */
 export const SOLO_BEST_OF = 5;
 export const SOLO_ROUNDS_TO_WIN = 3;
@@ -31,7 +31,7 @@ export interface SoloRound {
 
 /**
  * Generate one solo round. The generator (fraction.js) is lazy-imported so it
- * stays out of the initial bundle — same approach as the lazy validator.
+ * stays out of the initial bundle - same approach as the lazy validator.
  */
 export async function createSoloRound(index: number, level: number): Promise<SoloRound> {
   const { generateRound, configForLevel, difficultyCoefficient } = await import('@plusduel/shared');
@@ -48,7 +48,7 @@ export async function createSoloRound(index: number, level: number): Promise<Sol
   };
 }
 
-/** Level used for a match-mode round — climbs with the round like in duels. */
+/** Level used for a match-mode round - climbs with the round like in duels. */
 export function levelForMatchRound(roundIndex: number): number {
   return Math.max(1, Math.min(6, roundIndex));
 }

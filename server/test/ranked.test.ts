@@ -48,8 +48,8 @@ function fakeSocket(id: string) {
   };
 }
 
-function player(sock: ReturnType<typeof fakeSocket>, name: string, playerId: string, ip = ''): Player {
-  return { socket: sock as any, name, playerId, ip, score: 0, roundWins: 0 };
+function player(sock: ReturnType<typeof fakeSocket>, name: string, playerId: string): Player {
+  return { socket: sock as any, name, playerId, score: 0, roundWins: 0 };
 }
 
 const endsOf = (emitted: { event: string; payload: any }[]) =>
@@ -65,7 +65,7 @@ describe('ranked quick play', () => {
     const sb = fakeSocket('sb');
     hub.enqueue(player(sa, 'Alice', 'pa'));
     hub.enqueue(player(sb, 'Bob', 'pb'));
-    // Record loading is async — flush microtasks (fake timers stay on for rounds).
+    // Record loading is async - flush microtasks (fake timers stay on for rounds).
     for (let i = 0; i < 10; i++) await Promise.resolve();
 
     const room = hub.roomForSocket('sa')!;
@@ -115,7 +115,7 @@ describe('ranked quick play', () => {
     expect(entry).not.toBeNull();
     expect(entry!.rating).toBeGreaterThan(1000);
     expect(entry!.games).toBe(2);
-    // Guest row is gone — no double counting in the ladder.
+    // Guest row is gone - no double counting in the ladder.
     expect(hub.ratings.peek('dev-1')).toBeUndefined();
     expect(db.saved.get('acct:user-1')!.rating).toBe(entry!.rating);
 
@@ -150,8 +150,8 @@ describe('ranked quick play', () => {
     const hub = new Hub(db);
     const sa = fakeSocket('sa');
     const sb = fakeSocket('sb');
-    hub.enqueue(player(sa, 'Alice', 'dev-a', '1.1.1.1'));
-    hub.enqueue(player(sb, 'Bob', 'dev-b', '2.2.2.2'));
+    hub.enqueue(player(sa, 'Alice', 'dev-a'));
+    hub.enqueue(player(sb, 'Bob', 'dev-b'));
     for (let i = 0; i < 10; i++) await Promise.resolve();
 
     const room = hub.roomForSocket('sa')!;
@@ -162,7 +162,7 @@ describe('ranked quick play', () => {
       vi.advanceTimersByTime(3500);
     }
     expect(endsOf(sa.emitted)).toHaveLength(1);
-    // onSettled persists async — flush before asserting.
+    // onSettled persists async - flush before asserting.
     for (let i = 0; i < 10; i++) await Promise.resolve();
 
     expect(db.saved.get('dev-a')!.games).toBeGreaterThan(0);
@@ -178,8 +178,8 @@ describe('ranked quick play', () => {
     const hub = new Hub();
     const s1 = fakeSocket('s1');
     const s2 = fakeSocket('s2');
-    hub.enqueue(player(s1, 'Me', 'same-id', '1.1.1.1'));
-    hub.enqueue(player(s2, 'MeAgain', 'same-id', '1.1.1.1'));
+    hub.enqueue(player(s1, 'Me', 'same-id'));
+    hub.enqueue(player(s2, 'MeAgain', 'same-id'));
 
     const errors = s2.emitted.filter((e) => e.event === 'game:error');
     expect(errors).toHaveLength(1);
@@ -190,19 +190,19 @@ describe('ranked quick play', () => {
     expect(hub.roomForSocket('s2')).toBeUndefined();
   });
 
-  it('plays same-network matches unrated', async () => {
+  it('rates matches between different players (even from one machine)', async () => {
     const hub = new Hub();
     const sa = fakeSocket('sa');
     const sb = fakeSocket('sb');
-    hub.enqueue(player(sa, 'Alice', 'dev-a', '9.9.9.9'));
-    hub.enqueue(player(sb, 'Bob', 'dev-b', '9.9.9.9'));
+    hub.enqueue(player(sa, 'Alice', 'dev-a'));
+    hub.enqueue(player(sb, 'Bob', 'dev-b'));
     for (let i = 0; i < 10; i++) await Promise.resolve();
 
     const room = hub.roomForSocket('sa')!;
     expect(room).toBeDefined();
     const starts = sa.emitted.filter((e) => e.event === 'match:start');
     expect(starts).toHaveLength(1);
-    expect(starts[0]!.payload.rated).toBe(false);
+    expect(starts[0]!.payload.rated).toBe(true);
 
     for (let w = 0; w < 3; w++) {
       const rs = sa.emitted.filter((e) => e.event === 'round:start').at(-1)!.payload as RoundStartPayload;
@@ -211,6 +211,6 @@ describe('ranked quick play', () => {
     }
     const ends = endsOf(sa.emitted);
     expect(ends).toHaveLength(1);
-    expect(ends[0]!.ratingsByPlayer).toBeUndefined();
+    expect(ends[0]!.ratingsByPlayer!['sa']!.after).toBeGreaterThan(1000);
   });
 });

@@ -19,7 +19,7 @@ export interface RatingRecord {
 
 /**
  * In-memory ranked ladder (Quick play only).
- * NOTE: wiped on server restart — acceptable for now, persistent DB is phase 2.
+ * NOTE: wiped on server restart - acceptable for now, persistent DB is phase 2.
  */
 export class RatingsStore {
   private records = new Map<string, RatingRecord>();

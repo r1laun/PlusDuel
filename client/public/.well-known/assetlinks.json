@@ -3,9 +3,9 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "com.r1laun.plusduel",
+      "package_name": "com.onrender.plusduel.twa",
       "sha256_cert_fingerprints": [
-        "REPLACE_WITH_PWABUILDER_SHA256_FINGERPRINT"
+        "F8:C7:DB:4F:93:21:A1:5E:60:C4:CA:77:BC:47:81:5D:63:D6:FF:01:03:B8:80:EE:7D:9F:93:F9:AF:F4:11:EA"
       ]
     }
   }

@@ -1,0 +1,39 @@
+PlusDuel — Real-time 1v1 Math Duel
+====================================
+Package: com.onrender.plusduel.twa
+Website / TWA origin: https://plusduel.onrender.com/
+Privacy Policy URL (для Console): https://plusduel.onrender.com/privacy.html
+Category: Game > Puzzle | Free, no ads | English (default) + RU/ES/AR/ZH in-app
+
+SHORT DESCRIPTION (max 80 chars, EN)
+------------------------------------
+1v1 math duels: build the target from every digit. Faster wins!
+
+FULL DESCRIPTION (EN) — вставь в Store listing
+----------------------------------------------
+PlusDuel is a real-time 1v1 math duel. Each round deals a target number and a set of digits. Build an expression equal to the target using EVERY digit exactly once. First correct answer wins the round — sudden death.
+
+HOW IT PLAYS
+• Target + digits every round
+• Operators: + − × ÷ ( ) ^ √ !, concatenation allowed (2 3 → 23)
+• Exact math, no floats — every digit used exactly once
+• Best-of-5 match: speed + difficulty score
+• See the winning expression after every round and learn
+
+MODES
+• Quick play — instant matchmaking, no account needed
+• Private rooms — share a 4–6 letter code, duel a friend
+• Practice solo — train vs generated rounds
+
+WHY PLUSDUEL
+• Zero-latency client check + server re-validation (server is source of truth)
+• Guest nicknames, optional sign-in to keep rating across devices
+• Lightweight PWA, offline shell, portrait-first for phones
+• Free, no ads
+
+Fair, fast, competitive arithmetic. Can you out-calculate your opponent?
+
+CONTACT (замени на свой перед релизом)
+--------------------------------------
+Support email: nuraly2907@icloud.com
+Website: https://plusduel.onrender.com/

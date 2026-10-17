@@ -1,0 +1,49 @@
+DATA SAFETY — черновик для формы Play Console (App content → Data safety)
+============================================================================
+Основано на реальном коде: Supabase Auth (email), Socket.io multiplayer, GA4, localStorage nick.
+
+1) Does your app collect or share user data? → YES
+
+2) Data collected (поставь галки так):
+
+- Personal info → Email address
+  Collected: YES (optional sign-in via Supabase)
+  Shared: YES (Supabase, auth processor)
+  Purposes: Account management, App functionality
+  Ephemeral: NO
+
+- Personal info → Name (nickname)
+  Collected: YES (nickname input, stored on device + sent to server for match)
+  Shared: YES (other players see nickname in match/leaderboard; Supabase/Render transit)
+  Purposes: App functionality
+  Ephemeral: NO (leaderboard rating persists)
+
+- App activity → App interactions (matches, scores, round history)
+  Collected: YES
+  Shared: YES (Render hosting, Supabase if linked)
+  Purposes: App functionality, Analytics
+  Ephemeral: NO
+
+- Device or other IDs → User IDs (devicePlayerId pd:* / acct:*), GA4 client ID
+  Collected: YES
+  Shared: YES (Supabase, Google Analytics, Render)
+  Purposes: App functionality, Analytics, Fraud prevention
+  Ephemeral: NO
+
+- Device info → OS version, browser, coarse IP-derived region (GA4 + server logs)
+  Collected: YES (automatic)
+  Shared: YES (Google Analytics, Render)
+  Purposes: Analytics, App functionality
+  Ephemeral: NO
+
+3) Вопросы внизу формы:
+- Data is encrypted in transit → YES (HTTPS/WSS everywhere)
+- Users can request data deletion → YES
+  Deletion path: email to nuraly2907@icloud.com with subject "PlusDuel deletion request"
+  (sign-out alone does NOT delete server account data; clearing site data deletes local guest data)
+- Targeting children → NO (general audience puzzle, not directed at <13; см. Privacy §7)
+- Ads in app → NO
+
+4) После публикации проверь сгенерированный Data safety блок в сторе — должен совпадать с Privacy Policy §2–§6 (https://plusduel.onrender.com/privacy.html).
+
+NOTE: если позже добавишь push-уведомления, рекламный SDK или биллинг — форму надо перепройти.

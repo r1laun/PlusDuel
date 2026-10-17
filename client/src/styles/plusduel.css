@@ -363,3 +363,17 @@ button, input { font: inherit; color: inherit; }
 .pd-scoreboard__score { min-width: 40px; text-align: right; }
 .pd-scoreboard__row--you { color: var(--pd-orange); }
 .pd-scoreboard__row--you .pd-scoreboard__bar { border-color: var(--pd-orange); }
+
+/* ---------- Footer (Play compliance: in-app Privacy link) ---------- */
+.pd-footer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0 4px;
+  font-size: 13px;
+  color: var(--pd-muted);
+}
+.pd-footer__link { color: var(--pd-muted); text-decoration: underline; text-underline-offset: 3px; }
+.pd-footer__link:hover { color: var(--pd-orange); }
+.pd-footer__dot { opacity: .6; }

@@ -3,8 +3,15 @@
 
   <url>
     <loc>https://plusduel.onrender.com/</loc>
-    <lastmod>2026-09-28</lastmod>
+    <lastmod>2026-10-14</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://plusduel.onrender.com/privacy.html</loc>
+    <lastmod>2026-10-14</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
   </url>
 </urlset>

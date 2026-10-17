@@ -205,6 +205,14 @@ export default function HomeScreen({
               <p className="pd-status">{t('rule5')}</p>
             </div>
           )}
+
+          <footer className="pd-footer">
+            <a className="pd-footer__link" href="/privacy.html">
+              Privacy Policy
+            </a>
+            <span className="pd-footer__dot" aria-hidden="true">·</span>
+            <span className="pd-footer__note">PlusDuel 1v1 Math Duel</span>
+          </footer>
         </>
       )}
     </div>

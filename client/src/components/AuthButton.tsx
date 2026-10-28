@@ -53,7 +53,7 @@ export default function AuthButton({ session, compact }: Props) {
           <span className="pd-label" title={session.user.email ?? ''}>
             {String(label).slice(0, 20)}
           </span>
-          <button className="pd-btn pd-btn--outline pd-btn--sm" onClick={signOut} disabled={busy}>
+          <button className="pd-pill-btn" onClick={signOut} disabled={busy}>
             {t('signOut')}
           </button>
         </div>
@@ -65,7 +65,7 @@ export default function AuthButton({ session, compact }: Props) {
   return (
     <>
       <button
-        className={`pd-btn pd-btn--outline${compact ? ' pd-btn--sm' : ''}`}
+        className={compact ? 'pd-pill-btn' : 'pd-btn pd-btn--outline'}
         onClick={signIn}
         disabled={busy}
       >

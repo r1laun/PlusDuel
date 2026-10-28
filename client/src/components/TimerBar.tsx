@@ -35,7 +35,13 @@ export default function TimerBar({ timeLimitMs, receivedAt }: Props) {
     };
   }, [timeLimitMs, receivedAt]);
 
+  const pct = timeLimitMs > 0 ? Math.min(100, Math.max(0, (remaining / timeLimitMs) * 100)) : 0;
+  const low = remaining > 0 && remaining <= 5000;
+
   return (
-    <div className="pd-display pd-display--accent">{(remaining / 1000).toFixed(1)}s</div>
+    <div className={`pd-timer${low ? ' pd-timer--low' : ''}`}>
+      <div className="pd-timer__fill" style={{ width: `${pct}%` }} />
+      <span className="pd-timer__text">{(remaining / 1000).toFixed(1)}s</span>
+    </div>
   );
 }

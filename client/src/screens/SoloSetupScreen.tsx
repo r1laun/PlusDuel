@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { LEVELS } from '@plusduel/shared';
 import type { SoloMode } from '../solo/engine';
+import { getSoloLifetimeStats } from '../hooks/useSoloGame';
+import { PlusDuelLogo } from '../components/ThemeButton';
 import { useLang } from '../i18n';
 import { playClick, tap } from '../sound/click';
 
@@ -11,14 +13,30 @@ interface Props {
 
 export default function SoloSetupScreen({ onStart, onBack }: Props) {
   const [mode, setMode] = useState<SoloMode>('endless');
-  const [level, setLevel] = useState(1);
+  const [level, setLevel] = useState(2);
   const { t } = useLang();
+  const lifetime = getSoloLifetimeStats();
 
   const cfg = LEVELS[level - 1] ?? LEVELS[0]!;
 
   return (
     <div className="pd-frame">
-      <p className="pd-status">{t('soloIntro')}</p>
+      <PlusDuelLogo compact />
+      <p className="pd-tagline">{t('soloIntro')}</p>
+
+      {/* PlusMath PracticeScreen Lifetime Stats Card */}
+      <div className="pd-panel">
+        <div className="pd-stats-grid">
+          <div>
+            <div className="pd-stat__val">{lifetime.totalSolved}</div>
+            <div className="pd-stat__label">{t('soloSolvedTotal')}</div>
+          </div>
+          <div>
+            <div className="pd-stat__val pd-stat__val--ink">{lifetime.bestStreak}</div>
+            <div className="pd-stat__label">{t('soloBestStreak')}</div>
+          </div>
+        </div>
+      </div>
 
       <div className="pd-panel">
         <div className="pd-row">
@@ -41,13 +59,13 @@ export default function SoloSetupScreen({ onStart, onBack }: Props) {
             {t('matchMode')}
           </button>
         </div>
-        <p className="pd-status">
+        <p className="pd-status pd-status--muted">
           {mode === 'endless' ? t('endlessDesc') : t('matchDesc')}
         </p>
       </div>
 
       <div className="pd-panel">
-        <p className="pd-status">{t('level')}</p>
+        <p className="pd-status">{t('level')} (1–6)</p>
         <div className="pd-level-grid">
           {LEVELS.map((l) => (
             <button
@@ -62,22 +80,28 @@ export default function SoloSetupScreen({ onStart, onBack }: Props) {
             </button>
           ))}
         </div>
-        <p className="pd-status">
-          {t('levelInfo', { min: cfg.minDigits, max: cfg.maxDigits, tmin: cfg.targetMin, tmax: cfg.targetMax, sec: cfg.timeLimitSec })}
-        </p>
+        <div className="pd-level-spec">
+          {t('levelInfo', {
+            min: cfg.minDigits,
+            max: cfg.maxDigits,
+            tmin: cfg.targetMin,
+            tmax: cfg.targetMax,
+            sec: cfg.timeLimitSec,
+          })}
+        </div>
       </div>
 
       <button
-        className="pd-btn pd-btn--primary"
+        className="pd-btn pd-btn--accent"
         onClick={() => {
           playClick();
           onStart(mode, level);
         }}
       >
-        {t('start')}
+        {t('start')} ▶
       </button>
       <button className="pd-btn pd-btn--outline" onClick={tap(onBack)}>
-        {t('back')}
+        ← {t('back')}
       </button>
     </div>
   );

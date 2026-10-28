@@ -4,7 +4,7 @@ import type { Session } from '@supabase/supabase-js';
 import { playClick, tap } from '../sound/click';
 import { useLang } from '../i18n';
 import AuthButton from '../components/AuthButton';
-import ThemeButton from '../components/ThemeButton';
+import ThemeButton, { PlusDuelLogo } from '../components/ThemeButton';
 
 interface Props {
   name: string;
@@ -48,7 +48,7 @@ export default function HomeScreen({
       <div className="pd-header">
         <div className="pd-header__group">
           <button
-            className="pd-btn pd-btn--outline pd-btn--sm"
+            className="pd-pill-btn"
             onClick={cycleLang}
             title="Language"
             aria-label="Language"
@@ -59,19 +59,17 @@ export default function HomeScreen({
         </div>
         <AuthButton session={session} compact />
       </div>
-      <div className="pd-logo">
-        <span className="pd-logo__plus">Plus</span>
-        <span className="pd-logo__dual">Duel</span>
-      </div>
+
+      <PlusDuelLogo />
       <p className="pd-tagline">{t('tagline')}</p>
 
-      {error && <div className="pd-status">{error}</div>}
+      {error && <div className="pd-status-banner pd-status-banner--error">{error}</div>}
       {!serverUp && !queued && (
-        <div className="pd-status">{t('serverDown')}</div>
+        <div className="pd-status pd-status--muted">{t('serverDown')}</div>
       )}
 
       {queued ? (
-        <div className="pd-panel">
+        <div className="pd-panel pd-panel--accent">
           {queuePos === -1 ? (
             <>
               <p className="pd-status">{t('roomOpen')}</p>
@@ -116,16 +114,14 @@ export default function HomeScreen({
             </div>
 
             <div className="pd-row">
-              <button className="pd-btn pd-btn--primary" onClick={tap(onQuickPlay)}>
-                {t('quickPlay')}
+              <button className="pd-btn pd-btn--accent" onClick={tap(onQuickPlay)}>
+                {t('quickPlay')} ▶
               </button>
-              <button className="pd-btn pd-btn--outline" onClick={tap(onSolo)}>
+              <button className="pd-btn pd-btn--primary" onClick={tap(onSolo)}>
                 {t('practiceSolo')}
               </button>
             </div>
           </div>
-
-          <hr className="pd-divider" />
 
           <div className="pd-panel">
             <button className="pd-btn pd-btn--outline" onClick={tap(onCreatePrivate)}>
@@ -155,8 +151,6 @@ export default function HomeScreen({
             </div>
           </div>
 
-          <hr className="pd-divider" />
-
           <div className="pd-panel">
             <p className="pd-status">{t('leaderboard')}</p>
             {rankings?.you && (
@@ -180,11 +174,9 @@ export default function HomeScreen({
                 </div>
               ))
             ) : (
-              <p className="pd-status">{t('noRanked')}</p>
+              <p className="pd-status pd-status--muted">{t('noRanked')}</p>
             )}
           </div>
-
-          <hr className="pd-divider" />
 
           <button
             className="pd-btn pd-btn--outline"

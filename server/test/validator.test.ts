@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { validateExpression } from '@plusduel/shared';
+import { previewExpression, validateExpression } from '@plusduel/shared';
 
 const v = (expr: string, digits: number[], target: number) => validateExpression(expr, digits, target);
 
@@ -157,5 +157,27 @@ describe('unary minus and parens', () => {
 
   it('rejects unbalanced parens', () => {
     expect(v('(5+2', [5, 2], 7).valid).toBe(false);
+  });
+});
+
+describe('previewExpression (live calculation & digit tracking)', () => {
+  it('evaluates partial expressions before all digits are used', () => {
+    const p = previewExpression('3+2', [2, 3, 5], 25);
+    expect(p.valid).toBe(false);
+    expect(p.liveDisplay).toBe('5');
+    expect(p.usedDigits).toEqual([3, 2]);
+    expect(p.missingDigits).toEqual([5]);
+    expect(p.allDigitsUsedExact).toBe(false);
+  });
+
+  it('formats exact fractions in liveDisplay and marks solved when target reached', () => {
+    const half = previewExpression('3÷2', [3, 2, 4], 6);
+    expect(half.liveDisplay).toBe('3/2');
+    expect(half.valid).toBe(false);
+
+    const solved = previewExpression('5×(3+2)', [2, 3, 5], 25);
+    expect(solved.liveDisplay).toBe('25');
+    expect(solved.allDigitsUsedExact).toBe(true);
+    expect(solved.valid).toBe(true);
   });
 });

@@ -1,8 +1,19 @@
 import { useEffect, useState } from 'react';
-import type { ValidationResult } from '@plusduel/shared';
+
+export interface LocalValidationState {
+  valid: boolean;
+  reason?: string;
+  checked: boolean;
+  liveDisplay: string | null;
+  usedDigits: number[];
+  missingDigits: number[];
+  extraDigits: number[];
+  allDigitsUsedExact: boolean;
+}
 
 /**
- * Instant client-side validation (tier 1). The server re-validates (tier 2).
+ * Instant client-side validation & live expression preview (tier 1).
+ * The server re-validates (tier 2).
  * Validator module is lazy-imported to keep initial bundle light.
  */
 export function useLocalValidation(
@@ -10,22 +21,44 @@ export function useLocalValidation(
   digits: number[],
   target: number,
   active: boolean,
-): { valid: boolean; reason?: string; checked: boolean } {
-  const [result, setResult] = useState<{ valid: boolean; reason?: string; checked: boolean }>({
+): LocalValidationState {
+  const [result, setResult] = useState<LocalValidationState>({
     valid: false,
     checked: false,
+    liveDisplay: null,
+    usedDigits: [],
+    missingDigits: digits,
+    extraDigits: [],
+    allDigitsUsedExact: false,
   });
 
   useEffect(() => {
-    if (!active || !expr) {
-      setResult({ valid: false, checked: false });
+    if (!active || !expr.trim()) {
+      setResult({
+        valid: false,
+        checked: false,
+        liveDisplay: null,
+        usedDigits: [],
+        missingDigits: digits,
+        extraDigits: [],
+        allDigitsUsedExact: false,
+      });
       return;
     }
     let cancelled = false;
-    import('@plusduel/shared/validator').then(({ validateExpression }) => {
+    import('@plusduel/shared/validator').then(({ previewExpression }) => {
       if (cancelled) return;
-      const r = validateExpression(expr, digits, target);
-      setResult({ valid: r.valid, reason: r.reason, checked: true });
+      const r = previewExpression(expr, digits, target);
+      setResult({
+        valid: r.valid,
+        reason: r.reason,
+        checked: true,
+        liveDisplay: r.liveDisplay,
+        usedDigits: r.usedDigits,
+        missingDigits: r.missingDigits,
+        extraDigits: r.extraDigits,
+        allDigitsUsedExact: r.allDigitsUsedExact,
+      });
     });
     return () => {
       cancelled = true;

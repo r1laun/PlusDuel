@@ -22,6 +22,24 @@ import {
   type SoloMode,
   type SoloRound,
 } from '../solo/engine';
+import { safeGet, safeSet } from '../storage';
+
+const SOLO_SOLVED_KEY = 'pd:solo_solved';
+const SOLO_STREAK_KEY = 'pd:solo_best_streak';
+
+export function getSoloLifetimeStats(): { totalSolved: number; bestStreak: number } {
+  const totalSolved = Number.parseInt(safeGet(SOLO_SOLVED_KEY) || '0', 10) || 0;
+  const bestStreak = Number.parseInt(safeGet(SOLO_STREAK_KEY) || '0', 10) || 0;
+  return { totalSolved, bestStreak };
+}
+
+function recordSoloProgress(currentStreak: number): void {
+  const { totalSolved, bestStreak } = getSoloLifetimeStats();
+  safeSet(SOLO_SOLVED_KEY, String(totalSolved + 1));
+  if (currentStreak > bestStreak) {
+    safeSet(SOLO_STREAK_KEY, String(currentStreak));
+  }
+}
 
 export interface SoloStats {
   solved: number;
@@ -67,6 +85,7 @@ export function useSoloGame() {
     scores: Record<string, number>;
     wins: Record<string, number>;
     failed: number;
+    streak: number;
     current: SoloRound | null;
   } | null>(null);
 
@@ -108,6 +127,7 @@ export function useSoloGame() {
             if (!gg || gg.current !== r) return;
             gg.wins[SOLO_CLOCK] = (gg.wins[SOLO_CLOCK] ?? 0) + 1;
             gg.failed += 1;
+            gg.streak = 0;
             const end = roundEndPayload(r, SOLO_CLOCK, null, gg.scores, gg.wins);
             if (gg.mode === 'endless') {
               push({
@@ -152,7 +172,15 @@ export function useSoloGame() {
   const start = useCallback(
     (mode: SoloMode, level: number) => {
       clearTimers();
-      game.current = { mode, level, scores: emptyScores(), wins: emptyScores(), failed: 0, current: null };
+      game.current = {
+        mode,
+        level,
+        scores: emptyScores(),
+        wins: emptyScores(),
+        failed: 0,
+        streak: 0,
+        current: null,
+      };
       push({
         active: true,
         mode,
@@ -187,6 +215,8 @@ export function useSoloGame() {
           if (game.current !== g || g.current !== r) return;
           g.scores[SOLO_YOU] = (g.scores[SOLO_YOU] ?? 0) + points;
           g.wins[SOLO_YOU] = (g.wins[SOLO_YOU] ?? 0) + 1;
+          g.streak += 1;
+          recordSoloProgress(g.streak);
           const end = roundEndPayload(r, SOLO_YOU, expression, g.scores, g.wins);
           if (g.mode === 'endless') {
             push({

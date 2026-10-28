@@ -36,6 +36,7 @@ export default function PlayScreen({
   soloStats,
 }: Props) {
   const [expr, setExpr] = useState('');
+  const [wins, setWins] = useState<{ me: number; opp: number }>({ me: 0, opp: 0 });
   const { t } = useLang();
   const isTouch = useMemo(
     () => typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches,
@@ -45,6 +46,15 @@ export default function PlayScreen({
   useEffect(() => {
     setExpr('');
   }, [round.index]);
+
+  useEffect(() => {
+    if (!roundEnd) return;
+    const me = roundEnd.winsByPlayer[myId] ?? 0;
+    const opp = roundEnd.winsByPlayer[matchInfo.opponent.id] ?? 0;
+    setWins({ me, opp });
+    if (roundEnd.winnerId === myId) playRoundWin();
+    else playRoundLose();
+  }, [roundEnd, myId, matchInfo.opponent.id]);
 
   const validation = useLocalValidation(expr, round.digits, round.target, roundEnd === null);
   const active = roundEnd === null;
@@ -56,16 +66,15 @@ export default function PlayScreen({
 
   const iWon = roundEnd?.winnerId === myId;
 
-  useEffect(() => {
-    if (!roundEnd) return;
-    if (roundEnd.winnerId === myId) playRoundWin();
-    else playRoundLose();
-  }, [roundEnd, myId]);
-
   const leave = () => {
     playClick();
     onLeave();
   };
+
+  const usedCount = Math.min(
+    round.digits.length,
+    round.digits.length - validation.missingDigits.length,
+  );
 
   return (
     <div className="pd-frame">
@@ -80,21 +89,38 @@ export default function PlayScreen({
             if (e.key === 'Enter' || e.key === ' ') leave();
           }}
         >
-          EXT
+          ← EXT
         </div>
         {active ? (
           <TimerBar timeLimitMs={round.timeLimitMs} receivedAt={roundReceivedAt} />
         ) : (
-          <div className="pd-display pd-display--accent">0.0s</div>
+          <div className="pd-timer">
+            <span className="pd-timer__text">0.0s</span>
+          </div>
         )}
+        <div className="pd-badge pd-badge--score">
+          {wins.me} : {wins.opp}
+        </div>
         <div className="pd-badge">R{round.index}</div>
       </div>
 
-      <div className="pd-display">{round.target}</div>
+      {/* PlusMath-style Target Card */}
+      <div className="pd-target-card">
+        <div className="pd-target-card__top">
+          <span>{t('targetHeader')}</span>
+          <span className="pd-target-card__meta">
+            {matchInfo.opponent.name}
+          </span>
+        </div>
+        <div className="pd-target-card__value">{round.target}</div>
+        <div className="pd-target-card__sub">
+          {t('useEveryDigitOnce', { used: usedCount, total: round.digits.length })}
+        </div>
+      </div>
 
-      {matchInfo.rated === false && <div className="pd-status">{t('unrated')}</div>}
+      {matchInfo.rated === false && <div className="pd-status pd-status--muted">{t('unrated')}</div>}
 
-      {error && <div className="pd-status">{error}</div>}
+      {error && <div className="pd-status-banner pd-status-banner--error">{error}</div>}
 
       {active ? (
         <ExpressionInput
@@ -108,7 +134,7 @@ export default function PlayScreen({
           onSubmit={submit}
         />
       ) : (
-        <div className="pd-panel">
+        <div className="pd-panel pd-panel--accent">
           {roundEnd!.winnerId === null ? (
             <>
               <div className="pd-status">{t('timeout')}</div>
@@ -128,10 +154,14 @@ export default function PlayScreen({
               </div>
             </>
           )}
-          <div className="pd-status">{t('nextRound')}</div>
+          <div className="pd-status pd-status--muted">{t('nextRound')}</div>
           {soloStats && (
             <div className="pd-status">
-              {t('soloLine', { solved: soloStats.solved, failed: soloStats.failed, score: soloStats.score.toFixed(1) })}
+              {t('soloLine', {
+                solved: soloStats.solved,
+                failed: soloStats.failed,
+                score: soloStats.score.toFixed(1),
+              })}
             </div>
           )}
         </div>

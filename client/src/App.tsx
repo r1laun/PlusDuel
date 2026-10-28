@@ -12,10 +12,11 @@ import { socket, setSocketToken } from './socket';
 import HomeScreen from './screens/HomeScreen';
 import { useSoloGame } from './hooks/useSoloGame';
 import { SOLO_YOU } from './solo/engine';
-import { playClick } from './sound/click';
+import { playClick, setInMenuScreen } from './sound/click';
 import { safeGet, safeSet, getPlayerId } from './storage';
 import { accessToken, supabase } from './auth/supabase';
 import { useLang } from './i18n';
+import { useTheme } from './theme';
 import type { Session } from '@supabase/supabase-js';
 // Split the duel UI (and its validation chain) out of the initial bundle -
 // it loads on demand when a match starts, keeping first paint light.
@@ -26,6 +27,7 @@ import EndScreen from './screens/EndScreen';
 type Phase = 'home' | 'queued' | 'playing' | 'ended' | 'solo-setup' | 'solo';
 
 export default function App() {
+  useTheme();
   const [phase, setPhase] = useState<Phase>('home');
   const [name, setName] = useState(() => safeGet('pd:name'));
   const [queuePos, setQueuePos] = useState(0);
@@ -46,6 +48,10 @@ export default function App() {
   // Handlers registered once (socket effect) always use the current language.
   const tRef = useRef(t);
   tRef.current = t;
+
+  useEffect(() => {
+    setInMenuScreen(phase === 'home' || phase === 'solo-setup' || phase === 'queued');
+  }, [phase]);
 
   const refreshRankings = useCallback(() => {
     socket.emit('rankings:get', (res) => {

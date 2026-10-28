@@ -9,6 +9,16 @@ export interface ValidationResult {
   value?: number;
 }
 
+export interface LivePreviewResult {
+  valid: boolean;
+  reason?: string;
+  liveDisplay: string | null;
+  usedDigits: number[];
+  missingDigits: number[];
+  extraDigits: number[];
+  allDigitsUsedExact: boolean;
+}
+
 /**
  * Validate a player's expression for a round.
  * 1. Character/leading-zero/digit-multiset check via raw-text scan
@@ -65,6 +75,68 @@ export function validateExpression(
   }
 
   return { valid: true, value };
+}
+
+/**
+ * Real-time preview while the player builds an expression (ported from PlusMath).
+ * Evaluates partial expressions before all digits are used so the player sees
+ * a live `= value` pill in the expression display box.
+ */
+export function previewExpression(
+  expression: string,
+  issuedDigits: number[],
+  target: number,
+): LivePreviewResult {
+  const trimmed = (expression ?? '').trim();
+  const rawUsedDigits: number[] = [];
+  for (const ch of trimmed) {
+    if (ch >= '0' && ch <= '9') rawUsedDigits.push(Number(ch));
+  }
+  const missingDigits = multisetDiff(issuedDigits, rawUsedDigits);
+  const extraDigits = multisetDiff(rawUsedDigits, issuedDigits);
+  const allDigitsUsedExact = sameMultiset(rawUsedDigits, issuedDigits);
+
+  if (!trimmed) {
+    return {
+      valid: false,
+      liveDisplay: null,
+      usedDigits: [],
+      missingDigits: [...issuedDigits].sort((a, b) => a - b),
+      extraDigits: [],
+      allDigitsUsedExact: false,
+    };
+  }
+
+  const fullValidation = validateExpression(trimmed, issuedDigits, target);
+
+  let liveDisplay: string | null = null;
+  const scan = scanExpression(trimmed);
+  if (scan.ok) {
+    try {
+      const ast = parse(scan.normalized);
+      const frac = evaluateExact(ast);
+      if (frac) {
+        const sign = (typeof frac.s === 'bigint' ? frac.s < 0n : frac.s < 0) ? '−' : '';
+        if (isExactInteger(frac)) {
+          liveDisplay = `${sign}${frac.n.toString()}`;
+        } else {
+          liveDisplay = `${sign}${frac.n.toString()}/${frac.d.toString()}`;
+        }
+      }
+    } catch {
+      liveDisplay = null;
+    }
+  }
+
+  return {
+    valid: fullValidation.valid,
+    reason: fullValidation.reason,
+    liveDisplay,
+    usedDigits: rawUsedDigits,
+    missingDigits,
+    extraDigits,
+    allDigitsUsedExact,
+  };
 }
 
 function multisetDiff(a: number[], b: number[]): number[] {

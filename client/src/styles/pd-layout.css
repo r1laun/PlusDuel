@@ -13,14 +13,8 @@
 .pd-frame h1,
 .pd-frame p { margin-bottom: 0; }
 
-/* Таргет - главное число раунда: крупный кегль, тот же стиль */
-.pd-frame > .pd-display { font-size: 32px; }
-
 /* Инпут вне flex-контейнера должен занимать всю ширину */
 .pd-input { width: 100%; }
-
-/* EXT-бейдж кликабелен */
-.pd-topbar .pd-badge[role='button'] { cursor: pointer; }
 
 /* Акцентная пилюля в панели (напр. "You won") - по центру, а не слева:
    inline-block из дизайн-системы иначе прижимается к левому краю */
@@ -31,37 +25,33 @@
   margin-right: auto;
 }
 
-/* Операторы 3×3 - симметричная сетка вместо хвоста 5+5+2 */
+/* Операторы 3×3 - симметричная сетка */
 .pd-keypad { grid-template-columns: repeat(3, 1fr); }
 
-/* Тройка экшенов (delete/clear/submit) - центрированный ряд равных клавиш */
+/* Ряд экшенов (delete / clear / submit) */
 .pd-actions {
   display: flex;
   justify-content: center;
-  gap: var(--pd-gap);
+  gap: 8px;
 }
-.pd-actions > * { flex: 1; max-width: 200px; }
+.pd-actions > * { flex: 1; }
+.pd-actions > .pd-key--confirm { flex: 1.3; }
 
 /* ---------- Small screens (phones ≤480px) ---------- */
 @media (max-width: 480px) {
-  /* Ужать рамку и панели - больше места контенту */
-  .pd-frame { padding: 16px; }
-  .pd-panel { padding: 20px 16px; }
+  .pd-frame { padding: 12px 14px 20px; }
+  .pd-panel { padding: 18px 15px; }
 
-  /* Логотип и слоган не распирают первый экран */
-  .pd-logo { font-size: 36px; }
-  .pd-tagline { font-size: 13px; }
+  .pd-logo { font-size: 34px; }
+  .pd-tagline { font-size: 12px; margin-bottom: 12px; }
 
-  /* Кнопки режима (Training/Match) - в столбик, во всю ширину */
   .pd-row { flex-direction: column; }
 
-  /* Уровни 3×2 вместо 6 в ряд - крупные тапы */
   .pd-level-grid { grid-template-columns: repeat(3, 1fr); }
-  .pd-level-grid .pd-key { padding: 14px 0; }
+  .pd-level-grid .pd-key { padding: 12px 0; }
 
-  /* Код комнаты не вылезает за края */
-  .pd-room-code__value { font-size: 34px; }
+  .pd-room-code__value { font-size: 32px; }
 
-  /* Таргет раунда чуть компактнее */
-  .pd-frame > .pd-display { font-size: 26px; }
+  .pd-target-card__value { font-size: 34px; }
+  .pd-skin-list { grid-template-columns: 1fr; }
 }

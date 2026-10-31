@@ -8,3 +8,9 @@ PlusDuel - Google Play package/
 .DS_Store
 .env
 .gstack/
+android/.gradle/
+android/.kotlin/
+android/build/
+android/app/build/
+android/local.properties
+play-store/*.aab

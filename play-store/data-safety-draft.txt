@@ -24,25 +24,37 @@ DATA SAFETY — черновик для формы Play Console (App content →
   Purposes: App functionality, Analytics
   Ephemeral: NO
 
-- Device or other IDs → User IDs (devicePlayerId pd:* / acct:*), GA4 client ID
+- Device or other IDs → Advertising ID (AAID) + User IDs (devicePlayerId)
   Collected: YES
-  Shared: YES (Supabase, Google Analytics, Render)
-  Purposes: App functionality, Analytics, Fraud prevention
+  Shared: YES (Google AdMob SDK for banner ads, Supabase, Render)
+  Purposes: Advertising or marketing, Analytics, App functionality, Fraud prevention
   Ephemeral: NO
 
-- Device info → OS version, browser, coarse IP-derived region (GA4 + server logs)
+- Location → Approximate location (coarse IP location used by Google AdMob)
+  Collected: YES
+  Shared: YES (Google AdMob)
+  Purposes: Advertising or marketing, Analytics, Fraud prevention
+  Ephemeral: NO
+
+- App info and performance → Crash logs & Diagnostics (Google AdMob SDK)
+  Collected: YES
+  Shared: YES (Google AdMob)
+  Purposes: Analytics, Advertising or marketing
+  Ephemeral: NO
+
+- Device info → OS version, device model (AdMob + server logs)
   Collected: YES (automatic)
-  Shared: YES (Google Analytics, Render)
-  Purposes: Analytics, App functionality
+  Shared: YES (Google AdMob, Render)
+  Purposes: Advertising or marketing, Analytics, App functionality
   Ephemeral: NO
 
-3) Вопросы внизу формы:
+3) Вопросы внизу формы и в App content:
 - Data is encrypted in transit → YES (HTTPS/WSS everywhere)
 - Users can request data deletion → YES
   Deletion path: email to nuraly2907@icloud.com with subject "PlusDuel deletion request"
-  (sign-out alone does NOT delete server account data; clearing site data deletes local guest data)
-- Targeting children → NO (general audience puzzle, not directed at <13; см. Privacy §7)
-- Ads in app → NO
+- Targeting children → NO (13+)
+- Ads in app (App content → Ads) → YES, my app contains ads
+- Advertising ID (App content → Advertising ID) → YES, my app uses Advertising ID → выбери галочки: "Advertising or marketing" и "Analytics"
 
 4) После публикации проверь сгенерированный Data safety блок в сторе — должен совпадать с Privacy Policy §2–§6 (https://plusduel.onrender.com/privacy.html).
 

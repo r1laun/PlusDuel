@@ -26,15 +26,15 @@
   <p class="sub">Last updated: October 14, 2026 · App: PlusDuel — Real-time 1v1 Math Duel (package <code>com.onrender.plusduel.twa</code>) · Website: <a href="https://plusduel.onrender.com/">plusduel.onrender.com</a></p>
 
   <h2>1. What PlusDuel is</h2>
-  <p>PlusDuel is a free browser-first 1v1 math duel game. You can play as a guest with a nickname, or optionally sign in to keep rating across devices. The Android app distributed via Google Play is a Trusted Web Activity (TWA) wrapper of the same website — this policy covers both.</p>
+  <p>PlusDuel is a free 1v1 math duel and solo puzzle game available on the web (<a href="https://plusduel.onrender.com/">plusduel.onrender.com</a>) and as a native Android mobile application on Google Play (package <code>com.onrender.plusduel.twa</code>). This policy covers both the website and the Android app.</p>
 
   <h2>2. Data we collect</h2>
   <ul>
-    <li><strong>Nickname &amp; gameplay data (guest):</strong> nickname you enter (stored on your device via localStorage), match results, rating, round history. Used only to run matchmaking and leaderboards.</li>
-    <li><strong>Account data (optional sign-in via Supabase):</strong> email address and authentication tokens, to link guest rating to your account across devices. Sign-in is optional.</li>
-    <li><strong>Technical / analytics data:</strong> device type, OS / browser version, coarse session analytics via Google Analytics 4 (page views, session duration, anonymous client IDs / cookies), and real-time Socket.io connection identifiers required for multiplayer.</li>
+    <li><strong>Nickname &amp; gameplay data:</strong> nickname you enter (stored locally on your device), match results, Elo rating, coins, unlocked styles, and solo records. Used to run matchmaking, leaderboards, and local progress.</li>
+    <li><strong>Account data (optional sign-in via Supabase on web):</strong> email address and authentication tokens, to link guest rating to your account across devices. Sign-in is optional.</li>
+    <li><strong>Advertising &amp; technical data (Android app &amp; web):</strong> The Android app integrates Google AdMob SDK (<code>com.google.android.gms:play-services-ads</code>) to display banner ads in menus. AdMob may collect and process your device Advertising ID (AAID), coarse IP-based location, device information, and ad interaction diagnostics under <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">Google’s Privacy Policy</a>. You can reset or delete your Advertising ID in Android Settings → Google → Ads. On the website, coarse session analytics via Google Analytics 4 and Socket.io connection identifiers are used to deliver multiplayer matches.</li>
   </ul>
-  <p>We do <strong>not</strong> collect precise location, contacts, photos, microphone, camera, or advertising IDs. We show <strong>no third-party ads</strong>.</p>
+  <p>We do <strong>not</strong> collect precise GPS location, contacts, photos, microphone, or camera data.</p>
 
   <h2>3. How we use data</h2>
   <ul>
@@ -47,9 +47,10 @@
 
   <h2>4. Sharing</h2>
   <ul>
-    <li><strong>Supabase</strong> (authentication &amp; account data) — processes email + auth tokens on our behalf.</li>
-    <li><strong>Google Analytics 4</strong> (analytics) — processes pseudonymous usage data and cookies.</li>
-    <li><strong>Render</strong> (hosting) — hosts the website / game server; processes IP addresses and connection logs to deliver the service.</li>
+    <li><strong>Google AdMob</strong> (Android mobile app advertising) — processes Advertising ID (AAID), device diagnostics, and coarse IP location to serve banner ads.</li>
+    <li><strong>Supabase</strong> (authentication &amp; leaderboard data) — processes optional account tokens and Elo ratings.</li>
+    <li><strong>Google Analytics 4</strong> (web analytics) — processes pseudonymous usage data and cookies.</li>
+    <li><strong>Render</strong> (hosting) — hosts the game server; processes IP addresses and Socket.io connection logs to deliver online duels.</li>
   </ul>
   <p>We do not sell personal data. We disclose data only when required by law.</p>
 

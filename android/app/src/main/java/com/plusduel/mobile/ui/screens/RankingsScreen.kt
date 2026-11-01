@@ -54,17 +54,17 @@ fun RankingsScreen(
             .fillMaxSize()
             .background(colors.bg)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+            .padding(horizontal = 18.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PlusDuelLogoHeader(
             subtitle = AppStrings.tr(
                 lang,
-                "Твой рейтинг Elo, звания и мировой топ игроков",
-                "Your Elo rating, rank progression & global leaderboard",
-                "Tu clasificación Elo, rangos y tabla mundial",
-                "你的 Elo 积分、段位晋升与全球排行榜",
-                "تصنيف Elo الخاص بك ولوحة المتصدرين العالمية"
+                "Рейтинг Elo и мировой топ",
+                "Elo Rating & Global Leaderboard",
+                "Clasificación Elo y Top Mundial",
+                "Elo 段位与全球排行",
+                "تصنيف Elo والمتصدرين"
             ),
             compact = true
         )
@@ -73,29 +73,32 @@ fun RankingsScreen(
         PdPanel(
             borderColor = colors.orange,
             backgroundColor = colors.surface,
-            contentPadding = PaddingValues(18.dp)
+            contentPadding = PaddingValues(16.dp)
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
+                Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = progress.nickname.ifBlank {
-                            AppStrings.tr(lang, "Игрок PlusDuel", "PlusDuel Player", "Jugador PlusDuel", "PlusDuel 玩家", "لاعب PlusDuel")
+                            AppStrings.tr(lang, "Игрок", "Player", "Jugador", "玩家", "لاعب")
                         },
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp
+                        fontSize = 17.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = AppStrings.rankTitle(lang, progress.rankTitle),
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 13.sp
+                        fontSize = 12.sp,
+                        maxLines = 1
                     )
                 }
 
@@ -110,12 +113,13 @@ fun RankingsScreen(
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        fontSize = 18.sp,
+                        maxLines = 1
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -123,7 +127,7 @@ fun RankingsScreen(
             ) {
                 StatCell(
                     value = progress.duelGames.toString(),
-                    label = AppStrings.tr(lang, "Матчи", "Matches", "Partidas", "总对局", "مباريات")
+                    label = AppStrings.tr(lang, "Матчи", "Games", "Juegos", "对局", "مباريات")
                 )
                 StatCell(
                     value = progress.duelWins.toString(),
@@ -131,17 +135,17 @@ fun RankingsScreen(
                 )
                 StatCell(
                     value = progress.duelLosses.toString(),
-                    label = AppStrings.tr(lang, "Поражения", "Losses", "Derrotas", "负场", "خسارة")
+                    label = AppStrings.tr(lang, "Пораж.", "Losses", "Derrotas", "负场", "خسارة")
                 )
                 StatCell(
                     value = "$winRate%",
-                    label = AppStrings.tr(lang, "Винрейт", "Win Rate", "% Victoria", "胜率", "نسبة الفوز")
+                    label = AppStrings.tr(lang, "Винрейт", "Win %", "% Vict.", "胜率", "نسبة")
                 )
             }
         }
 
         // ==================== GLOBAL LEADERBOARD ====================
-        PdPanel(contentPadding = PaddingValues(18.dp)) {
+        PdPanel(contentPadding = PaddingValues(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -150,16 +154,16 @@ fun RankingsScreen(
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "МИРОВОЙ ТОП ИГРОКОВ",
-                        "GLOBAL LEADERBOARD",
-                        "CLASIFICACIÓN MUNDIAL",
-                        "全球排行榜",
-                        "لوحة المتصدرين العالمية"
+                        "ТОП ИГРОКОВ",
+                        "LEADERBOARD",
+                        "CLASIFICACIÓN",
+                        "排行榜",
+                        "المتصدرون"
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp
+                    fontSize = 11.sp
                 )
                 Text(
                     text = if (onlineState.connected) "● ONLINE" else "○ OFFLINE",
@@ -170,7 +174,7 @@ fun RankingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             if (onlineState.rankingsTop.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -189,7 +193,7 @@ fun RankingsScreen(
                                     color = if (isYou) colors.orange else colors.line,
                                     shape = RoundedCornerShape(12.dp)
                                 )
-                                .padding(horizontal = 12.dp, vertical = 10.dp),
+                                .padding(horizontal = 12.dp, vertical = 9.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -204,13 +208,13 @@ fun RankingsScreen(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 13.sp
                                 )
-                                Spacer(modifier = Modifier.width(10.dp))
+                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = entry.name,
                                     color = colors.ink,
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp,
+                                    fontSize = 13.sp,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
@@ -221,7 +225,8 @@ fun RankingsScreen(
                                 color = if (isYou) colors.orange else colors.muted,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 12.sp
+                                fontSize = 12.sp,
+                                maxLines = 1
                             )
                         }
                     }
@@ -230,11 +235,11 @@ fun RankingsScreen(
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "Загрузка таблицы лидеров или пока нет рейтинговых матчей на сервере.",
-                        "Connecting to leaderboard or no ranked games recorded yet.",
-                        "Cargando clasificación o aún no hay partidas clasificatorias.",
-                        "正在连接排行榜，或暂无排位赛记录。",
-                        "جارٍ تحميل التصنيف أو لا توجد مباريات مصنفة بعد."
+                        "Пока нет записей",
+                        "No ranked games yet",
+                        "Sin partidas aún",
+                        "暂无排位记录",
+                        "لا توجد مباريات بعد"
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
@@ -242,14 +247,14 @@ fun RankingsScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 12.dp)
+                        .padding(vertical = 10.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             PdButton(
-                text = AppStrings.tr(lang, "Обновить рейтинг ↻", "Refresh Leaderboard ↻", "Actualizar ↻", "刷新排行榜 ↻", "تحديث التصنيف ↻"),
+                text = AppStrings.tr(lang, "Обновить ↻", "Refresh ↻", "Actualizar ↻", "刷新 ↻", "تحديث ↻"),
                 variant = PdButtonVariant.OUTLINE,
                 onClick = {
                     onClickSound()
@@ -260,22 +265,22 @@ fun RankingsScreen(
         }
 
         // ==================== ELO TIERS GUIDE ====================
-        PdPanel(contentPadding = PaddingValues(18.dp)) {
+        PdPanel(contentPadding = PaddingValues(16.dp)) {
             Text(
                 text = AppStrings.tr(
                     lang,
-                    "СИСТЕМА ЗВАНИЙ ELO",
-                    "ELO RANK TIERS",
+                    "ЗВАНИЯ ELO",
+                    "ELO TIERS",
                     "RANGOS ELO",
-                    "ELO 段位体系",
-                    "مستويات تصنيف ELO"
+                    "ELO 段位",
+                    "الرتب"
                 ),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp
+                fontSize = 11.sp
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             val bands = listOf(
                 1800 to "Grandmaster",
@@ -294,7 +299,7 @@ fun RankingsScreen(
                             .fillMaxWidth()
                             .background(if (isCurrent) colors.tint else colors.bg, RoundedCornerShape(10.dp))
                             .border(1.dp, if (isCurrent) colors.orange else colors.line, RoundedCornerShape(10.dp))
-                            .padding(horizontal = 12.dp, vertical = 8.dp),
+                            .padding(horizontal = 12.dp, vertical = 7.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -303,13 +308,15 @@ fun RankingsScreen(
                             color = if (isCurrent) colors.orange else colors.ink,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
+                            fontSize = 12.sp,
+                            maxLines = 1
                         )
                         Text(
-                            text = if (minElo > 0) "$minElo+ Elo" else "< 800 Elo",
+                            text = if (minElo > 0) "$minElo+" else "< 800",
                             color = if (isCurrent) colors.orange else colors.muted,
                             fontFamily = FontFamily.Monospace,
-                            fontSize = 12.sp
+                            fontSize = 12.sp,
+                            maxLines = 1
                         )
                     }
                 }
@@ -327,13 +334,15 @@ private fun StatCell(value: String, label: String) {
             color = colors.ink,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
+            fontSize = 18.sp,
+            maxLines = 1
         )
         Text(
             text = label,
             color = colors.muted,
             fontFamily = FontFamily.Monospace,
-            fontSize = 11.sp
+            fontSize = 11.sp,
+            maxLines = 1
         )
     }
 }

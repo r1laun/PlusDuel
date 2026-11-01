@@ -42,6 +42,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plusduel.mobile.data.PlayerProgressState
@@ -101,8 +102,8 @@ fun ArenaScreen(
             .fillMaxSize()
             .background(colors.bg)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+            .padding(horizontal = 18.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // ==================== TOP STATUS BAR ====================
         Row(
@@ -110,7 +111,6 @@ fun ArenaScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            // Elo & Rank Pill
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
@@ -123,7 +123,8 @@ fun ArenaScreen(
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    maxLines = 1
                 )
             }
 
@@ -131,7 +132,6 @@ fun ArenaScreen(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                // Coins Chip (opens Style/Shop)
                 Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(999.dp))
@@ -148,11 +148,11 @@ fun ArenaScreen(
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        maxLines = 1
                     )
                 }
 
-                // Quick Audio Toggle
                 val audioOn = progress.soundEnabled || progress.musicEnabled
                 Box(
                     modifier = Modifier
@@ -167,27 +167,29 @@ fun ArenaScreen(
                         color = if (audioOn) colors.orange else colors.muted,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp
+                        fontSize = 12.sp,
+                        maxLines = 1
                     )
                 }
             }
         }
 
-        // ==================== LOGO & TAGLINE ====================
+        // ==================== LOGO ====================
         PlusDuelLogoHeader(
             subtitle = AppStrings.tr(
                 lang,
-                "Математические дуэли 1 на 1 · Собери число из всех цифр быстрее соперника",
-                "Real-time 1v1 math duels · Build the target from every digit faster",
-                "Duelos matemáticos 1v1 en tiempo real · Usa cada dígito una vez",
-                "实时 1v1 数学对决 · 用全部数字更快凑出目标数",
-                "مبارزات رياضية ١ ضد ١ · كوّن الرقم المستهدف أسرع"
-            )
+                "1 на 1 математические дуэли",
+                "Real-time 1v1 Competitive Math",
+                "Duelos matemáticos 1v1",
+                "1v1 实时数学竞技",
+                "مبارزات رياضية ١ ضد ١"
+            ),
+            compact = true
         )
 
         if (onlineState.errorBanner.isNotBlank()) {
             val errText = if (onlineState.errorBanner == "OPPONENT_LEFT") {
-                AppStrings.tr(lang, "Соперник покинул матч", "Opponent left the match", "El rival abandonó", "对手已离开对局", "غادر الخصم المباراة")
+                AppStrings.tr(lang, "Соперник вышел", "Opponent left", "Rival salió", "对手已退出", "غادر الخصم")
             } else {
                 onlineState.errorBanner
             }
@@ -196,7 +198,7 @@ fun ArenaScreen(
                     .fillMaxWidth()
                     .background(colors.danger.copy(alpha = 0.1f), RoundedCornerShape(14.dp))
                     .border(1.5.dp, colors.danger, RoundedCornerShape(14.dp))
-                    .padding(12.dp),
+                    .padding(10.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
@@ -205,7 +207,8 @@ fun ArenaScreen(
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
                     fontSize = 12.sp,
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    maxLines = 1
                 )
             }
         }
@@ -215,17 +218,17 @@ fun ArenaScreen(
             PdPanel(
                 borderColor = colors.orange,
                 backgroundColor = colors.surface,
-                contentPadding = PaddingValues(20.dp)
+                contentPadding = PaddingValues(18.dp)
             ) {
                 if (onlineState.queuePosition == -1) {
                     Text(
                         text = AppStrings.tr(
                             lang,
-                            "ПРИВАТНАЯ КОМНАТА ОТКРЫТА",
+                            "ПРИВАТНАЯ КОМНАТА",
                             "PRIVATE ROOM OPEN",
-                            "SALA PRIVADA ABIERTA",
-                            "私人房间已开启",
-                            "الغرفة الخاصة مفتوحة"
+                            "SALA PRIVADA",
+                            "私人房间",
+                            "غرفة خاصة"
                         ),
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
@@ -249,35 +252,27 @@ fun ArenaScreen(
                                     cm?.setPrimaryClip(ClipData.newPlainText("PlusDuel Code", onlineState.privateRoomCode))
                                     copiedToast = true
                                 }
-                                .padding(vertical = 16.dp, horizontal = 12.dp),
+                                .padding(vertical = 14.dp, horizontal = 12.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Text(
-                                    text = AppStrings.tr(lang, "КОД КОМНАТЫ", "ROOM CODE", "CÓDIGO", "房间代码", "رمز الغرفة"),
-                                    color = colors.muted,
-                                    fontFamily = FontFamily.Monospace,
-                                    fontSize = 11.sp
-                                )
-                                Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = onlineState.privateRoomCode,
                                     color = colors.orange,
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 34.sp,
+                                    fontSize = 32.sp,
                                     letterSpacing = 3.sp
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = if (copiedToast) {
-                                        AppStrings.tr(lang, "✓ Скопировано в буфер!", "✓ Copied to clipboard!", "✓ ¡Copiado!", "✓ 已复制！", "✓ تم النسخ!")
+                                        AppStrings.tr(lang, "✓ Скопировано", "✓ Copied!", "✓ Copiado", "✓ 已复制", "✓ تم النسخ")
                                     } else {
-                                        AppStrings.tr(lang, "Нажми, чтобы скопировать и отправить другу", "Tap to copy & share with a friend", "Toca para copiar", "点击复制并分享给好友", "اضغط للنسخ والمشاركة")
+                                        AppStrings.tr(lang, "Нажми, чтобы скопировать", "Tap to copy code", "Toca para copiar", "点击复制房间码", "اضغط للنسخ")
                                     },
                                     color = if (copiedToast) colors.orange else colors.muted,
                                     fontFamily = FontFamily.Monospace,
-                                    fontWeight = if (copiedToast) FontWeight.Bold else FontWeight.Normal,
                                     fontSize = 11.sp
                                 )
                             }
@@ -286,11 +281,11 @@ fun ArenaScreen(
                         Text(
                             text = AppStrings.tr(
                                 lang,
-                                "Подключение к комнате… (${queueWaitSec}с)",
-                                "Connecting to room… (${queueWaitSec}s)",
-                                "Conectando a la sala… (${queueWaitSec}s)",
-                                "正在连接房间… (${queueWaitSec}秒)",
-                                "جارٍ الاتصال بالغرفة… (${queueWaitSec}ث)"
+                                "Создание комнаты… (${queueWaitSec}с)",
+                                "Opening room… (${queueWaitSec}s)",
+                                "Abriendo sala… (${queueWaitSec}s)",
+                                "正在创建… (${queueWaitSec}秒)",
+                                "جارٍ الفتح… (${queueWaitSec}ث)"
                             ),
                             color = colors.ink,
                             fontFamily = FontFamily.Monospace,
@@ -303,11 +298,11 @@ fun ArenaScreen(
                     Text(
                         text = AppStrings.tr(
                             lang,
-                            "Поиск онлайн-соперника… (${queueWaitSec}с)",
-                            "Searching for online opponent… (${queueWaitSec}s)",
-                            "Buscando rival en línea… (${queueWaitSec}s)",
-                            "正在匹配在线对手… (${queueWaitSec}秒)",
-                            "جارٍ البحث عن خصم… (${queueWaitSec}ث)"
+                            "Поиск соперника… (${queueWaitSec}с)",
+                            "Searching opponent… (${queueWaitSec}s)",
+                            "Buscando rival… (${queueWaitSec}s)",
+                            "正在匹配… (${queueWaitSec}秒)",
+                            "جارٍ البحث… (${queueWaitSec}ث)"
                         ),
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
@@ -316,42 +311,15 @@ fun ArenaScreen(
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(6.dp))
-                    Text(
-                        text = if (onlineState.connected) {
-                            AppStrings.tr(
-                                lang,
-                                "Сервер подключён · ждём второго игрока или начните бой с ботом",
-                                "Server connected · waiting for player or start a Bot Duel now",
-                                "Servidor conectado · esperando jugador o juega contra el Bot",
-                                "服务器已连接 · 等待玩家或立即开始人机对战",
-                                "الخادم متصل · بانتظار لاعب أو ابدأ ضد الذكاء الاصطناعي"
-                            )
-                        } else {
-                            AppStrings.tr(
-                                lang,
-                                "Пробуждение сервера… Можно сразу начать дуэль с ботом!",
-                                "Waking server… Or start a Bot Duel immediately!",
-                                "Conectando al servidor… ¡O empieza contra el Bot ya!",
-                                "正在唤醒服务器… 也可以立即开始人机对战！",
-                                "جارٍ الاتصال… أو ابدأ ضد البوت فوراً!"
-                            )
-                        },
-                        color = colors.muted,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 12.sp,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    Spacer(modifier = Modifier.height(14.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
                     PdButton(
                         text = AppStrings.tr(
                             lang,
-                            "Сыграть с ботом сейчас ▶",
-                            "Play vs Smart Bot Now ▶",
-                            "Jugar contra Bot ahora ▶",
-                            "立即与智能机器人对战 ▶",
-                            "العب ضد البوت الآن ▶"
+                            "Бой с ботом ▶",
+                            "Play vs Bot ▶",
+                            "Jugar vs Bot ▶",
+                            "人机对战 ▶",
+                            "العب ضد البوت ▶"
                         ),
                         variant = PdButtonVariant.ACCENT,
                         onClick = {
@@ -365,7 +333,7 @@ fun ArenaScreen(
 
                 Spacer(modifier = Modifier.height(10.dp))
                 PdButton(
-                    text = AppStrings.tr(lang, "Отменить", "Cancel", "Cancelar", "取消", "إلغاء"),
+                    text = AppStrings.tr(lang, "Отмена", "Cancel", "Cancelar", "取消", "إلغاء"),
                     variant = PdButtonVariant.OUTLINE,
                     onClick = {
                         onClickSound()
@@ -376,14 +344,14 @@ fun ArenaScreen(
             }
         } else {
             // ==================== 1. ONLINE 1v1 QUICK PLAY CARD ====================
-            PdPanel(contentPadding = PaddingValues(18.dp)) {
+            PdPanel(contentPadding = PaddingValues(16.dp)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = AppStrings.tr(lang, "ТВОЙ НИКНЕЙМ", "YOUR NICKNAME", "TU APODO", "你的昵称", "اسم اللاعب"),
+                        text = AppStrings.tr(lang, "НИКНЕЙМ", "NICKNAME", "APODO", "昵称", "الاسم"),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
@@ -396,13 +364,9 @@ fun ArenaScreen(
                                 .clip(CircleShape)
                                 .background(if (onlineState.connected) colors.success else colors.orange)
                         )
-                        Spacer(modifier = Modifier.width(6.dp))
+                        Spacer(modifier = Modifier.width(5.dp))
                         Text(
-                            text = if (onlineState.connected) {
-                                AppStrings.tr(lang, "Онлайн готов", "Server Online", "En línea", "在线就绪", "متصل")
-                            } else {
-                                AppStrings.tr(lang, "Автономный / Бот", "Offline / Bot Ready", "Modo Bot listo", "离线 / 人机就绪", "جاهز للعب")
-                            },
+                            text = if (onlineState.connected) "Online" else "Bot Ready",
                             color = colors.muted,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 11.sp
@@ -417,14 +381,15 @@ fun ArenaScreen(
                         .fillMaxWidth()
                         .background(colors.bg, RoundedCornerShape(12.dp))
                         .border(1.5.dp, colors.line, RoundedCornerShape(12.dp))
-                        .padding(horizontal = 14.dp, vertical = 12.dp)
+                        .padding(horizontal = 14.dp, vertical = 11.dp)
                 ) {
                     if (progress.nickname.isEmpty()) {
                         Text(
-                            text = AppStrings.tr(lang, "Анонимный игрок (введите ник)…", "Anonymous player (enter nickname)…", "Jugador anónimo…", "输入你的昵称…", "أدخل اسمك المستعار…"),
+                            text = AppStrings.tr(lang, "Аноним", "Anonymous", "Anónimo", "匿名玩家", "لاعب"),
                             color = colors.muted.copy(alpha = 0.6f),
                             fontFamily = FontFamily.Monospace,
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            maxLines = 1
                         )
                     }
                     BasicTextField(
@@ -442,16 +407,16 @@ fun ArenaScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(12.dp))
+                Spacer(modifier = Modifier.height(10.dp))
 
                 PdButton(
                     text = AppStrings.tr(
                         lang,
-                        "Быстрый бой 1v1 (Онлайн) ▶",
-                        "Quick Play 1v1 (Online) ▶",
-                        "Partida rápida 1v1 (Online) ▶",
-                        "快速在线 1v1 匹配 ▶",
-                        "مباراة سريعة ١ ضد ١ (أونلاين) ▶"
+                        "Онлайн 1v1 ▶",
+                        "1v1 Online ▶",
+                        "1v1 Online ▶",
+                        "在线 1v1 ▶",
+                        "أونلاين 1v1 ▶"
                     ),
                     variant = PdButtonVariant.ACCENT,
                     badgeText = "+30 ●",
@@ -464,36 +429,25 @@ fun ArenaScreen(
             }
 
             // ==================== 2. SMART BOT 1v1 DUEL CARD ====================
-            PdPanel(contentPadding = PaddingValues(18.dp)) {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        text = AppStrings.tr(
-                            lang,
-                            "ДУЭЛЬ С УМНЫМ БОТОМ (ДО 3 ПОБЕД)",
-                            "1v1 DUEL VS SMART BOT (BEST OF 5)",
-                            "DUELO 1v1 CONTRA BOT (AL MEJOR DE 5)",
-                            "智能机器人 1v1 对决（五局三胜）",
-                            "مبارزة ١ ضد ١ مع البوت الذكي"
-                        ),
-                        color = colors.muted,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
-                    )
-                    Text(
-                        text = "+${selectedBot.winCoinBonus} ●",
-                        color = colors.orange,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 12.sp
-                    )
-                }
+            PdPanel(contentPadding = PaddingValues(16.dp)) {
+                Text(
+                    text = AppStrings.tr(
+                        lang,
+                        "БОЙ С БОТОМ (ДО 3 ПОБЕД)",
+                        "VS SMART BOT (BEST OF 5)",
+                        "VS BOT (AL MEJOR DE 5)",
+                        "智能人机对决 (五局三胜)",
+                        "ضد البوت الذكي"
+                    ),
+                    color = colors.muted,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 11.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 for (row in BotDifficulty.entries.chunked(2)) {
                     Row(
@@ -522,7 +476,7 @@ fun ArenaScreen(
                                         onClickSound()
                                         onSelectBot(bot)
                                     }
-                                    .padding(vertical = 10.dp, horizontal = 8.dp),
+                                    .padding(vertical = 10.dp, horizontal = 6.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
@@ -532,7 +486,9 @@ fun ArenaScreen(
                                     fontWeight = FontWeight.Bold,
                                     fontSize = 12.sp,
                                     textAlign = TextAlign.Center,
-                                    maxLines = 1
+                                    maxLines = 1,
+                                    softWrap = false,
+                                    overflow = TextOverflow.Ellipsis
                                 )
                             }
                         }
@@ -540,32 +496,14 @@ fun ArenaScreen(
                     Spacer(modifier = Modifier.height(8.dp))
                 }
 
-                Text(
-                    text = AppStrings.tr(
-                        lang,
-                        "Мгновенный старт даже без интернета · Рейтинговый бой 1 на 1",
-                        "Instant start offline or online · Rated best-of-5 match",
-                        "Inicio instantáneo con o sin internet · Partida clasificatoria",
-                        "无需等待即可开局（支持离线）· 计入 Elo 积分与金币奖励",
-                        "بداية فورية حتى بدون إنترنت · مباراة مصنفة"
-                    ),
-                    color = colors.muted,
-                    fontFamily = FontFamily.Monospace,
-                    fontSize = 11.sp,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                Spacer(modifier = Modifier.height(10.dp))
-
                 PdButton(
                     text = AppStrings.tr(
                         lang,
-                        "Начать бой с ботом ▶",
-                        "Start Bot Duel ▶",
-                        "Empezar duelo vs Bot ▶",
-                        "开始人机对决 ▶",
-                        "ابدأ المبارزة ضد البوت ▶"
+                        "Бой с ботом ▶",
+                        "Play vs Bot ▶",
+                        "Jugar vs Bot ▶",
+                        "开始人机 ▶",
+                        "العب ضد البوت ▶"
                     ),
                     variant = PdButtonVariant.PRIMARY,
                     badgeText = "+${selectedBot.winCoinBonus} ●",
@@ -578,15 +516,15 @@ fun ArenaScreen(
             }
 
             // ==================== 3. PRIVATE ROOM WITH A FRIEND ====================
-            PdPanel(contentPadding = PaddingValues(18.dp)) {
+            PdPanel(contentPadding = PaddingValues(16.dp)) {
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "ПРИВАТНАЯ ДУЭЛЬ С ДРУГОМ",
-                        "PRIVATE DUEL WITH A FRIEND",
-                        "DUELO PRIVADO CON UN AMIGO",
-                        "好友私人房间对决",
-                        "مبارزة خاصة مع صديق"
+                        "ПРИВАТНАЯ КОМНАТА",
+                        "PRIVATE ROOM",
+                        "SALA PRIVADA",
+                        "好友房间",
+                        "غرفة خاصة"
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
@@ -594,16 +532,16 @@ fun ArenaScreen(
                     fontSize = 11.sp
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 PdButton(
                     text = AppStrings.tr(
                         lang,
-                        "Создать приватную комнату",
-                        "Create Private Room",
-                        "Crear sala privada",
-                        "创建私人房间",
-                        "إنشاء غرفة خاصة"
+                        "Создать комнату",
+                        "Create Room",
+                        "Crear sala",
+                        "创建房间",
+                        "إنشاء غرفة"
                     ),
                     variant = PdButtonVariant.OUTLINE,
                     onClick = {
@@ -613,7 +551,7 @@ fun ArenaScreen(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
@@ -625,14 +563,15 @@ fun ArenaScreen(
                             .weight(1f)
                             .background(colors.bg, RoundedCornerShape(12.dp))
                             .border(1.5.dp, colors.line, RoundedCornerShape(12.dp))
-                            .padding(horizontal = 14.dp, vertical = 12.dp)
+                            .padding(horizontal = 14.dp, vertical = 11.dp)
                     ) {
                         if (roomCodeInput.isEmpty()) {
                             Text(
-                                text = AppStrings.tr(lang, "КОД КОМНАТЫ", "ROOM CODE", "CÓDIGO", "输入房间码", "رمز الغرفة"),
+                                text = AppStrings.tr(lang, "КОД", "ROOM CODE", "CÓDIGO", "房间码", "الرمز"),
                                 color = colors.muted.copy(alpha = 0.6f),
                                 fontFamily = FontFamily.Monospace,
-                                fontSize = 13.sp
+                                fontSize = 13.sp,
+                                maxLines = 1
                             )
                         }
                         BasicTextField(

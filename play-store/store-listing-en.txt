@@ -21,15 +21,16 @@ HOW IT PLAYS
 • See the winning expression after every round and learn
 
 MODES
-• Quick play — instant matchmaking, no account needed
-• Private rooms — share a 4–6 letter code, duel a friend
-• Practice solo — train vs generated rounds
+• Quick Play 1v1 — live online matchmaking
+• Smart Bot Duels — 4 difficulty tiers (Novice to Grandmaster), works offline
+• Private Rooms — share a room code to duel a friend
+• Solo Arena — Endless Training & Best-of-5 timed matches across 6 difficulty tiers
 
-WHY PLUSDUEL
-• Zero-latency client check + server re-validation (server is source of truth)
-• Guest nicknames, optional sign-in to keep rating across devices
-• Lightweight PWA, offline shell, portrait-first for phones
-• Free, no ads
+FEATURES
+• Live intermediate expression preview & exact rational arithmetic
+• Elo rating ladder (Novice, Club, Gold, Platinum, Diamond, Master, Grandmaster)
+• Style Shop — unlock 6 accent color palettes and 3 keypad tile shapes with coins earned from victories
+• Warm acoustic sound engine, haptic feedback, Paper & Carbon themes, and 5 languages (EN, RU, ES, ZH, AR)
 
 Fair, fast, competitive arithmetic. Can you out-calculate your opponent?
 

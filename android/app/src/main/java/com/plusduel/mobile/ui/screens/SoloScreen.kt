@@ -28,6 +28,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plusduel.mobile.data.COINS_PER_ROUND_SOLVED
@@ -60,23 +61,23 @@ fun SoloScreen(
             .fillMaxSize()
             .background(colors.bg)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+            .padding(horizontal = 18.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PlusDuelLogoHeader(
             subtitle = AppStrings.tr(
                 lang,
-                "Одиночная тренировка · Зарабатывай +$COINS_PER_ROUND_SOLVED ● за каждую решённую задачу",
-                "Solo Practice · Earn +$COINS_PER_ROUND_SOLVED ● coins for every solved round",
-                "Práctica en solitario · Gana +$COINS_PER_ROUND_SOLVED ● por cada ronda resuelta",
-                "单人训练模式 · 每解出一题奖励 +$COINS_PER_ROUND_SOLVED ● 金币",
-                "التدريب الفردي · اربح +$COINS_PER_ROUND_SOLVED ● لكل جولة تحلها"
+                "Одиночный режим · +$COINS_PER_ROUND_SOLVED ● за раунд",
+                "Solo Practice · +$COINS_PER_ROUND_SOLVED ● per round",
+                "Modo Solo · +$COINS_PER_ROUND_SOLVED ● por ronda",
+                "单人训练 · 每局 +$COINS_PER_ROUND_SOLVED ●",
+                "التدريب الفردي · +$COINS_PER_ROUND_SOLVED ●"
             ),
             compact = true
         )
 
         // ==================== LIFETIME SOLO STATS CARD ====================
-        PdPanel(contentPadding = PaddingValues(18.dp)) {
+        PdPanel(contentPadding = PaddingValues(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly
@@ -87,13 +88,13 @@ fun SoloScreen(
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 26.sp
+                        fontSize = 24.sp
                     )
                     Text(
-                        text = AppStrings.tr(lang, "Решено соло", "Solved Solo", "Resueltos", "单人已解", "تم حلها"),
+                        text = AppStrings.tr(lang, "Решено", "Solved", "Resueltos", "已解", "محلولة"),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontSize = 12.sp
+                        fontSize = 11.sp
                     )
                 }
 
@@ -103,13 +104,13 @@ fun SoloScreen(
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 26.sp
+                        fontSize = 24.sp
                     )
                     Text(
-                        text = AppStrings.tr(lang, "Лучшая серия", "Best Streak", "Mejor racha", "最高连胜", "أفضل سلسلة"),
+                        text = AppStrings.tr(lang, "Серия", "Streak", "Racha", "连胜", "سلسلة"),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontSize = 12.sp
+                        fontSize = 11.sp
                     )
                 }
 
@@ -119,26 +120,26 @@ fun SoloScreen(
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 26.sp
+                        fontSize = 24.sp
                     )
                     Text(
-                        text = AppStrings.tr(lang, "Монеты", "Coins", "Monedas", "金币", "العملات"),
+                        text = AppStrings.tr(lang, "Монеты", "Coins", "Monedas", "金币", "عملات"),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontSize = 12.sp
+                        fontSize = 11.sp
                     )
                 }
             }
         }
 
         // ==================== MODE SELECTOR: ENDLESS VS MATCH ====================
-        PdPanel(contentPadding = PaddingValues(18.dp)) {
+        PdPanel(contentPadding = PaddingValues(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(10.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 PdButton(
-                    text = AppStrings.tr(lang, "Тренировка ∞", "Training ∞", "Práctica ∞", "无限训练 ∞", "تدريب ∞"),
+                    text = AppStrings.tr(lang, "Тренировка ∞", "Endless ∞", "Práctica ∞", "无限 ∞", "تدريب ∞"),
                     variant = if (!isMatchMode) PdButtonVariant.ACCENT else PdButtonVariant.OUTLINE,
                     isActive = !isMatchMode,
                     onClick = {
@@ -149,7 +150,7 @@ fun SoloScreen(
                 )
 
                 PdButton(
-                    text = AppStrings.tr(lang, "Матч (до 3)", "Match (Bo5)", "Partida (Bo5)", "五局挑战", "مباراة (٥)"),
+                    text = AppStrings.tr(lang, "Матч (до 3)", "Match (Bo5)", "Partida", "五局赛", "مباراة"),
                     variant = if (isMatchMode) PdButtonVariant.ACCENT else PdButtonVariant.OUTLINE,
                     isActive = isMatchMode,
                     onClick = {
@@ -159,62 +160,33 @@ fun SoloScreen(
                     modifier = Modifier.weight(1f)
                 )
             }
-
-            Spacer(modifier = Modifier.height(10.dp))
-
-            Text(
-                text = if (!isMatchMode) {
-                    AppStrings.tr(
-                        lang,
-                        "Бесконечный поток задач выбранного уровня без ограничений по числу раундов.",
-                        "Endless stream of solvable rounds at your chosen difficulty level.",
-                        "Flujo infinito de problemas del nivel elegido.",
-                        "在所选难度下无限生成可解算式。",
-                        "سلسلة لا نهائية من المسائل بالمستوى المختار."
-                    )
-                } else {
-                    AppStrings.tr(
-                        lang,
-                        "Матч из 5 раундов против таймера: сложность растёт с каждым раундом!",
-                        "Best-of-5 match against the clock: difficulty climbs every round!",
-                        "Partida al mejor de 5 contra el reloj: ¡la dificultad sube!",
-                        "五局三胜限时挑战：难度随回合递增！",
-                        "مباراة من ٥ جولات ضد الوقت: تزداد الصعوبة كل جولة!"
-                    )
-                },
-                color = colors.muted,
-                fontFamily = FontFamily.Monospace,
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.fillMaxWidth()
-            )
         }
 
         // ==================== DIFFICULTY LEVEL (1–6) ====================
-        PdPanel(contentPadding = PaddingValues(18.dp)) {
+        PdPanel(contentPadding = PaddingValues(16.dp)) {
             Text(
                 text = AppStrings.tr(
                     lang,
-                    "УРОВЕНЬ СЛОЖНОСТИ (1–6)",
-                    "DIFFICULTY LEVEL (1–6)",
-                    "NIVEL DE DIFICULTAD (1–6)",
-                    "难度等级 (1–6)",
-                    "مستوى الصعوبة (١–٦)"
+                    "УРОВЕНЬ (1–6)",
+                    "LEVEL (1–6)",
+                    "NIVEL (1–6)",
+                    "难度 (1–6)",
+                    "المستوى (١–٦)"
                 ),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp,
+                fontSize = 11.sp,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth()
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(10.dp))
 
             for (row in RoundGenerator.LEVELS.chunked(3)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(10.dp)
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     for (item in row) {
                         val active = item.level == selectedLevel
@@ -223,7 +195,7 @@ fun SoloScreen(
                         Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .height(54.dp)
+                                .height(50.dp)
                                 .clip(RoundedCornerShape(14.dp))
                                 .background(if (active || pressed) colors.tint else colors.surface)
                                 .statefulBorder(
@@ -246,12 +218,12 @@ fun SoloScreen(
                                 color = if (active || pressed) colors.orange else colors.ink,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 22.sp
+                                fontSize = 20.sp
                             )
                         }
                     }
                 }
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
             Box(
@@ -259,23 +231,25 @@ fun SoloScreen(
                     .fillMaxWidth()
                     .background(colors.bg, RoundedCornerShape(12.dp))
                     .border(1.dp, colors.line, RoundedCornerShape(12.dp))
-                    .padding(14.dp),
+                    .padding(12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "${spec.minDigits}–${spec.maxDigits} цифр · цель ${spec.targetMin}–${spec.targetMax} · таймер ${spec.timeLimitSec}с",
-                        "${spec.minDigits}–${spec.maxDigits} digits · target ${spec.targetMin}–${spec.targetMax} · ${spec.timeLimitSec}s timer",
-                        "${spec.minDigits}–${spec.maxDigits} dígitos · objetivo ${spec.targetMin}–${spec.targetMax} · ${spec.timeLimitSec}s",
-                        "${spec.minDigits}–${spec.maxDigits} 个数字 · 目标 ${spec.targetMin}–${spec.targetMax} · 限时 ${spec.timeLimitSec}秒",
-                        "${spec.minDigits}–${spec.maxDigits} أرقام · الهدف ${spec.targetMin}–${spec.targetMax} · ${spec.timeLimitSec}ث"
+                        "${spec.minDigits}–${spec.maxDigits} цифр · цель ${spec.targetMin}–${spec.targetMax} · ${spec.timeLimitSec}с",
+                        "${spec.minDigits}–${spec.maxDigits} digits · target ${spec.targetMin}–${spec.targetMax} · ${spec.timeLimitSec}s",
+                        "${spec.minDigits}–${spec.maxDigits} dígitos · ${spec.targetMin}–${spec.targetMax} · ${spec.timeLimitSec}s",
+                        "${spec.minDigits}–${spec.maxDigits} 数字 · 目标 ${spec.targetMin}–${spec.targetMax} · ${spec.timeLimitSec}秒",
+                        "${spec.minDigits}–${spec.maxDigits} أرقام · ${spec.targetMin}–${spec.targetMax} · ${spec.timeLimitSec}ث"
                     ),
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 13.sp,
-                    textAlign = TextAlign.Center
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
             }
         }
@@ -283,11 +257,11 @@ fun SoloScreen(
         PdButton(
             text = AppStrings.tr(
                 lang,
-                "Начать соло-игру ▶",
-                "Start Solo Game ▶",
-                "Empezar partida Solo ▶",
-                "开始单人挑战 ▶",
-                "ابدأ اللعب الفردي ▶"
+                "Начать соло ▶",
+                "Start Solo ▶",
+                "Empezar Solo ▶",
+                "开始单人 ▶",
+                "ابدأ الفردي ▶"
             ),
             variant = PdButtonVariant.ACCENT,
             badgeText = "+$COINS_PER_ROUND_SOLVED ●",

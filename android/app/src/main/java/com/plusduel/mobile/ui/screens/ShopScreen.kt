@@ -31,6 +31,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.plusduel.mobile.data.AccentSkin
@@ -59,22 +60,22 @@ fun ShopScreen(
             .fillMaxSize()
             .background(colors.bg)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+            .padding(horizontal = 18.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PlusDuelLogoHeader(
             subtitle = AppStrings.tr(
                 lang,
-                "Магазин кастомизации: открывай цветовые схемы и формы плиток за победы!",
-                "Style Shop: unlock accent palettes and tile shapes by winning duels & solo rounds!",
-                "Tienda de estilo: ¡desbloquea colores y fichas ganando partidas!",
-                "个性装扮商店：通过获胜赢取金币，解锁主题配色与方块造型！",
-                "متجر المظهر: افتح الألوان وأشكال المربعات بالفوز في المبارزات!"
+                "Цветовые палитры и формы плиток",
+                "Accent Palettes & Tile Shapes",
+                "Colores y formas de fichas",
+                "主题配色与方块造型",
+                "الألوان وأشكال المربعات"
             ),
             compact = true
         )
 
-        // ==================== COIN BALANCE CARD (NO ADS, EARNED BY PLAYING) ====================
+        // ==================== COIN BALANCE CARD ====================
         PdPanel(
             borderColor = colors.orange,
             backgroundColor = colors.surface,
@@ -85,9 +86,9 @@ fun ShopScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.weight(1f)) {
+                Column {
                     Text(
-                        text = AppStrings.tr(lang, "ТВОЙ БАЛАНС МОНЕТ", "YOUR COIN BALANCE", "TU SALDO", "当前金币余额", "رصيد العملات"),
+                        text = AppStrings.tr(lang, "БАЛАНС", "BALANCE", "SALDO", "余额", "الرصيد"),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
@@ -98,24 +99,27 @@ fun ShopScreen(
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 28.sp
+                        fontSize = 26.sp,
+                        maxLines = 1
                     )
                 }
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = AppStrings.tr(lang, "+20..50 ● за дуэль", "+20..50 ● per duel win", "+20..50 ● por duelo", "对决获胜 +20..50 ●", "+20..50 ● لكل فوز"),
+                        text = AppStrings.tr(lang, "+20..50 ● за дуэль", "+20..50 ● per duel", "+20..50 ● / duelo", "对决 +20..50 ●", "+20..50 ●"),
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
+                        fontSize = 11.sp,
+                        maxLines = 1
                     )
-                    Spacer(modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = AppStrings.tr(lang, "+5 ● за каждый раунд", "+5 ● per round solved", "+5 ● por ronda", "每解一题 +5 ●", "+5 ● لكل جولة"),
+                        text = AppStrings.tr(lang, "+5 ● за раунд", "+5 ● per round", "+5 ● / ronda", "每回合 +5 ●", "+5 ● / جولة"),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontSize = 11.sp
+                        fontSize = 11.sp,
+                        maxLines = 1
                     )
                 }
             }
@@ -126,16 +130,16 @@ fun ShopScreen(
             Text(
                 text = AppStrings.tr(
                     lang,
-                    "1. ЦВЕТОВОЙ АКЦЕНТ ИГРЫ",
-                    "1. ACCENT COLOR PALETTE",
+                    "1. ЦВЕТОВОЙ АКЦЕНТ",
+                    "1. ACCENT PALETTE",
                     "1. COLOR DE ACENTO",
-                    "1. 游戏主题配色",
-                    "١. لون اللعبة المميز"
+                    "1. 主题配色",
+                    "١. اللون المميز"
                 ),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp
+                fontSize = 11.sp
             )
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -169,7 +173,7 @@ fun ShopScreen(
                                     soundManager.playMistake()
                                 }
                             }
-                            .padding(horizontal = 14.dp, vertical = 12.dp),
+                            .padding(horizontal = 14.dp, vertical = 11.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -179,20 +183,24 @@ fun ShopScreen(
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(28.dp)
+                                    .size(26.dp)
                                     .clip(CircleShape)
                                     .background(swatchColor)
                                     .border(1.5.dp, colors.ink, CircleShape)
                             )
-                            Spacer(modifier = Modifier.width(12.dp))
+                            Spacer(modifier = Modifier.width(10.dp))
                             Text(
                                 text = skin.title(lang),
                                 color = colors.ink,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
+                                fontSize = 13.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
+
+                        Spacer(modifier = Modifier.width(8.dp))
 
                         ShopActionChip(
                             selected = selected,
@@ -211,16 +219,16 @@ fun ShopScreen(
             Text(
                 text = AppStrings.tr(
                     lang,
-                    "2. ФОРМА ПЛИТОК И КЛАВИШ",
-                    "2. DIGIT & KEYPAD TILE SHAPE",
-                    "2. FORMA DE LAS FICHAS",
-                    "2. 数字与按键形状",
-                    "٢. شكل مربعات الأرقام"
+                    "2. ФОРМА ПЛИТОК",
+                    "2. TILE SHAPE",
+                    "2. FORMA DE FICHAS",
+                    "2. 方块造型",
+                    "٢. شكل المربعات"
                 ),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp
+                fontSize = 11.sp
             )
             Spacer(modifier = Modifier.height(10.dp))
 
@@ -253,7 +261,7 @@ fun ShopScreen(
                                     soundManager.playMistake()
                                 }
                             }
-                            .padding(horizontal = 14.dp, vertical = 12.dp),
+                            .padding(horizontal = 14.dp, vertical = 11.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -263,7 +271,7 @@ fun ShopScreen(
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(32.dp)
+                                    .size(30.dp)
                                     .clip(RoundedCornerShape(shape.cornerDp.dp))
                                     .background(colors.ink),
                                 contentAlignment = Alignment.Center
@@ -273,18 +281,22 @@ fun ShopScreen(
                                     color = colors.onInk,
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.Bold,
-                                    fontSize = 15.sp
+                                    fontSize = 14.sp
                                 )
                             }
-                            Spacer(modifier = Modifier.width(12.dp))
+                            Spacer(modifier = Modifier.width(10.dp))
                             Text(
                                 text = shape.title(lang),
                                 color = colors.ink,
                                 fontFamily = FontFamily.Monospace,
                                 fontWeight = FontWeight.Bold,
-                                fontSize = 14.sp
+                                fontSize = 13.sp,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis
                             )
                         }
+
+                        Spacer(modifier = Modifier.width(8.dp))
 
                         ShopActionChip(
                             selected = selected,
@@ -339,7 +351,9 @@ private fun ShopActionChip(
             color = fg,
             fontFamily = FontFamily.Monospace,
             fontWeight = FontWeight.Bold,
-            fontSize = 12.sp
+            fontSize = 12.sp,
+            maxLines = 1,
+            softWrap = false
         )
     }
 }

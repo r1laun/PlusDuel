@@ -121,7 +121,7 @@ private val PlusDuelTypography = Typography(
 fun PlusDuelTheme(
     themeMode: ThemeMode = ThemeMode.SYSTEM,
     accentSkin: AccentSkin = AccentSkin.ORANGE,
-    language: AppLanguage = AppLanguage.RU,
+    language: AppLanguage = AppLanguage.EN,
     content: @Composable () -> Unit
 ) {
     val systemDark = isSystemInDarkTheme()

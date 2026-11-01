@@ -66,43 +66,36 @@ fun SettingsScreen(
             .fillMaxSize()
             .background(colors.bg)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 14.dp),
-        verticalArrangement = Arrangement.spacedBy(14.dp)
+            .padding(horizontal = 18.dp, vertical = 12.dp),
+        verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PlusDuelLogoHeader(
             subtitle = AppStrings.tr(
                 lang,
-                "Настройки звука, языка, темы и правила дуэлей",
-                "Audio, language, theme settings & duel rules",
-                "Ajustes de sonido, idioma, tema y reglas",
-                "音效、语言、主题设置与对决规则",
-                "إعدادات الصوت واللغة والمظهر وقواعد اللعبة"
+                "Настройки и правила",
+                "Settings & Rules",
+                "Ajustes y reglas",
+                "设置与规则",
+                "الإعدادات والقواعد"
             ),
             compact = true
         )
 
         // ==================== AUDIO & HAPTICS ====================
-        PdPanel(contentPadding = PaddingValues(18.dp)) {
+        PdPanel(contentPadding = PaddingValues(16.dp)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = AppStrings.tr(lang, "Музыка в меню", "Menu Ambient Music", "Música del menú", "主菜单背景音乐", "موسيقى القائمة"),
-                        color = colors.ink,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = AppStrings.tr(lang, "Мягкая фоновая мелодия в лобби", "Smooth ambient melody in lobby", "Melodía suave en el lobby", "在大厅播放柔和背景旋律", "موسيقى هادئة في القائمة"),
-                        color = colors.muted,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 11.sp
-                    )
-                }
+                Text(
+                    text = AppStrings.tr(lang, "Музыка в меню", "Menu Music", "Música", "背景音乐", "الموسيقى"),
+                    color = colors.ink,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.weight(1f)
+                )
                 Switch(
                     checked = progress.musicEnabled,
                     onCheckedChange = {
@@ -116,28 +109,21 @@ fun SettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = AppStrings.tr(lang, "Звуки нажатий (SFX)", "Sound Effects (SFX)", "Efectos de sonido", "按键音效 (SFX)", "المؤثرات الصوتية"),
-                        color = colors.ink,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = AppStrings.tr(lang, "Акустические звуки плиток и побед", "Warm acoustic tile & victory sounds", "Sonidos acústicos suaves", "柔和原声按键与胜利音效", "مؤثرات صوتية دافئة"),
-                        color = colors.muted,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 11.sp
-                    )
-                }
+                Text(
+                    text = AppStrings.tr(lang, "Звуки (SFX)", "Sound Effects", "Efectos (SFX)", "按键音效", "المؤثرات الصوتية"),
+                    color = colors.ink,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.weight(1f)
+                )
                 Switch(
                     checked = progress.soundEnabled,
                     onCheckedChange = { onSetSound(it) },
@@ -148,28 +134,21 @@ fun SettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(6.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column(modifier = Modifier.weight(1f)) {
-                    Text(
-                        text = AppStrings.tr(lang, "Тактильная вибрация", "Haptic Vibration", "Vibración táctil", "触感震动反馈", "اهتزاز اللمس"),
-                        color = colors.ink,
-                        fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp
-                    )
-                    Text(
-                        text = AppStrings.tr(lang, "Отдача при нажатии клавиш и ошибках", "Tactile feedback on tile taps", "Respuesta al tocar fichas", "点击方块时的震动反馈", "استجابة لمسية عند النقر"),
-                        color = colors.muted,
-                        fontFamily = FontFamily.Monospace,
-                        fontSize = 11.sp
-                    )
-                }
+                Text(
+                    text = AppStrings.tr(lang, "Вибрация", "Haptics", "Vibración", "震动反馈", "الاهتزاز"),
+                    color = colors.ink,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.weight(1f)
+                )
                 Switch(
                     checked = progress.hapticsEnabled,
                     onCheckedChange = {
@@ -185,15 +164,15 @@ fun SettingsScreen(
         }
 
         // ==================== LANGUAGE & THEME ====================
-        PdPanel(contentPadding = PaddingValues(18.dp)) {
+        PdPanel(contentPadding = PaddingValues(16.dp)) {
             Text(
-                text = AppStrings.tr(lang, "ЯЗЫК ИНТЕРФЕЙСА", "LANGUAGE", "IDIOMA", "语言", "اللغة"),
+                text = AppStrings.tr(lang, "ЯЗЫК", "LANGUAGE", "IDIOMA", "语言", "اللغة"),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp
+                fontSize = 11.sp
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -221,7 +200,7 @@ fun SettingsScreen(
                                 onClickSound()
                                 onSetLanguage(itemLang)
                             }
-                            .padding(vertical = 11.dp),
+                            .padding(vertical = 10.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -229,30 +208,31 @@ fun SettingsScreen(
                             color = if (active || pressed) colors.orange else colors.ink,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
+                            fontSize = 13.sp,
+                            maxLines = 1
                         )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(14.dp))
 
             Text(
-                text = AppStrings.tr(lang, "ТЕМА ЭКРАНА", "THEME MODE", "TEMA VISUAL", "深浅色主题", "السمة"),
+                text = AppStrings.tr(lang, "ТЕМА", "THEME", "TEMA", "主题", "السمة"),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp
+                fontSize = 11.sp
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 val modes = listOf(
-                    ThemeMode.SYSTEM to AppStrings.tr(lang, "Авто", "Auto", "Auto", "跟随系统", "تلقائي"),
-                    ThemeMode.LIGHT to AppStrings.tr(lang, "Бумага", "Paper", "Papel", "暖纸浅色", "فاتح"),
-                    ThemeMode.DARK to AppStrings.tr(lang, "Карбон", "Carbon", "Carbón", "暗黑碳色", "داكن")
+                    ThemeMode.SYSTEM to AppStrings.tr(lang, "Авто", "Auto", "Auto", "自动", "تلقائي"),
+                    ThemeMode.LIGHT to AppStrings.tr(lang, "Бумага", "Paper", "Papel", "浅色", "فاتح"),
+                    ThemeMode.DARK to AppStrings.tr(lang, "Карбон", "Carbon", "Carbón", "暗色", "داكن")
                 )
                 for ((mode, label) in modes) {
                     val active = progress.themeMode == mode
@@ -276,7 +256,7 @@ fun SettingsScreen(
                                 onClickSound()
                                 onSetTheme(mode)
                             }
-                            .padding(vertical = 11.dp),
+                            .padding(vertical = 10.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
@@ -284,7 +264,8 @@ fun SettingsScreen(
                             color = if (active || pressed) colors.orange else colors.ink,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
+                            fontSize = 13.sp,
+                            maxLines = 1
                         )
                     }
                 }
@@ -292,48 +273,43 @@ fun SettingsScreen(
         }
 
         // ==================== RULES OF PLUSDUEL ====================
-        PdPanel(contentPadding = PaddingValues(18.dp)) {
+        PdPanel(contentPadding = PaddingValues(16.dp)) {
             Text(
-                text = AppStrings.tr(lang, "ПРАВИЛА ИГРЫ PLUSDUEL", "HOW TO PLAY PLUSDUEL", "REGLAS DEL JUEGO", "PLUSDUEL 游戏规则", "قواعد لعبة PLUSDUEL"),
+                text = AppStrings.tr(lang, "ПРАВИЛА", "RULES", "REGLAS", "规则", "القواعد"),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                fontSize = 12.sp
+                fontSize = 11.sp
             )
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(6.dp))
             Text(
                 text = AppStrings.tr(
                     lang,
-                    "1. Собери выражение, равное Целевому Числу, используя каждую выданную цифру ровно один раз.\n" +
-                        "2. Доступные знаки: + − × ÷ ( ) ^ √ ! · Цифры можно склеивать (2 и 3 → 23), ведущий ноль (03) запрещён.\n" +
-                        "3. Вся математика точная: √ и ! должны давать целые числа.\n" +
-                        "4. Побеждает тот, кто первым отправит верное решение (до 3 побед в матче).",
-                    "1. Build a math expression equal to the Target Number using every issued digit exactly once.\n" +
-                        "2. Allowed operators: + − × ÷ ( ) ^ √ ! · Digit concatenation (2 and 3 → 23) is allowed; leading zeros (03) are rejected.\n" +
-                        "3. Exact rational arithmetic: √ and ! must produce exact integers.\n" +
-                        "4. First valid submission wins the round instantly (Best-of-5 match).",
-                    "1. Crea una expresión igual al Objetivo usando cada dígito exactamente una vez.\n" +
-                        "2. Operadores: + − × ÷ ( ) ^ √ ! · Puedes unir dígitos (23), sin ceros iniciales (03).\n" +
-                        "3. Matemática exacta: √ y ! deben dar enteros exactos.\n" +
-                        "4. El primero en enviar una solución válida gana la ronda.",
-                    "1. 使用全部给定数字（每个数字恰好用一次）构建等于目标数的算式。\n" +
-                        "2. 可用运算符：+ − × ÷ ( ) ^ √ ! · 允许数字拼接（2与3 → 23），禁止前导零（03）。\n" +
-                        "3. 严格精确计算：√ 与 ! 必须得到整数。\n" +
-                        "4. 最先提交正确算式的一方立即赢得该回合（五局三胜）。",
-                    "١. كوّن معادلة تساوي الرقم المستهدف باستخدام كل رقم معطى مرة واحدة بالضبط.\n" +
-                        "٢. العمليات المتاحة: + − × ÷ ( ) ^ √ ! · يُسمح بدمج الأرقام (23) ويُمنع الصفر البادئ (03).\n" +
-                        "٣. حساب دقيق: الجذر والعاملي يجب أن ينتجا أعداداً صحيحة.\n" +
-                        "٤. أول من يرسل حلاً صحيحاً يفوز بالجولة فوراً."
+                    "• Используй каждую цифру ровно 1 раз, чтобы получить Целевое Число.\n" +
+                        "• Знаки: + − × ÷ ( ) ^ √ ! · Цифры можно склеивать (2 и 3 → 23).\n" +
+                        "• Кто первым отправит точный ответ — забирает раунд!",
+                    "• Use every issued digit once to hit the Target Number.\n" +
+                        "• Operators: + − × ÷ ( ) ^ √ ! · Concatenation (2 & 3 → 23) allowed.\n" +
+                        "• First exact solution wins the round!",
+                    "• Usa cada dígito una vez para lograr el Objetivo.\n" +
+                        "• Operadores: + − × ÷ ( ) ^ √ ! · Unir dígitos permitido.\n" +
+                        "• ¡El primero en acertar gana la ronda!",
+                    "• 用完所有数字（各用一次）凑出目标数。\n" +
+                        "• 运算符：+ − × ÷ ( ) ^ √ ! · 允许数字拼接。\n" +
+                        "• 最先提交正确算式者赢得该回合！",
+                    "• استخدم كل رقم مرة واحدة للوصول للهدف.\n" +
+                        "• العمليات: + − × ÷ ( ) ^ √ ! · دمج الأرقام مسموح.\n" +
+                        "• أول حل صحيح يفوز بالجولة!"
                 ),
                 color = colors.ink,
                 fontFamily = FontFamily.Monospace,
                 fontSize = 12.sp,
-                lineHeight = 18.sp
+                lineHeight = 17.sp
             )
         }
 
         PdButton(
-            text = AppStrings.tr(lang, "Политика конфиденциальности", "Privacy Policy", "Política de privacidad", "隐私政策", "سياسة الخصوصية"),
+            text = AppStrings.tr(lang, "Политика конфиденциальности", "Privacy Policy", "Privacidad", "隐私政策", "الخصوصية"),
             variant = PdButtonVariant.OUTLINE,
             onClick = {
                 onClickSound()
@@ -343,7 +319,7 @@ fun SettingsScreen(
         )
 
         PdButton(
-            text = AppStrings.tr(lang, "Сбросить локальную статистику", "Reset Local Stats", "Reiniciar estadísticas", "重置本地统计", "إعادة ضبط الإحصائيات"),
+            text = AppStrings.tr(lang, "Сбросить статистику", "Reset Stats", "Reiniciar", "重置数据", "إعادة ضبط"),
             variant = PdButtonVariant.OUTLINE,
             onClick = {
                 onClickSound()
@@ -359,28 +335,28 @@ fun SettingsScreen(
                 borderColor = colors.orange,
                 backgroundColor = colors.surface,
                 cornerRadius = 24.dp,
-                contentPadding = PaddingValues(22.dp)
+                contentPadding = PaddingValues(20.dp)
             ) {
                 Text(
-                    text = AppStrings.tr(lang, "Политика конфиденциальности", "Privacy Policy — PlusDuel", "Política de privacidad", "隐私政策 — PlusDuel", "سياسة الخصوصية — PlusDuel"),
+                    text = AppStrings.tr(lang, "Политика конфиденциальности", "Privacy Policy — PlusDuel", "Privacidad", "隐私政策", "الخصوصية"),
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontSize = 15.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "• Настройки, прогресс соло-режима, монеты и открытые скины хранятся локально на вашем устройстве.\n• Для показа нижнего рекламного баннера в меню используется Google AdMob SDK (com.google.android.gms:play-services-ads), который может обрабатывать рекламный ID устройства (AAID), регион по IP и диагностику показа рекламы согласно Политике конфиденциальности Google.\n• В онлайн-дуэлях сервер обрабатывает ваш никнейм, игровой ID устройства для рейтинга Elo и отправленные математические формулы.\n• Полная версия: https://plusduel.onrender.com/privacy.html\n• Контакт: nuraly2907@icloud.com",
-                        "• Your settings, solo stats, coins, and unlocked styles are stored locally on your device.\n• PlusDuel uses Google AdMob SDK (com.google.android.gms:play-services-ads) to display banner ads in menus, which may process your device Advertising ID (AAID), coarse IP location, and ad diagnostics under Google's Privacy Policy.\n• When playing online duels, the server processes only your chosen nickname, device player ID for Elo rankings, and submitted math expressions.\n• Web policy: https://plusduel.onrender.com/privacy.html\n• Contact: nuraly2907@icloud.com"
+                        "• Настройки, соло-рекорды, монеты и открытые скины хранятся локально на устройстве.\n• Для показа нижнего баннера используется Google AdMob SDK (com.google.android.gms:play-services-ads), который может обрабатывать рекламный ID (AAID) и регион по IP согласно Политике Google.\n• В онлайн-дуэлях сервер обрабатывает никнейм, игровой ID для рейтинга Elo и отправленные формулы.\n• URL: https://plusduel.onrender.com/privacy.html",
+                        "• Settings, solo stats, coins, and unlocked styles are stored locally on your device.\n• PlusDuel uses Google AdMob SDK (com.google.android.gms:play-services-ads) for bottom banner ads, which may process your Advertising ID (AAID), coarse IP location, and ad diagnostics under Google's Privacy Policy.\n• In online duels, the server processes your nickname, player ID for Elo rankings, and submitted math expressions.\n• Web: https://plusduel.onrender.com/privacy.html"
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
-                    fontSize = 12.sp,
-                    lineHeight = 18.sp
+                    fontSize = 11.sp,
+                    lineHeight = 16.sp
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 PdButton(
                     text = AppStrings.tr(lang, "Закрыть", "Close", "Cerrar", "关闭", "إغلاق"),
                     variant = PdButtonVariant.PRIMARY,
@@ -400,29 +376,29 @@ fun SettingsScreen(
                 borderColor = colors.danger,
                 backgroundColor = colors.surface,
                 cornerRadius = 24.dp,
-                contentPadding = PaddingValues(22.dp)
+                contentPadding = PaddingValues(20.dp)
             ) {
                 Text(
-                    text = AppStrings.tr(lang, "Сбросить статистику?", "Reset Local Stats?", "¿Reiniciar estadísticas?", "确定重置统计数据？", "إعادة ضبط الإحصائيات؟"),
+                    text = AppStrings.tr(lang, "Сбросить статистику?", "Reset Local Stats?", "¿Reiniciar?", "重置统计？", "إعادة ضبط؟"),
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 17.sp
+                    fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "Локальный счётчик матчей и соло-рекордов будет сброшен. Открытые скины и монеты сохранятся.",
-                        "Your local match counters and solo records will be reset. Unlocked skins and coins will be kept."
+                        "Счётчик матчей и соло-рекорды будут сброшены. Монеты и скины сохранятся.",
+                        "Local match counters and solo records will be reset. Coins and skins are kept."
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
                     fontSize = 12.sp
                 )
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(14.dp))
                 PdButton(
-                    text = AppStrings.tr(lang, "Да, сбросить", "Yes, Reset", "Sí, reiniciar", "确认重置", "نعم"),
+                    text = AppStrings.tr(lang, "Сбросить", "Reset", "Reiniciar", "确认", "نعم"),
                     variant = PdButtonVariant.ACCENT,
                     onClick = {
                         onClickSound()

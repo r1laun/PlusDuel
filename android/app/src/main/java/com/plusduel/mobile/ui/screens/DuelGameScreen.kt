@@ -145,35 +145,35 @@ fun DuelGameScreen(
             val subMsg = when {
                 matchResult.reason == "forfeit" -> AppStrings.tr(
                     language,
-                    "Соперник покинул матч — победа присуждена вам!",
-                    "Opponent forfeited the match!",
-                    "¡El rival abandonó la partida!",
-                    "对手退出对局，你直接获胜！",
-                    "انسحب الخصم من المباراة!"
+                    "Соперник вышел",
+                    "Opponent forfeited",
+                    "El rival abandonó",
+                    "对手已退出",
+                    "انسحب الخصم"
                 )
                 matchResult.isDraw -> AppStrings.tr(
                     language,
-                    "Равная борьба до последней секунды!",
-                    "Evenly matched to the final second!",
-                    "¡Igualados hasta el último segundo!",
-                    "势均力敌的对决！",
-                    "مباراة متكافئة حتى اللحظة الأخيرة!"
+                    "Равный счёт",
+                    "Evenly matched",
+                    "Partida igualada",
+                    "势均力敌",
+                    "مباراة متكافئة"
                 )
                 matchResult.iWon -> AppStrings.tr(
                     language,
-                    "Ты оказался быстрее и точнее в расчётах!",
-                    "You solved faster and outcalculated ${matchResult.opponentName}!",
-                    "¡Calculaste más rápido que ${matchResult.opponentName}!",
-                    "你的计算比 ${matchResult.opponentName} 更快更准！",
-                    "كنت أسرع في الحساب من ${matchResult.opponentName}!"
+                    "Чистая победа!",
+                    "Well played!",
+                    "¡Bien jugado!",
+                    "漂亮获胜！",
+                    "أداء رائع!"
                 )
                 else -> AppStrings.tr(
                     language,
-                    "${matchResult.opponentName} выиграл этот матч.",
-                    "${matchResult.opponentName} took the match.",
-                    "${matchResult.opponentName} ganó la partida.",
-                    "${matchResult.opponentName} 赢得了本场对局。",
-                    "فاز ${matchResult.opponentName} بالمباراة."
+                    "Победил ${matchResult.opponentName}",
+                    "${matchResult.opponentName} won",
+                    "Ganó ${matchResult.opponentName}",
+                    "${matchResult.opponentName} 获胜",
+                    "فاز ${matchResult.opponentName}"
                 )
             }
 
@@ -224,18 +224,12 @@ fun DuelGameScreen(
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = AppStrings.tr(
-                                language,
-                                "Награда за матч: +${matchResult.coinsEarned} ● монет",
-                                "Match Reward: +${matchResult.coinsEarned} ● coins",
-                                "Recompensa: +${matchResult.coinsEarned} ● monedas",
-                                "对局奖励：+${matchResult.coinsEarned} ● 金币",
-                                "مكافأة المباراة: +${matchResult.coinsEarned} ● عملة"
-                            ),
-                            color = colors.ink,
+                            text = "+${matchResult.coinsEarned} ●",
+                            color = colors.orange,
                             fontFamily = FontFamily.Monospace,
                             fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp
+                            fontSize = 14.sp,
+                            maxLines = 1
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
@@ -980,27 +974,27 @@ fun DuelGameScreen(
                 val titleText = when {
                     iWonRound -> AppStrings.tr(
                         language,
-                        "✓ Раунд за тобой! +$COINS_PER_ROUND_SOLVED ●",
-                        "✓ You won the round! +$COINS_PER_ROUND_SOLVED ●",
-                        "✓ ¡Ganaste la ronda! +$COINS_PER_ROUND_SOLVED ●",
-                        "✓ 你赢下了本回合！+$COINS_PER_ROUND_SOLVED ●",
+                        "✓ Раунд твой! +$COINS_PER_ROUND_SOLVED ●",
+                        "✓ Round won! +$COINS_PER_ROUND_SOLVED ●",
+                        "✓ ¡Ronda ganada! +$COINS_PER_ROUND_SOLVED ●",
+                        "✓ 本局获胜！+$COINS_PER_ROUND_SOLVED ●",
                         "✓ فزت بالجولة! +$COINS_PER_ROUND_SOLVED ●"
                     )
                     timedOut -> AppStrings.tr(
                         language,
-                        "Время раунда истекло",
-                        "Round timed out",
+                        "Время вышло",
+                        "Time's up",
                         "Tiempo agotado",
-                        "本回合超时",
-                        "انتهى وقت الجولة"
+                        "时间到",
+                        "انتهى الوقت"
                     )
                     else -> AppStrings.tr(
                         language,
-                        "$opponentName забрал раунд",
-                        "$opponentName won the round",
-                        "$opponentName ganó la ronda",
-                        "$opponentName 赢得了本回合",
-                        "فاز $opponentName بالجولة"
+                        "Раунд за $opponentName",
+                        "$opponentName won",
+                        "Ganó $opponentName",
+                        "$opponentName 获胜",
+                        "فاز $opponentName"
                     )
                 }
 
@@ -1009,8 +1003,10 @@ fun DuelGameScreen(
                     color = if (iWonRound) colors.orange else colors.ink,
                     fontFamily = FontFamily.Monospace,
                     fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp,
+                    fontSize = 15.sp,
                     textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.fillMaxWidth()
                 )
 

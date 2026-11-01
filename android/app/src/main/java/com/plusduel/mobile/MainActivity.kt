@@ -681,7 +681,6 @@ private fun PlusDuelRoot(
         }
 
         if (!inActiveGameplay) {
-            AdMobBannerBar()
             BottomNavigationBar(
                 currentTab = currentTab,
                 lang = lang,
@@ -696,6 +695,7 @@ private fun PlusDuelRoot(
                     }
                 }
             )
+            AdMobBannerBar()
         }
     }
 }

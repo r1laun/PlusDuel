@@ -21,8 +21,8 @@ enum class ThemeMode {
 }
 
 enum class AppLanguage(val code: String, val label: String, val isRtl: Boolean = false) {
-    RU("ru", "РУ", false),
     EN("en", "EN", false),
+    RU("ru", "РУ", false),
     ES("es", "ES", false),
     ZH("zh", "中文", false),
     AR("ar", "عربي", true);
@@ -33,16 +33,7 @@ enum class AppLanguage(val code: String, val label: String, val isRtl: Boolean =
     }
 
     companion object {
-        fun defaultForDevice(): AppLanguage {
-            val lang = Locale.getDefault().language.lowercase(Locale.ROOT)
-            return when {
-                lang.startsWith("ru") || lang.startsWith("kk") || lang.startsWith("uk") || lang.startsWith("be") -> RU
-                lang.startsWith("es") -> ES
-                lang.startsWith("zh") -> ZH
-                lang.startsWith("ar") -> AR
-                else -> EN
-            }
-        }
+        fun defaultForDevice(): AppLanguage = EN
     }
 }
 

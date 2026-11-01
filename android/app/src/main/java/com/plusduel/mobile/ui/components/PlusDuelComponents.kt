@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
@@ -170,7 +171,7 @@ fun PdButton(
                 enabled = enabled,
                 onClick = onClick
             )
-            .padding(horizontal = 20.dp, vertical = 13.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -182,8 +183,12 @@ fun PdButton(
                 color = fg,
                 fontFamily = FontFamily.Monospace,
                 fontWeight = FontWeight.Bold,
-                fontSize = 15.sp,
-                textAlign = TextAlign.Center
+                fontSize = 14.sp,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f, fill = false)
             )
             if (badgeText != null) {
                 Spacer(modifier = Modifier.width(8.dp))
@@ -200,7 +205,9 @@ fun PdButton(
                         color = Color.White,
                         fontFamily = FontFamily.Monospace,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
+                        fontSize = 11.sp,
+                        maxLines = 1,
+                        softWrap = false
                     )
                 }
             }
@@ -349,13 +356,15 @@ fun PlusDuelLogoHeader(
             }
         }
         if (subtitle != null) {
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(3.dp))
             Text(
                 text = subtitle,
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
-                fontSize = 12.sp,
-                textAlign = TextAlign.Center
+                fontSize = 11.sp,
+                textAlign = TextAlign.Center,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
         }
     }

@@ -21,7 +21,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -118,62 +117,62 @@ fun DuelGameScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .background(colors.bg)
-                .padding(horizontal = 20.dp, vertical = 20.dp),
+                .padding(horizontal = 16.dp, vertical = 16.dp),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             PlusDuelLogoHeader(compact = true)
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             val headline = when {
-                matchResult.isDraw -> AppStrings.tr(language, "НИЧЬЯ", "DRAW", "EMPATE", "平局", "تعادل")
-                matchResult.iWon -> AppStrings.tr(language, "ПОБЕДА!", "VICTORY!", "¡VICTORIA!", "胜利！", "انتصار!")
-                else -> AppStrings.tr(language, "ПОРАЖЕНИЕ", "DEFEAT", "DERROTA", "惜败", "هزيمة")
+                matchResult.isDraw -> AppStrings.tr(language, "Ничья", "Draw", "Empate", "平局", "تعادل")
+                matchResult.iWon -> AppStrings.tr(language, "Победа", "Victory", "Victoria", "胜利", "انتصار")
+                else -> AppStrings.tr(language, "Поражение", "Defeat", "Derrota", "惜败", "هزيمة")
             }
 
             Text(
                 text = headline,
                 color = if (matchResult.iWon) colors.orange else colors.ink,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 34.sp,
+                fontWeight = FontWeight.SemiBold,
+                fontSize = 32.sp,
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             val subMsg = when {
                 matchResult.reason == "forfeit" -> AppStrings.tr(
                     language,
-                    "Соперник вышел",
-                    "Opponent forfeited",
+                    "Соперник покинул матч",
+                    "Opponent left the match",
                     "El rival abandonó",
-                    "对手已退出",
-                    "انسحب الخصم"
+                    "对手已离开对局",
+                    "غادر الخصم المباراة"
                 )
                 matchResult.isDraw -> AppStrings.tr(
                     language,
-                    "Равный счёт",
-                    "Evenly matched",
-                    "Partida igualada",
-                    "势均力敌",
-                    "مباراة متكافئة"
+                    "Равный счёт по раундам",
+                    "Even score across rounds",
+                    "Marcador igualado",
+                    "双方比分持平",
+                    "تعادل في الجولات"
                 )
                 matchResult.iWon -> AppStrings.tr(
                     language,
-                    "Чистая победа!",
-                    "Well played!",
-                    "¡Bien jugado!",
-                    "漂亮获胜！",
-                    "أداء رائع!"
+                    "Вы решили задачи быстрее соперника",
+                    "You solved faster than ${matchResult.opponentName}",
+                    "Calculaste más rápido que ${matchResult.opponentName}",
+                    "你的计算快于 ${matchResult.opponentName}",
+                    "حللت أسرع من ${matchResult.opponentName}"
                 )
                 else -> AppStrings.tr(
                     language,
-                    "Победил ${matchResult.opponentName}",
-                    "${matchResult.opponentName} won",
-                    "Ganó ${matchResult.opponentName}",
-                    "${matchResult.opponentName} 获胜",
-                    "فاز ${matchResult.opponentName}"
+                    "Матч за ${matchResult.opponentName}",
+                    "${matchResult.opponentName} won the match",
+                    "${matchResult.opponentName} ganó la partida",
+                    "${matchResult.opponentName} 赢得对局",
+                    "فاز ${matchResult.opponentName} بالمباراة"
                 )
             }
 
@@ -185,12 +184,12 @@ fun DuelGameScreen(
                 textAlign = TextAlign.Center
             )
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             PdPanel(
                 borderColor = if (matchResult.iWon) colors.orange else colors.line,
                 backgroundColor = colors.surface,
-                contentPadding = PaddingValues(18.dp)
+                contentPadding = PaddingValues(16.dp)
             ) {
                 if (matchResult.ratingDelta != null) {
                     val rd = matchResult.ratingDelta
@@ -198,78 +197,85 @@ fun DuelGameScreen(
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(colors.tint, RoundedCornerShape(12.dp))
-                            .border(1.dp, colors.orange, RoundedCornerShape(12.dp))
-                            .padding(vertical = 10.dp, horizontal = 12.dp),
+                            .background(colors.tint, RoundedCornerShape(10.dp))
+                            .border(1.dp, colors.orange, RoundedCornerShape(10.dp))
+                            .padding(vertical = 8.dp, horizontal = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "Elo ${rd.after} ($sign) · ${AppStrings.rankTitle(language, rd.title)}",
+                            text = "${rd.after} Elo ($sign) · ${AppStrings.rankTitle(language, rd.title)}",
                             color = colors.orange,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 13.sp
                         )
                     }
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(8.dp))
                 }
 
                 if (matchResult.coinsEarned > 0) {
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(colors.bg, RoundedCornerShape(12.dp))
-                            .border(1.dp, colors.line, RoundedCornerShape(12.dp))
+                            .background(colors.bg, RoundedCornerShape(10.dp))
+                            .border(1.dp, colors.line, RoundedCornerShape(10.dp))
                             .padding(vertical = 8.dp, horizontal = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
-                            text = "+${matchResult.coinsEarned} ●",
-                            color = colors.orange,
+                            text = AppStrings.tr(
+                                language,
+                                "+${matchResult.coinsEarned} монет",
+                                "+${matchResult.coinsEarned} coins",
+                                "+${matchResult.coinsEarned} monedas",
+                                "+${matchResult.coinsEarned} 金币",
+                                "+${matchResult.coinsEarned} عملة"
+                            ),
+                            color = colors.ink,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 13.sp,
                             maxLines = 1
                         )
                     }
                     Spacer(modifier = Modifier.height(12.dp))
                 }
 
-                // My score row
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(colors.tint, RoundedCornerShape(12.dp))
-                        .border(1.5.dp, colors.orange, RoundedCornerShape(12.dp))
-                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                        .height(44.dp)
+                        .background(colors.tint, RoundedCornerShape(10.dp))
+                        .border(1.dp, colors.orange, RoundedCornerShape(10.dp))
+                        .padding(horizontal = 12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = AppStrings.tr(language, "Ты", "You", "Tú", "你", "أنت"),
+                        text = AppStrings.tr(language, "Вы", "You", "Tú", "你", "أنت"),
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp
                     )
                     Text(
                         text = "${matchResult.myWins}W · ${String.format(Locale.US, "%.1f", matchResult.myScore)}",
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp
                     )
                 }
 
                 Spacer(modifier = Modifier.height(8.dp))
 
-                // Opponent score row
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(colors.bg, RoundedCornerShape(12.dp))
-                        .border(1.dp, colors.line, RoundedCornerShape(12.dp))
-                        .padding(horizontal = 14.dp, vertical = 12.dp),
+                        .height(44.dp)
+                        .background(colors.bg, RoundedCornerShape(10.dp))
+                        .border(1.dp, colors.line, RoundedCornerShape(10.dp))
+                        .padding(horizontal = 12.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -277,24 +283,24 @@ fun DuelGameScreen(
                         text = matchResult.opponentName,
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp
                     )
                     Text(
                         text = "${matchResult.oppWins}W · ${String.format(Locale.US, "%.1f", matchResult.oppScore)}",
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(18.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             if (onPlayAgain != null) {
                 PdButton(
-                    text = AppStrings.tr(language, "Сыграть ещё раз ▶", "Play Again ▶", "Jugar de nuevo ▶", "再来一局 ▶", "العب مرة أخرى ▶"),
+                    text = AppStrings.tr(language, "Сыграть снова", "Play again", "Jugar de nuevo", "再来一局", "العب مرة أخرى"),
                     variant = PdButtonVariant.ACCENT,
                     onClick = {
                         soundManager.playClick()
@@ -302,11 +308,11 @@ fun DuelGameScreen(
                     },
                     modifier = Modifier.fillMaxWidth()
                 )
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
             }
 
             PdButton(
-                text = AppStrings.tr(language, "Вернуться в лобби", "Back to Lobby", "Volver al lobby", "返回大厅", "العودة للقائمة"),
+                text = AppStrings.tr(language, "В лобби", "Back to lobby", "Volver al lobby", "返回大厅", "العودة للقائمة"),
                 variant = if (onPlayAgain != null) PdButtonVariant.OUTLINE else PdButtonVariant.PRIMARY,
                 onClick = {
                     soundManager.playClick()
@@ -331,15 +337,15 @@ fun DuelGameScreen(
             PlusDuelLogoHeader(compact = true)
             Spacer(modifier = Modifier.height(16.dp))
             Text(
-                text = AppStrings.tr(language, "Генерация раунда…", "Preparing round…", "Preparando ronda…", "正在生成题目…", "جارٍ تجهيز الجولة…"),
+                text = AppStrings.tr(language, "Подготовка раунда", "Preparing round", "Preparando ronda", "正在准备回合", "جارٍ تجهيز الجولة"),
                 color = colors.ink,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 15.sp
+                fontWeight = FontWeight.Medium,
+                fontSize = 14.sp
             )
             Spacer(modifier = Modifier.height(16.dp))
             PdButton(
-                text = AppStrings.tr(language, "← Выход", "← Leave", "← Salir", "← 退出", "← خروج"),
+                text = AppStrings.tr(language, "Выйти", "Leave", "Salir", "退出", "خروج"),
                 variant = PdButtonVariant.OUTLINE,
                 onClick = {
                     soundManager.playClick()
@@ -360,7 +366,6 @@ fun DuelGameScreen(
 
     val active = roundOutcome == null
 
-    // Remaining time ticker
     var remainingMs by remember(round.index, round.receivedAtMs, round.timeLimitMs) {
         mutableLongStateOf(round.timeLimitMs)
     }
@@ -391,8 +396,8 @@ fun DuelGameScreen(
 
     fun triggerShake() {
         coroutineScope.launch {
-            for (delta in listOf(-12f, 12f, -8f, 8f, -4f, 0f)) {
-                shakeOffset.animateTo(delta, tween(40))
+            for (delta in listOf(-10f, 10f, -6f, 6f, -3f, 0f)) {
+                shakeOffset.animateTo(delta, tween(36))
             }
         }
     }
@@ -424,10 +429,10 @@ fun DuelGameScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(colors.bg)
-            .padding(horizontal = 16.dp, vertical = 10.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        // ==================== TOP SECTION (FIXED STRUCTURE) ====================
+        // ==================== TOP SECTION (4PX GRID STRUCTURE) ====================
         Column(
             modifier = Modifier.fillMaxWidth(),
             verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -442,13 +447,14 @@ fun DuelGameScreen(
                 val backPressed by backInteraction.collectIsPressedAsState()
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp))
+                        .height(36.dp)
+                        .clip(RoundedCornerShape(8.dp))
                         .background(if (backPressed) colors.tint else colors.surface)
                         .statefulBorder(
                             isDashed = backPressed,
                             strokeWidth = 1.5.dp,
-                            color = colors.ink,
-                            cornerRadius = 12.dp
+                            color = colors.line,
+                            cornerRadius = 8.dp
                         )
                         .clickable(
                             interactionSource = backInteraction,
@@ -457,13 +463,14 @@ fun DuelGameScreen(
                             soundManager.playClick()
                             onLeave()
                         }
-                        .padding(horizontal = 10.dp, vertical = 7.dp)
+                        .padding(horizontal = 12.dp),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = AppStrings.tr(language, "← ВЫХ", "← EXT", "← SAL", "← 退出", "← خروج"),
+                        text = AppStrings.tr(language, "← Выход", "← Leave", "← Salir", "← 退出", "← خروج"),
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                         fontSize = 12.sp
                     )
                 }
@@ -481,25 +488,25 @@ fun DuelGameScreen(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .height(32.dp)
-                        .clip(RoundedCornerShape(999.dp))
+                        .height(36.dp)
+                        .clip(RoundedCornerShape(8.dp))
                         .background(colors.surface)
-                        .border(1.5.dp, colors.line, RoundedCornerShape(999.dp))
+                        .border(1.dp, colors.line, RoundedCornerShape(8.dp))
                 ) {
                     Box(
                         modifier = Modifier
                             .fillMaxHeight()
                             .fillMaxWidth(progressFraction)
                             .background(
-                                if (progressFraction < 0.22f) colors.danger.copy(alpha = 0.28f)
-                                else colors.orange.copy(alpha = 0.22f)
+                                if (progressFraction < 0.22f) colors.danger.copy(alpha = 0.2f)
+                                else colors.tint
                             )
                     )
                     Text(
                         text = secText,
                         color = if (progressFraction < 0.22f && active) colors.danger else colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                         fontSize = 12.sp,
                         modifier = Modifier.align(Alignment.Center)
                     )
@@ -510,19 +517,21 @@ fun DuelGameScreen(
                 val displayOppWins = roundOutcome?.oppWins ?: oppWins
                 Box(
                     modifier = Modifier
-                        .background(colors.tint, RoundedCornerShape(12.dp))
-                        .border(1.5.dp, colors.orange, RoundedCornerShape(12.dp))
-                        .padding(horizontal = 10.dp, vertical = 7.dp)
+                        .height(36.dp)
+                        .background(colors.surface, RoundedCornerShape(8.dp))
+                        .border(1.dp, colors.line, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 10.dp),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = if (gameKind == ActiveGameKind.SOLO_ENDLESS) {
-                            "🔥 $soloStreak"
+                            "${soloStreak}x"
                         } else {
                             "$displayMyWins : $displayOppWins"
                         },
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.SemiBold,
                         fontSize = 12.sp
                     )
                 }
@@ -530,31 +539,33 @@ fun DuelGameScreen(
                 // Round Index Badge
                 Box(
                     modifier = Modifier
-                        .background(colors.surface, RoundedCornerShape(12.dp))
-                        .border(1.5.dp, colors.line, RoundedCornerShape(12.dp))
-                        .padding(horizontal = 9.dp, vertical = 7.dp)
+                        .height(36.dp)
+                        .background(colors.surface, RoundedCornerShape(8.dp))
+                        .border(1.dp, colors.line, RoundedCornerShape(8.dp))
+                        .padding(horizontal = 10.dp),
+                    contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "R${round.index}",
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                         fontSize = 12.sp
                     )
                 }
             }
 
-            // 2. TARGET CARD
+            // 2. TARGET CARD (The primary focal moment on the screen)
             Surface(
                 modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(18.dp),
+                shape = RoundedCornerShape(16.dp),
                 color = colors.surface,
                 border = BorderStroke(1.5.dp, colors.ink)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 10.dp, horizontal = 16.dp),
+                        .padding(vertical = 12.dp, horizontal = 16.dp),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Row(
@@ -566,15 +577,14 @@ fun DuelGameScreen(
                             text = AppStrings.targetHeader(language),
                             color = colors.muted,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp
                         )
                         Text(
                             text = opponentName,
-                            color = colors.orange,
+                            color = colors.muted,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 11.sp,
+                            fontSize = 12.sp,
                             maxLines = 1,
                             overflow = TextOverflow.Ellipsis
                         )
@@ -584,12 +594,12 @@ fun DuelGameScreen(
                         text = round.target.toString(),
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 38.sp
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 40.sp
                     )
 
                     Text(
-                        text = AppStrings.useEveryDigitOnce(language, usedSlotIndices.size, round.digits.size),
+                        text = AppStrings.useEveryDigitOnce(language, usedSlotIndices.size, round.digits.lengthOrSize()),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
                         fontSize = 11.sp,
@@ -599,33 +609,33 @@ fun DuelGameScreen(
                 }
             }
 
-            // 3. FIXED-HEIGHT STATUS BANNER (58.dp SO KEYPAD NEVER JUMPS)
+            // 3. FIXED-HEIGHT STATUS BANNER (48.dp)
             val showSolvedHighlight = livePreview.isSolved
             val hasServerBanner = errorBanner.isNotBlank()
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(58.dp)
+                    .height(48.dp)
                     .background(
                         color = when {
-                            hasServerBanner -> colors.danger.copy(alpha = 0.1f)
-                            feedbackIsError && feedbackMessage.isNotEmpty() -> colors.danger.copy(alpha = 0.1f)
+                            hasServerBanner -> colors.danger.copy(alpha = 0.08f)
+                            feedbackIsError && feedbackMessage.isNotEmpty() -> colors.danger.copy(alpha = 0.08f)
                             showSolvedHighlight -> colors.tint
                             else -> colors.surface
                         },
-                        shape = RoundedCornerShape(14.dp)
+                        shape = RoundedCornerShape(10.dp)
                     )
                     .border(
-                        width = 1.5.dp,
+                        width = 1.dp,
                         color = when {
                             hasServerBanner -> colors.danger
                             feedbackIsError && feedbackMessage.isNotEmpty() -> colors.danger
                             showSolvedHighlight -> colors.orange
                             else -> colors.line
                         },
-                        shape = RoundedCornerShape(14.dp)
+                        shape = RoundedCornerShape(10.dp)
                     )
-                    .padding(horizontal = 12.dp, vertical = 6.dp),
+                    .padding(horizontal = 12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 when {
@@ -637,9 +647,10 @@ fun DuelGameScreen(
                             text = txt,
                             color = colors.danger,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 12.sp,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
                         )
                     }
                     showSolvedHighlight -> {
@@ -647,9 +658,10 @@ fun DuelGameScreen(
                             text = AppStrings.readyToSubmitBanner(language),
                             color = colors.orange,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 13.sp,
-                            textAlign = TextAlign.Center
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 12.sp,
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
                         )
                     }
                     feedbackMessage.isNotEmpty() -> {
@@ -657,10 +669,11 @@ fun DuelGameScreen(
                             text = feedbackMessage,
                             color = if (feedbackIsError) colors.danger else colors.ink,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 12.sp,
-                            lineHeight = 16.sp,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                     livePreview.syntaxErrorCode == ValidationErrorCode.LEADING_ZERO -> {
@@ -673,25 +686,10 @@ fun DuelGameScreen(
                             ),
                             color = colors.danger,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 12.sp,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                    !rated && gameKind == ActiveGameKind.ONLINE_DUEL -> {
-                        Text(
-                            text = AppStrings.tr(
-                                language,
-                                "Товарищеский матч · Операторы: + − × ÷ ( ) ^ √ !",
-                                "Unrated match · Operators: + − × ÷ ( ) ^ √ !",
-                                "Partida amistosa · Operadores: + − × ÷ ( ) ^ √ !",
-                                "非排位赛 · 运算符: + − × ÷ ( ) ^ √ !",
-                                "مباراة ودية · العمليات: + − × ÷ ( ) ^ √ !"
-                            ),
-                            color = colors.muted,
-                            fontFamily = FontFamily.Monospace,
-                            fontSize = 11.sp,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
                         )
                     }
                     else -> {
@@ -700,13 +698,15 @@ fun DuelGameScreen(
                             color = colors.muted,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 11.sp,
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            maxLines = 1,
+                            overflow = TextOverflow.Ellipsis
                         )
                     }
                 }
             }
 
-            // 4. EXPRESSION DISPLAY BOX (FIXED 56.dp HEIGHT, ALWAYS LTR)
+            // 4. EXPRESSION DISPLAY BOX (56.dp HEIGHT, ALWAYS LTR)
             CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                 Box(
                     modifier = Modifier
@@ -715,12 +715,12 @@ fun DuelGameScreen(
                         .height(56.dp)
                         .background(
                             color = if (showSolvedHighlight) colors.tint else colors.surface,
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(12.dp)
                         )
                         .border(
-                            width = if (showSolvedHighlight) 2.dp else 1.5.dp,
+                            width = 1.5.dp,
                             color = if (showSolvedHighlight) colors.orange else colors.ink,
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(12.dp)
                         )
                         .padding(horizontal = 16.dp),
                     contentAlignment = Alignment.CenterStart
@@ -745,8 +745,8 @@ fun DuelGameScreen(
                                 text = ExpressionValidator.normalizePretty(expressionString),
                                 color = if (showSolvedHighlight) colors.orange else colors.ink,
                                 fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 21.sp,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 20.sp,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis,
                                 modifier = Modifier.weight(1f)
@@ -759,20 +759,20 @@ fun DuelGameScreen(
                                 modifier = Modifier
                                     .background(
                                         color = if (showSolvedHighlight) colors.orange else colors.bg,
-                                        shape = RoundedCornerShape(999.dp)
+                                        shape = RoundedCornerShape(6.dp)
                                     )
                                     .border(
                                         width = 1.dp,
                                         color = if (showSolvedHighlight) colors.orange else colors.line,
-                                        shape = RoundedCornerShape(999.dp)
+                                        shape = RoundedCornerShape(6.dp)
                                     )
-                                    .padding(horizontal = 10.dp, vertical = 4.dp)
+                                    .padding(horizontal = 8.dp, vertical = 4.dp)
                             ) {
                                 Text(
                                     text = "= ${liveVal.toDisplayString()}",
                                     color = if (showSolvedHighlight) Color.White else colors.muted,
                                     fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Medium,
                                     fontSize = 13.sp
                                 )
                             }
@@ -789,7 +789,7 @@ fun DuelGameScreen(
                     modifier = Modifier.fillMaxWidth(),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    // 1. SMART DIGIT ROW (5 SLOTS, 54.dp HEIGHT)
+                    // 1. SMART DIGIT ROW (5 SLOTS, 52.dp HEIGHT)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
@@ -802,31 +802,31 @@ fun DuelGameScreen(
                                 Box(
                                     modifier = Modifier
                                         .weight(1f)
-                                        .height(54.dp)
+                                        .height(52.dp)
                                         .background(colors.surface, RoundedCornerShape(tileRadius))
-                                        .border(1.5.dp, colors.line, RoundedCornerShape(tileRadius)),
+                                        .border(1.dp, colors.line, RoundedCornerShape(tileRadius)),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
                                         text = "·",
                                         color = colors.muted.copy(alpha = 0.4f),
                                         fontFamily = FontFamily.Monospace,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 20.sp
+                                        fontSize = 18.sp
                                     )
                                 }
                             } else {
                                 val digitInteraction = remember(slotIndex) { MutableInteractionSource() }
                                 val isPressed by digitInteraction.collectIsPressedAsState()
                                 val scale by animateFloatAsState(
-                                    targetValue = if (isPressed) 0.94f else 1f,
+                                    targetValue = if (isPressed) 0.96f else 1f,
+                                    animationSpec = tween(120),
                                     label = "digitScale"
                                 )
 
                                 Box(
                                     modifier = Modifier
                                         .weight(1f)
-                                        .height(54.dp)
+                                        .height(52.dp)
                                         .scale(scale)
                                         .clip(RoundedCornerShape(tileRadius))
                                         .background(
@@ -862,27 +862,15 @@ fun DuelGameScreen(
                                         text = digit.toString(),
                                         color = if (isUsed || isPressed) colors.orange else colors.onInk,
                                         fontFamily = FontFamily.Monospace,
-                                        fontWeight = FontWeight.Bold,
-                                        fontSize = 24.sp
+                                        fontWeight = FontWeight.SemiBold,
+                                        fontSize = 22.sp
                                     )
-                                    if (isUsed) {
-                                        Text(
-                                            text = "✓",
-                                            color = colors.orange,
-                                            fontFamily = FontFamily.Monospace,
-                                            fontWeight = FontWeight.Bold,
-                                            fontSize = 10.sp,
-                                            modifier = Modifier
-                                                .align(Alignment.TopEnd)
-                                                .padding(top = 3.dp, end = 5.dp)
-                                        )
-                                    }
                                 }
                             }
                         }
                     }
 
-                    // 2. OPERATOR KEYPAD (3x3 SYMMETRIC GRID)
+                    // 2. OPERATOR KEYPAD (3x3 SYMMETRIC GRID, 44.dp HEIGHT)
                     Column(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -895,11 +883,11 @@ fun DuelGameScreen(
                                 for (op in row) {
                                     TactileKeypadButton(
                                         label = op,
-                                        fontSizeSp = 20,
+                                        fontSizeSp = 18,
                                         cornerRadius = tileRadius,
                                         modifier = Modifier
                                             .weight(1f)
-                                            .height(46.dp),
+                                            .height(44.dp),
                                         onClick = {
                                             soundManager.playKey()
                                             feedbackMessage = ""
@@ -911,19 +899,19 @@ fun DuelGameScreen(
                         }
                     }
 
-                    // 3. ACTIONS ROW (BACKSPACE / CLEAR / SUBMIT)
+                    // 3. ACTIONS ROW (BACKSPACE / CLEAR / SUBMIT, 44.dp HEIGHT)
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         TactileKeypadButton(
                             label = "⌫",
-                            fontSizeSp = 19,
+                            fontSizeSp = 18,
                             cornerRadius = tileRadius,
                             enabled = entries.isNotEmpty(),
                             modifier = Modifier
                                 .weight(0.75f)
-                                .height(50.dp),
+                                .height(44.dp),
                             onClick = {
                                 soundManager.playDelete()
                                 feedbackMessage = ""
@@ -940,7 +928,7 @@ fun DuelGameScreen(
                             enabled = entries.isNotEmpty(),
                             modifier = Modifier
                                 .weight(0.95f)
-                                .height(50.dp),
+                                .height(44.dp),
                             onClick = {
                                 soundManager.playDelete()
                                 feedbackMessage = ""
@@ -956,7 +944,7 @@ fun DuelGameScreen(
                             onClick = { handleSubmit() },
                             modifier = Modifier
                                 .weight(1.4f)
-                                .height(50.dp)
+                                .height(44.dp)
                         )
                     }
                 }
@@ -967,34 +955,34 @@ fun DuelGameScreen(
             val timedOut = roundOutcome.winnerId == null || roundOutcome.winningExpression == null
 
             PdPanel(
-                borderColor = colors.orange,
+                borderColor = if (iWonRound) colors.orange else colors.line,
                 backgroundColor = colors.surface,
-                contentPadding = PaddingValues(20.dp)
+                contentPadding = PaddingValues(16.dp)
             ) {
                 val titleText = when {
                     iWonRound -> AppStrings.tr(
                         language,
-                        "✓ Раунд твой! +$COINS_PER_ROUND_SOLVED ●",
-                        "✓ Round won! +$COINS_PER_ROUND_SOLVED ●",
-                        "✓ ¡Ronda ganada! +$COINS_PER_ROUND_SOLVED ●",
-                        "✓ 本局获胜！+$COINS_PER_ROUND_SOLVED ●",
-                        "✓ فزت بالجولة! +$COINS_PER_ROUND_SOLVED ●"
+                        "Раунд за вами · +$COINS_PER_ROUND_SOLVED монет",
+                        "Round won · +$COINS_PER_ROUND_SOLVED coins",
+                        "Ronda ganada · +$COINS_PER_ROUND_SOLVED monedas",
+                        "赢得本回合 · +$COINS_PER_ROUND_SOLVED 金币",
+                        "فزت بالجولة · +$COINS_PER_ROUND_SOLVED عملات"
                     )
                     timedOut -> AppStrings.tr(
                         language,
                         "Время вышло",
-                        "Time's up",
+                        "Time is up",
                         "Tiempo agotado",
-                        "时间到",
+                        "本回合超时",
                         "انتهى الوقت"
                     )
                     else -> AppStrings.tr(
                         language,
                         "Раунд за $opponentName",
-                        "$opponentName won",
-                        "Ganó $opponentName",
-                        "$opponentName 获胜",
-                        "فاز $opponentName"
+                        "$opponentName won the round",
+                        "$opponentName ganó la ronda",
+                        "$opponentName 赢得本回合",
+                        "فاز $opponentName بالجولة"
                     )
                 }
 
@@ -1002,7 +990,7 @@ fun DuelGameScreen(
                     text = titleText,
                     color = if (iWonRound) colors.orange else colors.ink,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     fontSize = 15.sp,
                     textAlign = TextAlign.Center,
                     maxLines = 1,
@@ -1017,16 +1005,16 @@ fun DuelGameScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(colors.tint, RoundedCornerShape(14.dp))
-                                .border(1.5.dp, colors.orange, RoundedCornerShape(14.dp))
-                                .padding(vertical = 12.dp, horizontal = 14.dp),
+                                .background(colors.tint, RoundedCornerShape(10.dp))
+                                .border(1.dp, colors.orange, RoundedCornerShape(10.dp))
+                                .padding(vertical = 12.dp, horizontal = 12.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
                                 text = "${ExpressionValidator.normalizePretty(formulaToShow)} = ${round.target}",
                                 color = colors.orange,
                                 fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.SemiBold,
                                 fontSize = 18.sp,
                                 textAlign = TextAlign.Center
                             )
@@ -1039,11 +1027,11 @@ fun DuelGameScreen(
                 Text(
                     text = AppStrings.tr(
                         language,
-                        "Следующий раунд начинается…",
-                        "Next round starting…",
-                        "Siguiente ronda…",
-                        "下一回合即将开始…",
-                        "الجولة التالية تبدأ الآن…"
+                        "Следующий раунд",
+                        "Next round starting",
+                        "Siguiente ronda",
+                        "下一回合即将开始",
+                        "الجولة التالية"
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
@@ -1055,3 +1043,5 @@ fun DuelGameScreen(
         }
     }
 }
+
+private fun List<Int>.lengthOrSize(): Int = this.size

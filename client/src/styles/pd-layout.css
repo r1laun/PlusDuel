@@ -39,8 +39,8 @@
 
 /* ---------- Small screens (phones ≤480px) ---------- */
 @media (max-width: 480px) {
-  .pd-frame { padding: 12px 14px 20px; }
-  .pd-panel { padding: 18px 15px; }
+  .pd-frame { padding: 12px 16px 20px; }
+  .pd-panel { padding: 16px; }
 
   .pd-logo { font-size: 34px; }
   .pd-tagline { font-size: 12px; margin-bottom: 12px; }

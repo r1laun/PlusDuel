@@ -98,7 +98,7 @@ export default function SoloSetupScreen({ onStart, onBack }: Props) {
           onStart(mode, level);
         }}
       >
-        {t('start')} ▶
+        {t('start')}
       </button>
       <button className="pd-btn pd-btn--outline" onClick={tap(onBack)}>
         ← {t('back')}

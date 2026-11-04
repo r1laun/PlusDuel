@@ -102,7 +102,7 @@ fun ArenaScreen(
             .fillMaxSize()
             .background(colors.bg)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         // ==================== TOP STATUS BAR ====================
@@ -114,15 +114,15 @@ fun ArenaScreen(
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
-                    .background(colors.surface, RoundedCornerShape(999.dp))
-                    .border(1.5.dp, colors.line, RoundedCornerShape(999.dp))
+                    .background(colors.surface, RoundedCornerShape(8.dp))
+                    .border(1.dp, colors.line, RoundedCornerShape(8.dp))
                     .padding(horizontal = 12.dp, vertical = 6.dp)
             ) {
                 Text(
-                    text = "★ ${progress.rating} · ${AppStrings.rankTitle(lang, progress.rankTitle)}",
+                    text = "${progress.rating} · ${AppStrings.rankTitle(lang, progress.rankTitle)}",
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     fontSize = 12.sp,
                     maxLines = 1
                 )
@@ -134,20 +134,27 @@ fun ArenaScreen(
             ) {
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(999.dp))
-                        .background(colors.tint, RoundedCornerShape(999.dp))
-                        .border(1.5.dp, colors.orange, RoundedCornerShape(999.dp))
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colors.surface, RoundedCornerShape(8.dp))
+                        .border(1.dp, colors.line, RoundedCornerShape(8.dp))
                         .clickable {
                             onClickSound()
                             onOpenShop()
                         }
-                        .padding(horizontal = 11.dp, vertical = 6.dp)
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Text(
-                        text = "● ${progress.coins}",
-                        color = colors.orange,
+                        text = AppStrings.tr(
+                            lang,
+                            "${progress.coins} монет",
+                            "${progress.coins} coins",
+                            "${progress.coins} monedas",
+                            "${progress.coins} 金币",
+                            "${progress.coins} عملة"
+                        ),
+                        color = colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                         fontSize = 12.sp,
                         maxLines = 1
                     )
@@ -156,17 +163,21 @@ fun ArenaScreen(
                 val audioOn = progress.soundEnabled || progress.musicEnabled
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(999.dp))
-                        .background(if (audioOn) colors.tint else colors.surface, RoundedCornerShape(999.dp))
-                        .border(1.5.dp, if (audioOn) colors.orange else colors.line, RoundedCornerShape(999.dp))
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(colors.surface, RoundedCornerShape(8.dp))
+                        .border(1.dp, colors.line, RoundedCornerShape(8.dp))
                         .clickable { onToggleAudio() }
-                        .padding(horizontal = 11.dp, vertical = 6.dp)
+                        .padding(horizontal = 12.dp, vertical = 6.dp)
                 ) {
                     Text(
-                        text = if (audioOn) "♪ ON" else "♪ OFF",
-                        color = if (audioOn) colors.orange else colors.muted,
+                        text = if (audioOn) {
+                            AppStrings.tr(lang, "Звук", "Sound", "Sonido", "音效", "الصوت")
+                        } else {
+                            AppStrings.tr(lang, "Тихо", "Muted", "Silencio", "静音", "صامت")
+                        },
+                        color = if (audioOn) colors.ink else colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                         fontSize = 12.sp,
                         maxLines = 1
                     )
@@ -178,10 +189,10 @@ fun ArenaScreen(
         PlusDuelLogoHeader(
             subtitle = AppStrings.tr(
                 lang,
-                "1 на 1 математические дуэли",
-                "Real-time 1v1 Competitive Math",
+                "Математические дуэли 1 на 1",
+                "1v1 competitive math duels",
                 "Duelos matemáticos 1v1",
-                "1v1 实时数学竞技",
+                "1v1 实时数学对决",
                 "مبارزات رياضية ١ ضد ١"
             ),
             compact = true
@@ -196,16 +207,16 @@ fun ArenaScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(colors.danger.copy(alpha = 0.1f), RoundedCornerShape(14.dp))
-                    .border(1.5.dp, colors.danger, RoundedCornerShape(14.dp))
-                    .padding(10.dp),
+                    .background(colors.danger.copy(alpha = 0.08f), RoundedCornerShape(10.dp))
+                    .border(1.dp, colors.danger, RoundedCornerShape(10.dp))
+                    .padding(12.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = errText,
                     color = colors.danger,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     fontSize = 12.sp,
                     textAlign = TextAlign.Center,
                     maxLines = 1
@@ -218,41 +229,41 @@ fun ArenaScreen(
             PdPanel(
                 borderColor = colors.orange,
                 backgroundColor = colors.surface,
-                contentPadding = PaddingValues(18.dp)
+                contentPadding = PaddingValues(16.dp)
             ) {
                 if (onlineState.queuePosition == -1) {
                     Text(
                         text = AppStrings.tr(
                             lang,
-                            "ПРИВАТНАЯ КОМНАТА",
-                            "PRIVATE ROOM OPEN",
-                            "SALA PRIVADA",
-                            "私人房间",
-                            "غرفة خاصة"
+                            "Приватная комната открыта",
+                            "Private room open",
+                            "Sala privada abierta",
+                            "私人房间已开启",
+                            "الغرفة الخاصة مفتوحة"
                         ),
-                        color = colors.orange,
+                        color = colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                         fontSize = 13.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    Spacer(modifier = Modifier.height(10.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     if (onlineState.privateRoomCode.isNotBlank()) {
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(RoundedCornerShape(16.dp))
+                                .clip(RoundedCornerShape(10.dp))
                                 .background(colors.tint)
-                                .dashedBorder(1.5.dp, colors.orange, 16.dp)
+                                .dashedBorder(1.5.dp, colors.orange, 10.dp)
                                 .clickable {
                                     onClickSound()
                                     val cm = context.getSystemService(Context.CLIPBOARD_SERVICE) as? ClipboardManager
                                     cm?.setPrimaryClip(ClipData.newPlainText("PlusDuel Code", onlineState.privateRoomCode))
                                     copiedToast = true
                                 }
-                                .padding(vertical = 14.dp, horizontal = 12.dp),
+                                .padding(vertical = 16.dp, horizontal = 12.dp),
                             contentAlignment = Alignment.Center
                         ) {
                             Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -260,20 +271,20 @@ fun ArenaScreen(
                                     text = onlineState.privateRoomCode,
                                     color = colors.orange,
                                     fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.SemiBold,
                                     fontSize = 32.sp,
-                                    letterSpacing = 3.sp
+                                    letterSpacing = 2.sp
                                 )
                                 Spacer(modifier = Modifier.height(4.dp))
                                 Text(
                                     text = if (copiedToast) {
-                                        AppStrings.tr(lang, "✓ Скопировано", "✓ Copied!", "✓ Copiado", "✓ 已复制", "✓ تم النسخ")
+                                        AppStrings.tr(lang, "Код скопирован", "Copied to clipboard", "Código copiado", "已复制房间码", "تم نسخ الرمز")
                                     } else {
-                                        AppStrings.tr(lang, "Нажми, чтобы скопировать", "Tap to copy code", "Toca para copiar", "点击复制房间码", "اضغط للنسخ")
+                                        AppStrings.tr(lang, "Нажмите, чтобы скопировать", "Tap to copy code", "Toca para copiar", "点击复制房间码", "اضغط للنسخ")
                                     },
                                     color = if (copiedToast) colors.orange else colors.muted,
                                     fontFamily = FontFamily.Monospace,
-                                    fontSize = 11.sp
+                                    fontSize = 12.sp
                                 )
                             }
                         }
@@ -281,13 +292,13 @@ fun ArenaScreen(
                         Text(
                             text = AppStrings.tr(
                                 lang,
-                                "Создание комнаты… (${queueWaitSec}с)",
-                                "Opening room… (${queueWaitSec}s)",
-                                "Abriendo sala… (${queueWaitSec}s)",
-                                "正在创建… (${queueWaitSec}秒)",
-                                "جارٍ الفتح… (${queueWaitSec}ث)"
+                                "Создание комнаты (${queueWaitSec} с)",
+                                "Opening room (${queueWaitSec}s)",
+                                "Abriendo sala (${queueWaitSec}s)",
+                                "正在创建房间 (${queueWaitSec}s)",
+                                "جارٍ فتح الغرفة (${queueWaitSec}s)"
                             ),
-                            color = colors.ink,
+                            color = colors.muted,
                             fontFamily = FontFamily.Monospace,
                             fontSize = 13.sp,
                             textAlign = TextAlign.Center,
@@ -298,16 +309,16 @@ fun ArenaScreen(
                     Text(
                         text = AppStrings.tr(
                             lang,
-                            "Поиск соперника… (${queueWaitSec}с)",
-                            "Searching opponent… (${queueWaitSec}s)",
-                            "Buscando rival… (${queueWaitSec}s)",
-                            "正在匹配… (${queueWaitSec}秒)",
-                            "جارٍ البحث… (${queueWaitSec}ث)"
+                            "Поиск соперника (${queueWaitSec} с)",
+                            "Searching for opponent (${queueWaitSec}s)",
+                            "Buscando rival (${queueWaitSec}s)",
+                            "正在匹配对手 (${queueWaitSec}s)",
+                            "جارٍ البحث عن خصم (${queueWaitSec}s)"
                         ),
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 14.sp,
                         textAlign = TextAlign.Center,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -315,11 +326,11 @@ fun ArenaScreen(
                     PdButton(
                         text = AppStrings.tr(
                             lang,
-                            "Бой с ботом ▶",
-                            "Play vs Bot ▶",
-                            "Jugar vs Bot ▶",
-                            "人机对战 ▶",
-                            "العب ضد البوت ▶"
+                            "Играть с ботом",
+                            "Play vs bot",
+                            "Jugar contra bot",
+                            "人机对决",
+                            "العب ضد البوت"
                         ),
                         variant = PdButtonVariant.ACCENT,
                         onClick = {
@@ -331,7 +342,7 @@ fun ArenaScreen(
                     )
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(8.dp))
                 PdButton(
                     text = AppStrings.tr(lang, "Отмена", "Cancel", "Cancelar", "取消", "إلغاء"),
                     variant = PdButtonVariant.OUTLINE,
@@ -351,25 +362,29 @@ fun ArenaScreen(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = AppStrings.tr(lang, "НИКНЕЙМ", "NICKNAME", "APODO", "昵称", "الاسم"),
+                        text = AppStrings.tr(lang, "Никнейм", "Nickname", "Apodo", "昵称", "الاسم"),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
+                        fontWeight = FontWeight.Medium,
+                        fontSize = 12.sp
                     )
                     Row(verticalAlignment = Alignment.CenterVertically) {
                         Box(
                             modifier = Modifier
-                                .size(8.dp)
+                                .size(6.dp)
                                 .clip(CircleShape)
-                                .background(if (onlineState.connected) colors.success else colors.orange)
+                                .background(if (onlineState.connected) colors.success else colors.muted)
                         )
-                        Spacer(modifier = Modifier.width(5.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
-                            text = if (onlineState.connected) "Online" else "Bot Ready",
+                            text = if (onlineState.connected) {
+                                AppStrings.tr(lang, "Онлайн", "Online", "En línea", "在线", "متصل")
+                            } else {
+                                AppStrings.tr(lang, "Офлайн", "Offline", "Sin red", "离线", "غير متصل")
+                            },
                             color = colors.muted,
                             fontFamily = FontFamily.Monospace,
-                            fontSize = 11.sp
+                            fontSize = 12.sp
                         )
                     }
                 }
@@ -379,13 +394,15 @@ fun ArenaScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(colors.bg, RoundedCornerShape(12.dp))
-                        .border(1.5.dp, colors.line, RoundedCornerShape(12.dp))
-                        .padding(horizontal = 14.dp, vertical = 11.dp)
+                        .height(44.dp)
+                        .background(colors.bg, RoundedCornerShape(10.dp))
+                        .border(1.dp, colors.line, RoundedCornerShape(10.dp))
+                        .padding(horizontal = 12.dp),
+                    contentAlignment = Alignment.CenterStart
                 ) {
                     if (progress.nickname.isEmpty()) {
                         Text(
-                            text = AppStrings.tr(lang, "Аноним", "Anonymous", "Anónimo", "匿名玩家", "لاعب"),
+                            text = AppStrings.tr(lang, "Гость", "Guest", "Invitado", "访客", "ضيف"),
                             color = colors.muted.copy(alpha = 0.6f),
                             fontFamily = FontFamily.Monospace,
                             fontSize = 14.sp,
@@ -400,26 +417,26 @@ fun ArenaScreen(
                         textStyle = TextStyle(
                             color = colors.ink,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 15.sp
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 14.sp
                         ),
                         modifier = Modifier.fillMaxWidth()
                     )
                 }
 
-                Spacer(modifier = Modifier.height(10.dp))
+                Spacer(modifier = Modifier.height(12.dp))
 
                 PdButton(
                     text = AppStrings.tr(
                         lang,
-                        "Онлайн 1v1 ▶",
-                        "1v1 Online ▶",
-                        "1v1 Online ▶",
-                        "在线 1v1 ▶",
-                        "أونلاين 1v1 ▶"
+                        "Быстрый бой 1v1",
+                        "Quick play 1v1",
+                        "Partida rápida 1v1",
+                        "快速匹配 1v1",
+                        "مباراة سريعة 1v1"
                     ),
                     variant = PdButtonVariant.ACCENT,
-                    badgeText = "+30 ●",
+                    badgeText = "+30",
                     onClick = {
                         onClickSound()
                         onQuickPlayOnline()
@@ -433,16 +450,16 @@ fun ArenaScreen(
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "БОЙ С БОТОМ (ДО 3 ПОБЕД)",
-                        "VS SMART BOT (BEST OF 5)",
-                        "VS BOT (AL MEJOR DE 5)",
-                        "智能人机对决 (五局三胜)",
-                        "ضد البوت الذكي"
+                        "Бой с ботом · до 3 побед",
+                        "Smart bot · Best of 5",
+                        "Contra bot · Al mejor de 5",
+                        "智能人机 · 五局三胜",
+                        "ضد البوت · الأفضل من ٥"
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 12.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis
                 )
@@ -461,13 +478,14 @@ fun ArenaScreen(
                             Box(
                                 modifier = Modifier
                                     .weight(1f)
-                                    .clip(RoundedCornerShape(12.dp))
+                                    .height(40.dp)
+                                    .clip(RoundedCornerShape(10.dp))
                                     .background(if (active || pressed) colors.tint else colors.bg)
                                     .statefulBorder(
                                         isDashed = active || pressed,
-                                        strokeWidth = if (active) 2.dp else 1.5.dp,
+                                        strokeWidth = 1.5.dp,
                                         color = if (active || pressed) colors.orange else colors.line,
-                                        cornerRadius = 12.dp
+                                        cornerRadius = 10.dp
                                     )
                                     .clickable(
                                         interactionSource = interaction,
@@ -476,14 +494,14 @@ fun ArenaScreen(
                                         onClickSound()
                                         onSelectBot(bot)
                                     }
-                                    .padding(vertical = 10.dp, horizontal = 6.dp),
+                                    .padding(horizontal = 8.dp),
                                 contentAlignment = Alignment.Center
                             ) {
                                 Text(
                                     text = AppStrings.botDifficultyLabel(lang, bot),
                                     color = if (active || pressed) colors.orange else colors.ink,
                                     fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Medium,
                                     fontSize = 12.sp,
                                     textAlign = TextAlign.Center,
                                     maxLines = 1,
@@ -499,14 +517,14 @@ fun ArenaScreen(
                 PdButton(
                     text = AppStrings.tr(
                         lang,
-                        "Бой с ботом ▶",
-                        "Play vs Bot ▶",
-                        "Jugar vs Bot ▶",
-                        "开始人机 ▶",
-                        "العب ضد البوت ▶"
+                        "Играть с ботом",
+                        "Play vs bot",
+                        "Jugar contra bot",
+                        "开始人机对决",
+                        "العب ضد البوت"
                     ),
                     variant = PdButtonVariant.PRIMARY,
-                    badgeText = "+${selectedBot.winCoinBonus} ●",
+                    badgeText = "+${selectedBot.winCoinBonus}",
                     onClick = {
                         onClickSound()
                         onStartBotDuel(selectedBot)
@@ -520,16 +538,16 @@ fun ArenaScreen(
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "ПРИВАТНАЯ КОМНАТА",
-                        "PRIVATE ROOM",
-                        "SALA PRIVADA",
-                        "好友房间",
+                        "Приватная комната",
+                        "Private room",
+                        "Sala privada",
+                        "私人房间",
                         "غرفة خاصة"
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 12.sp
                 )
 
                 Spacer(modifier = Modifier.height(8.dp))
@@ -538,7 +556,7 @@ fun ArenaScreen(
                     text = AppStrings.tr(
                         lang,
                         "Создать комнату",
-                        "Create Room",
+                        "Create room",
                         "Crear sala",
                         "创建房间",
                         "إنشاء غرفة"
@@ -561,13 +579,15 @@ fun ArenaScreen(
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .background(colors.bg, RoundedCornerShape(12.dp))
-                            .border(1.5.dp, colors.line, RoundedCornerShape(12.dp))
-                            .padding(horizontal = 14.dp, vertical = 11.dp)
+                            .height(44.dp)
+                            .background(colors.bg, RoundedCornerShape(10.dp))
+                            .border(1.dp, colors.line, RoundedCornerShape(10.dp))
+                            .padding(horizontal = 12.dp),
+                        contentAlignment = Alignment.CenterStart
                     ) {
                         if (roomCodeInput.isEmpty()) {
                             Text(
-                                text = AppStrings.tr(lang, "КОД", "ROOM CODE", "CÓDIGO", "房间码", "الرمز"),
+                                text = AppStrings.tr(lang, "Код комнаты", "Room code", "Código", "房间码", "رمز الغرفة"),
                                 color = colors.muted.copy(alpha = 0.6f),
                                 fontFamily = FontFamily.Monospace,
                                 fontSize = 13.sp,
@@ -585,9 +605,9 @@ fun ArenaScreen(
                             textStyle = TextStyle(
                                 color = colors.ink,
                                 fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 15.sp,
-                                letterSpacing = 2.sp
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 14.sp,
+                                letterSpacing = 1.sp
                             ),
                             modifier = Modifier.fillMaxWidth()
                         )

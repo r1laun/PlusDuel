@@ -1,6 +1,7 @@
 package com.plusduel.mobile.ui.components
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -51,9 +52,9 @@ import com.plusduel.mobile.ui.theme.PlusDuelTheme
 fun Modifier.dashedBorder(
     strokeWidth: Dp = 1.5.dp,
     color: Color,
-    cornerRadius: Dp = 14.dp,
-    dashOn: Dp = 7.dp,
-    dashOff: Dp = 5.dp
+    cornerRadius: Dp = 10.dp,
+    dashOn: Dp = 6.dp,
+    dashOff: Dp = 4.dp
 ): Modifier = this.drawBehind {
     val strokePx = strokeWidth.toPx()
     val halfStroke = strokePx / 2f
@@ -76,13 +77,13 @@ fun Modifier.dashedBorder(
 }
 
 /**
- * Solid border in idle state; switches to dashed border ONLY when pressed/held or active.
+ * Signature detail: solid border in idle state; switches to dashed border when pressed or active.
  */
 fun Modifier.statefulBorder(
     isDashed: Boolean,
     strokeWidth: Dp = 1.5.dp,
     color: Color,
-    cornerRadius: Dp = 14.dp
+    cornerRadius: Dp = 10.dp
 ): Modifier = if (isDashed) {
     this.dashedBorder(strokeWidth = strokeWidth, color = color, cornerRadius = cornerRadius)
 } else {
@@ -94,15 +95,15 @@ fun PdPanel(
     modifier: Modifier = Modifier,
     borderColor: Color = PlusDuelTheme.colors.line,
     backgroundColor: Color = PlusDuelTheme.colors.surface,
-    cornerRadius: Dp = 20.dp,
-    contentPadding: PaddingValues = PaddingValues(18.dp),
+    cornerRadius: Dp = 16.dp,
+    contentPadding: PaddingValues = PaddingValues(16.dp),
     content: @Composable ColumnScope.() -> Unit
 ) {
     Surface(
         modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(cornerRadius),
         color = backgroundColor,
-        border = BorderStroke(1.5.dp, borderColor)
+        border = BorderStroke(1.dp, borderColor)
     ) {
         Column(
             modifier = Modifier.padding(contentPadding),
@@ -129,7 +130,8 @@ fun PdButton(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
-        targetValue = if (isPressed && enabled) 0.97f else 1f,
+        targetValue = if (isPressed && enabled) 0.98f else 1f,
+        animationSpec = tween(140),
         label = "btnScale"
     )
 
@@ -138,32 +140,34 @@ fun PdButton(
     val bg = when (variant) {
         PdButtonVariant.PRIMARY -> if (isPressed && enabled) colors.surface else if (enabled) colors.ink else colors.ink.copy(alpha = 0.3f)
         PdButtonVariant.ACCENT -> if (isPressed && enabled) colors.tint else if (enabled) colors.orange else colors.orange.copy(alpha = 0.35f)
-        PdButtonVariant.OUTLINE -> if (isPressed && enabled) colors.tint else Color.Transparent
+        PdButtonVariant.OUTLINE -> if (isPressed && enabled || isActive) colors.tint else colors.surface
     }
     val fg = when (variant) {
         PdButtonVariant.PRIMARY -> if (isPressed && enabled) colors.ink else colors.onInk
         PdButtonVariant.ACCENT -> if (isPressed && enabled) colors.orange else Color.White
-        PdButtonVariant.OUTLINE -> if (enabled) colors.ink else colors.muted.copy(alpha = 0.45f)
+        PdButtonVariant.OUTLINE -> if (isActive) colors.orange else if (enabled) colors.ink else colors.muted.copy(alpha = 0.45f)
     }
 
     val borderColor = when (variant) {
         PdButtonVariant.PRIMARY -> if (enabled) colors.ink else colors.line
         PdButtonVariant.ACCENT -> if (enabled) colors.orange else colors.line
-        PdButtonVariant.OUTLINE -> if (isPressed && enabled || isActive) colors.orange else if (enabled) colors.ink else colors.line
+        PdButtonVariant.OUTLINE -> if (isPressed && enabled || isActive) colors.orange else colors.line
     }
 
-    val shape = RoundedCornerShape(999.dp)
+    val radius = 10.dp
+    val shape = RoundedCornerShape(radius)
 
     Box(
         modifier = modifier
             .scale(scale)
+            .height(44.dp)
             .clip(shape)
             .background(bg, shape)
             .statefulBorder(
                 isDashed = useDashed,
                 strokeWidth = 1.5.dp,
                 color = borderColor,
-                cornerRadius = 999.dp
+                cornerRadius = radius
             )
             .clickable(
                 interactionSource = interactionSource,
@@ -171,7 +175,7 @@ fun PdButton(
                 enabled = enabled,
                 onClick = onClick
             )
-            .padding(horizontal = 16.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center
     ) {
         Row(
@@ -182,7 +186,7 @@ fun PdButton(
                 text = text,
                 color = fg,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
+                fontWeight = FontWeight.Medium,
                 fontSize = 14.sp,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
@@ -195,16 +199,16 @@ fun PdButton(
                 Box(
                     modifier = Modifier
                         .background(
-                            color = if (variant == PdButtonVariant.OUTLINE) colors.orange else Color.White.copy(alpha = 0.22f),
-                            shape = RoundedCornerShape(999.dp)
+                            color = if (variant == PdButtonVariant.OUTLINE) colors.tint else Color.White.copy(alpha = 0.2f),
+                            shape = RoundedCornerShape(6.dp)
                         )
                         .padding(horizontal = 8.dp, vertical = 2.dp)
                 ) {
                     Text(
                         text = badgeText,
-                        color = Color.White,
+                        color = if (variant == PdButtonVariant.OUTLINE) colors.orange else Color.White,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Medium,
                         fontSize = 11.sp,
                         maxLines = 1,
                         softWrap = false
@@ -230,7 +234,8 @@ fun TactileKeypadButton(
     val interactionSource = remember { MutableInteractionSource() }
     val isPressed by interactionSource.collectIsPressedAsState()
     val scale by animateFloatAsState(
-        targetValue = if (isPressed && enabled) 0.94f else 1f,
+        targetValue = if (isPressed && enabled) 0.97f else 1f,
+        animationSpec = tween(120),
         label = "keyScale"
     )
 
@@ -244,7 +249,7 @@ fun TactileKeypadButton(
     val borderColor = when {
         !enabled -> colors.line.copy(alpha = 0.5f)
         isPressed || isActive || accentTint -> colors.orange
-        else -> colors.ink
+        else -> colors.line
     }
     val textColor = when {
         !enabled -> colors.muted.copy(alpha = 0.4f)
@@ -259,7 +264,7 @@ fun TactileKeypadButton(
             .background(bgColor, RoundedCornerShape(cornerRadius))
             .statefulBorder(
                 isDashed = useDashed,
-                strokeWidth = if (isActive) 2.dp else 1.5.dp,
+                strokeWidth = 1.5.dp,
                 color = borderColor,
                 cornerRadius = cornerRadius
             )
@@ -275,7 +280,7 @@ fun TactileKeypadButton(
             text = label,
             color = textColor,
             fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.Medium,
             fontSize = fontSizeSp.sp,
             textAlign = TextAlign.Center,
             maxLines = 1
@@ -283,9 +288,6 @@ fun TactileKeypadButton(
     }
 }
 
-/**
- * Exact 6x4 dot-matrix PlusDuel mark from `client/src/components/ThemeButton.tsx`.
- */
 private val PD_LOGO_DOTS: List<Pair<Int, Int>> = listOf(
     1 to 0, 2 to 0, 3 to 0, 4 to 0, 5 to 0,
     0 to 1, 1 to 1,
@@ -332,8 +334,8 @@ fun PlusDuelLogoHeader(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 PlusDuelDotMark(
                     modifier = Modifier
-                        .width(if (compact) 38.dp else 50.dp)
-                        .height(if (compact) 25.dp else 32.dp),
+                        .width(if (compact) 36.dp else 48.dp)
+                        .height(if (compact) 24.dp else 32.dp),
                     dotColor = colors.orange
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -341,27 +343,27 @@ fun PlusDuelLogoHeader(
                     text = "Plus",
                     color = colors.orange,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = if (compact) 26.sp else 36.sp,
-                    letterSpacing = (-1).sp
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = if (compact) 24.sp else 32.sp,
+                    letterSpacing = (-0.5).sp
                 )
                 Text(
                     text = "Duel",
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = if (compact) 26.sp else 36.sp,
-                    letterSpacing = (-1).sp
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = if (compact) 24.sp else 32.sp,
+                    letterSpacing = (-0.5).sp
                 )
             }
         }
         if (subtitle != null) {
-            Spacer(modifier = Modifier.height(3.dp))
+            Spacer(modifier = Modifier.height(4.dp))
             Text(
                 text = subtitle,
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
-                fontSize = 11.sp,
+                fontSize = 12.sp,
                 textAlign = TextAlign.Center,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis

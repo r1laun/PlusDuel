@@ -14,3 +14,5 @@ android/build/
 android/app/build/
 android/local.properties
 play-store/*.aab
+.idea/
+android/.idea/

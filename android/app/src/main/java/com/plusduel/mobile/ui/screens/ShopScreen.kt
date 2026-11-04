@@ -60,14 +60,14 @@ fun ShopScreen(
             .fillMaxSize()
             .background(colors.bg)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PlusDuelLogoHeader(
             subtitle = AppStrings.tr(
                 lang,
-                "Цветовые палитры и формы плиток",
-                "Accent Palettes & Tile Shapes",
+                "Цветовой акцент и форма плиток",
+                "Accent colors and tile shapes",
                 "Colores y formas de fichas",
                 "主题配色与方块造型",
                 "الألوان وأشكال المربعات"
@@ -77,7 +77,7 @@ fun ShopScreen(
 
         // ==================== COIN BALANCE CARD ====================
         PdPanel(
-            borderColor = colors.orange,
+            borderColor = colors.line,
             backgroundColor = colors.surface,
             contentPadding = PaddingValues(16.dp)
         ) {
@@ -88,34 +88,32 @@ fun ShopScreen(
             ) {
                 Column {
                     Text(
-                        text = AppStrings.tr(lang, "БАЛАНС", "BALANCE", "SALDO", "余额", "الرصيد"),
+                        text = AppStrings.tr(lang, "Монеты", "Coins", "Monedas", "金币", "العملات"),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp
+                        fontSize = 12.sp
                     )
                     Text(
-                        text = "● ${progress.coins}",
+                        text = progress.coins.toString(),
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 26.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 24.sp,
                         maxLines = 1
                     )
                 }
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = AppStrings.tr(lang, "+20..50 ● за дуэль", "+20..50 ● per duel", "+20..50 ● / duelo", "对决 +20..50 ●", "+20..50 ●"),
+                        text = AppStrings.tr(lang, "+20..50 за победу в дуэли", "+20..50 per duel win", "+20..50 por duelo", "对决获胜 +20..50", "+20..50 لكل فوز"),
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 11.sp,
+                        fontSize = 12.sp,
                         maxLines = 1
                     )
-                    Spacer(modifier = Modifier.height(2.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = AppStrings.tr(lang, "+5 ● за раунд", "+5 ● per round", "+5 ● / ronda", "每回合 +5 ●", "+5 ● / جولة"),
+                        text = AppStrings.tr(lang, "+5 за решённый раунд", "+5 per round solved", "+5 por ronda", "每解一题 +5", "+5 لكل جولة"),
                         color = colors.muted,
                         fontFamily = FontFamily.Monospace,
                         fontSize = 11.sp,
@@ -130,18 +128,18 @@ fun ShopScreen(
             Text(
                 text = AppStrings.tr(
                     lang,
-                    "1. ЦВЕТОВОЙ АКЦЕНТ",
-                    "1. ACCENT PALETTE",
-                    "1. COLOR DE ACENTO",
-                    "1. 主题配色",
-                    "١. اللون المميز"
+                    "Цветовой акцент",
+                    "Accent color",
+                    "Color de acento",
+                    "主题配色",
+                    "اللون المميز"
                 ),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 11.sp
+                fontWeight = FontWeight.Medium,
+                fontSize = 12.sp
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 for (skin in AccentSkin.entries) {
@@ -154,13 +152,14 @@ fun ShopScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(14.dp))
+                            .height(48.dp)
+                            .clip(RoundedCornerShape(10.dp))
                             .background(if (selected || pressed) colors.tint else colors.bg)
                             .statefulBorder(
                                 isDashed = selected || pressed,
-                                strokeWidth = if (selected) 2.dp else 1.5.dp,
+                                strokeWidth = 1.5.dp,
                                 color = if (selected || pressed) colors.orange else colors.line,
-                                cornerRadius = 14.dp
+                                cornerRadius = 10.dp
                             )
                             .clickable(
                                 interactionSource = interaction,
@@ -173,7 +172,7 @@ fun ShopScreen(
                                     soundManager.playMistake()
                                 }
                             }
-                            .padding(horizontal = 14.dp, vertical = 11.dp),
+                            .padding(horizontal = 12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -183,17 +182,17 @@ fun ShopScreen(
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(26.dp)
+                                    .size(20.dp)
                                     .clip(CircleShape)
                                     .background(swatchColor)
-                                    .border(1.5.dp, colors.ink, CircleShape)
+                                    .border(1.dp, colors.ink, CircleShape)
                             )
-                            Spacer(modifier = Modifier.width(10.dp))
+                            Spacer(modifier = Modifier.width(12.dp))
                             Text(
                                 text = skin.title(lang),
                                 color = colors.ink,
                                 fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Medium,
                                 fontSize = 13.sp,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
@@ -219,18 +218,18 @@ fun ShopScreen(
             Text(
                 text = AppStrings.tr(
                     lang,
-                    "2. ФОРМА ПЛИТОК",
-                    "2. TILE SHAPE",
-                    "2. FORMA DE FICHAS",
-                    "2. 方块造型",
-                    "٢. شكل المربعات"
+                    "Форма плиток",
+                    "Tile shape",
+                    "Forma de fichas",
+                    "方块造型",
+                    "شكل المربعات"
                 ),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 11.sp
+                fontWeight = FontWeight.Medium,
+                fontSize = 12.sp
             )
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
                 for (shape in TileShapeStyle.entries) {
@@ -242,13 +241,14 @@ fun ShopScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .clip(RoundedCornerShape(14.dp))
+                            .height(48.dp)
+                            .clip(RoundedCornerShape(10.dp))
                             .background(if (selected || pressed) colors.tint else colors.bg)
                             .statefulBorder(
                                 isDashed = selected || pressed,
-                                strokeWidth = if (selected) 2.dp else 1.5.dp,
+                                strokeWidth = 1.5.dp,
                                 color = if (selected || pressed) colors.orange else colors.line,
-                                cornerRadius = 14.dp
+                                cornerRadius = 10.dp
                             )
                             .clickable(
                                 interactionSource = interaction,
@@ -261,7 +261,7 @@ fun ShopScreen(
                                     soundManager.playMistake()
                                 }
                             }
-                            .padding(horizontal = 14.dp, vertical = 11.dp),
+                            .padding(horizontal = 12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
@@ -271,7 +271,7 @@ fun ShopScreen(
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .size(30.dp)
+                                    .size(28.dp)
                                     .clip(RoundedCornerShape(shape.cornerDp.dp))
                                     .background(colors.ink),
                                 contentAlignment = Alignment.Center
@@ -280,16 +280,16 @@ fun ShopScreen(
                                     text = "7",
                                     color = colors.onInk,
                                     fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 14.sp
+                                    fontWeight = FontWeight.Medium,
+                                    fontSize = 13.sp
                                 )
                             }
-                            Spacer(modifier = Modifier.width(10.dp))
+                            Spacer(modifier = Modifier.width(12.dp))
                             Text(
                                 text = shape.title(lang),
                                 color = colors.ink,
                                 fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Medium,
                                 fontSize = 13.sp,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
@@ -334,24 +334,24 @@ private fun ShopActionChip(
         else -> colors.muted
     }
     val label = when {
-        selected -> AppStrings.tr(lang, "Активно ✓", "Active ✓", "Activo ✓", "使用中 ✓", "مفعّل ✓")
-        unlocked -> AppStrings.tr(lang, "Выбрать", "Equip", "Usar", "装备", "اختيار")
-        else -> "● $costCoins"
+        selected -> AppStrings.tr(lang, "Выбрано", "Selected", "Activo", "使用中", "مفعّل")
+        unlocked -> AppStrings.tr(lang, "Выбрать", "Use", "Usar", "使用", "اختيار")
+        else -> costCoins.toString()
     }
 
     Box(
         modifier = Modifier
-            .clip(RoundedCornerShape(999.dp))
+            .clip(RoundedCornerShape(6.dp))
             .background(bg)
-            .border(1.dp, if (unlocked || canAfford) Color.Transparent else colors.line, RoundedCornerShape(999.dp))
-            .padding(horizontal = 12.dp, vertical = 6.dp)
+            .border(1.dp, if (unlocked || canAfford) Color.Transparent else colors.line, RoundedCornerShape(6.dp))
+            .padding(horizontal = 10.dp, vertical = 4.dp)
     ) {
         Text(
             text = label,
             color = fg,
             fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Bold,
-            fontSize = 12.sp,
+            fontWeight = FontWeight.Medium,
+            fontSize = 11.sp,
             maxLines = 1,
             softWrap = false
         )

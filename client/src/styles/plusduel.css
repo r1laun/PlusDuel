@@ -21,12 +21,13 @@
   --pd-danger-bg: rgba(217, 48, 37, 0.1);
   --pd-star-gold: #ff8c00;
   --pd-border-w: 1.5px;
-  --pd-radius-lg: 28px;
-  --pd-radius-md: 20px;
-  --pd-radius-pill: 999px;
-  --pd-radius-sm: 12px;
+  --pd-radius-lg: 20px;
+  --pd-radius-md: 16px;
+  --pd-radius-pill: 8px;
+  --pd-radius-sm: 10px;
   --pd-font: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   --pd-gap: 12px;
+  --pd-ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 :root[data-theme='dark'] {
@@ -74,6 +75,7 @@ html, body {
 
 .pd-app {
   font-family: var(--pd-font);
+  font-variant-numeric: tabular-nums;
   color: var(--pd-ink);
   background: var(--pd-bg);
   letter-spacing: 0;
@@ -149,16 +151,16 @@ button, input {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  height: 34px;
-  padding: 0 11px;
-  border-radius: var(--pd-radius-pill);
-  border: var(--pd-border-w) solid var(--pd-line);
+  gap: 6px;
+  height: 32px;
+  padding: 0 12px;
+  border-radius: 8px;
+  border: 1px solid var(--pd-line);
   background: var(--pd-surface);
   color: var(--pd-ink);
   font-size: 12px;
-  font-weight: 700;
-  transition: transform 0.1s ease, background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  font-weight: 500;
+  transition: transform 0.14s var(--pd-ease), background-color 0.14s var(--pd-ease), border-color 0.14s var(--pd-ease), color 0.14s var(--pd-ease);
 }
 .pd-pill-btn:hover:not(:disabled) {
   border-color: var(--pd-orange);
@@ -175,10 +177,10 @@ button, input {
 
 /* ---------- Panel (card) ---------- */
 .pd-panel {
-  border: var(--pd-border-w) solid var(--pd-line);
+  border: 1px solid var(--pd-line);
   border-radius: var(--pd-radius-md);
   background: var(--pd-surface);
-  padding: 22px 20px;
+  padding: 16px;
 }
 .pd-panel--accent {
   border-color: var(--pd-orange);
@@ -270,16 +272,16 @@ button, input {
 .pd-input {
   flex: 1;
   font-family: inherit;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
-  border: var(--pd-border-w) solid var(--pd-ink);
-  border-radius: var(--pd-radius-pill);
-  padding: 11px 18px;
-  min-height: 48px;
+  border: 1px solid var(--pd-line);
+  border-radius: var(--pd-radius-sm);
+  padding: 10px 12px;
+  min-height: 44px;
   background: var(--pd-bg);
   color: var(--pd-ink);
   outline: none;
-  transition: border-color 0.15s ease, background-color 0.15s ease;
+  transition: border-color 0.14s var(--pd-ease), background-color 0.14s var(--pd-ease);
 }
 .pd-input:focus {
   border: var(--pd-border-w) dashed var(--pd-orange);
@@ -293,17 +295,17 @@ button, input {
 /* ---------- Buttons (PlusMath Stateful Border: Solid idle -> Dashed on press/active) ---------- */
 .pd-btn {
   font-family: inherit;
-  font-size: 15px;
-  font-weight: 700;
-  border-radius: var(--pd-radius-pill);
-  border: var(--pd-border-w) solid var(--pd-ink);
-  padding: 13px 22px;
-  min-height: 48px;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: var(--pd-radius-sm);
+  border: 1px solid var(--pd-line);
+  padding: 10px 16px;
+  min-height: 44px;
   width: 100%;
   cursor: pointer;
   background: var(--pd-surface);
   color: var(--pd-ink);
-  transition: transform 0.1s cubic-bezier(0.2, 0, 0, 1), background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  transition: transform 0.14s var(--pd-ease), background-color 0.14s var(--pd-ease), border-color 0.14s var(--pd-ease), color 0.14s var(--pd-ease);
 }
 .pd-btn:hover:not(:disabled) {
   border-color: var(--pd-orange);
@@ -526,10 +528,9 @@ button, input {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--pd-muted);
-  text-transform: uppercase;
 }
 .pd-target-card__meta {
   color: var(--pd-orange);
@@ -849,11 +850,9 @@ button, input {
   margin: 0;
 }
 .pd-section-label {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 12px;
+  font-weight: 500;
   color: var(--pd-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
   margin-bottom: 8px;
 }
 .pd-skin-list {

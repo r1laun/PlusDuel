@@ -115,7 +115,7 @@ export default function HomeScreen({
 
             <div className="pd-row">
               <button className="pd-btn pd-btn--accent" onClick={tap(onQuickPlay)}>
-                {t('quickPlay')} ▶
+                {t('quickPlay')}
               </button>
               <button className="pd-btn pd-btn--primary" onClick={tap(onSolo)}>
                 {t('practiceSolo')}

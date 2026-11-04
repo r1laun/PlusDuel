@@ -40,10 +40,6 @@ object AdMobConfig {
     }
 }
 
-/**
- * Anchored adaptive bottom banner displayed right above the BottomNavigationBar in menu screens.
- * Reserves a stable 52.dp minimum height so the screen layout never jumps while the banner loads.
- */
 @Composable
 fun AdMobBannerBar(
     modifier: Modifier = Modifier
@@ -88,16 +84,16 @@ fun AdMobBannerBar(
             .fillMaxWidth()
             .heightIn(min = 52.dp)
             .background(colors.surface)
-            .border(0.75.dp, colors.line)
+            .border(1.dp, colors.line)
             .padding(vertical = 2.dp),
         contentAlignment = Alignment.Center
     ) {
         if (!adLoaded) {
             Text(
-                text = "AD · PLUSDUEL 1V1 ARENA",
-                color = colors.muted.copy(alpha = 0.45f),
+                text = "Sponsored",
+                color = colors.muted.copy(alpha = 0.5f),
                 fontFamily = FontFamily.Monospace,
-                fontSize = 10.sp
+                fontSize = 11.sp
             )
         }
         AndroidView(

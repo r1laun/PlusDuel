@@ -66,14 +66,14 @@ fun SettingsScreen(
             .fillMaxSize()
             .background(colors.bg)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PlusDuelLogoHeader(
             subtitle = AppStrings.tr(
                 lang,
                 "Настройки и правила",
-                "Settings & Rules",
+                "Settings and rules",
                 "Ajustes y reglas",
                 "设置与规则",
                 "الإعدادات والقواعد"
@@ -89,10 +89,10 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = AppStrings.tr(lang, "Музыка в меню", "Menu Music", "Música", "背景音乐", "الموسيقى"),
+                    text = AppStrings.tr(lang, "Музыка в меню", "Menu music", "Música", "背景音乐", "الموسيقى"),
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     fontSize = 14.sp,
                     modifier = Modifier.weight(1f)
                 )
@@ -109,7 +109,7 @@ fun SettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -117,10 +117,10 @@ fun SettingsScreen(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = AppStrings.tr(lang, "Звуки (SFX)", "Sound Effects", "Efectos (SFX)", "按键音效", "المؤثرات الصوتية"),
+                    text = AppStrings.tr(lang, "Звуки нажатий", "Sound effects", "Efectos de sonido", "按键音效", "المؤثرات الصوتية"),
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     fontSize = 14.sp,
                     modifier = Modifier.weight(1f)
                 )
@@ -134,7 +134,7 @@ fun SettingsScreen(
                 )
             }
 
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(4.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -145,7 +145,7 @@ fun SettingsScreen(
                     text = AppStrings.tr(lang, "Вибрация", "Haptics", "Vibración", "震动反馈", "الاهتزاز"),
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.Medium,
                     fontSize = 14.sp,
                     modifier = Modifier.weight(1f)
                 )
@@ -166,17 +166,17 @@ fun SettingsScreen(
         // ==================== LANGUAGE & THEME ====================
         PdPanel(contentPadding = PaddingValues(16.dp)) {
             Text(
-                text = AppStrings.tr(lang, "ЯЗЫК", "LANGUAGE", "IDIOMA", "语言", "اللغة"),
+                text = AppStrings.tr(lang, "Язык", "Language", "Idioma", "语言", "اللغة"),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 11.sp
+                fontWeight = FontWeight.Medium,
+                fontSize = 12.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(6.dp)
+                horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 for (itemLang in AppLanguage.entries) {
                     val active = progress.language == itemLang
@@ -185,13 +185,14 @@ fun SettingsScreen(
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .clip(RoundedCornerShape(12.dp))
+                            .height(40.dp)
+                            .clip(RoundedCornerShape(10.dp))
                             .background(if (active || pressed) colors.tint else colors.surface)
                             .statefulBorder(
                                 isDashed = active || pressed,
-                                strokeWidth = if (active) 2.dp else 1.5.dp,
-                                color = if (active || pressed) colors.orange else colors.ink,
-                                cornerRadius = 12.dp
+                                strokeWidth = 1.5.dp,
+                                color = if (active || pressed) colors.orange else colors.line,
+                                cornerRadius = 10.dp
                             )
                             .clickable(
                                 interactionSource = interaction,
@@ -199,15 +200,14 @@ fun SettingsScreen(
                             ) {
                                 onClickSound()
                                 onSetLanguage(itemLang)
-                            }
-                            .padding(vertical = 10.dp),
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = itemLang.label,
                             color = if (active || pressed) colors.orange else colors.ink,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 13.sp,
                             maxLines = 1
                         )
@@ -215,14 +215,14 @@ fun SettingsScreen(
                 }
             }
 
-            Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = AppStrings.tr(lang, "ТЕМА", "THEME", "TEMA", "主题", "السمة"),
+                text = AppStrings.tr(lang, "Тема", "Theme", "Tema", "主题", "السمة"),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 11.sp
+                fontWeight = FontWeight.Medium,
+                fontSize = 12.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
             Row(
@@ -241,13 +241,14 @@ fun SettingsScreen(
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .clip(RoundedCornerShape(12.dp))
+                            .height(40.dp)
+                            .clip(RoundedCornerShape(10.dp))
                             .background(if (active || pressed) colors.tint else colors.surface)
                             .statefulBorder(
                                 isDashed = active || pressed,
-                                strokeWidth = if (active) 2.dp else 1.5.dp,
-                                color = if (active || pressed) colors.orange else colors.ink,
-                                cornerRadius = 12.dp
+                                strokeWidth = 1.5.dp,
+                                color = if (active || pressed) colors.orange else colors.line,
+                                cornerRadius = 10.dp
                             )
                             .clickable(
                                 interactionSource = interaction,
@@ -255,15 +256,14 @@ fun SettingsScreen(
                             ) {
                                 onClickSound()
                                 onSetTheme(mode)
-                            }
-                            .padding(vertical = 10.dp),
+                            },
                         contentAlignment = Alignment.Center
                     ) {
                         Text(
                             text = label,
                             color = if (active || pressed) colors.orange else colors.ink,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = FontWeight.Medium,
                             fontSize = 13.sp,
                             maxLines = 1
                         )
@@ -275,41 +275,31 @@ fun SettingsScreen(
         // ==================== RULES OF PLUSDUEL ====================
         PdPanel(contentPadding = PaddingValues(16.dp)) {
             Text(
-                text = AppStrings.tr(lang, "ПРАВИЛА", "RULES", "REGLAS", "规则", "القواعد"),
+                text = AppStrings.tr(lang, "Правила", "Rules", "Reglas", "规则", "القواعد"),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 11.sp
+                fontWeight = FontWeight.Medium,
+                fontSize = 12.sp
             )
-            Spacer(modifier = Modifier.height(6.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = AppStrings.tr(
                     lang,
-                    "• Используй каждую цифру ровно 1 раз, чтобы получить Целевое Число.\n" +
-                        "• Знаки: + − × ÷ ( ) ^ √ ! · Цифры можно склеивать (2 и 3 → 23).\n" +
-                        "• Кто первым отправит точный ответ — забирает раунд!",
-                    "• Use every issued digit once to hit the Target Number.\n" +
-                        "• Operators: + − × ÷ ( ) ^ √ ! · Concatenation (2 & 3 → 23) allowed.\n" +
-                        "• First exact solution wins the round!",
-                    "• Usa cada dígito una vez para lograr el Objetivo.\n" +
-                        "• Operadores: + − × ÷ ( ) ^ √ ! · Unir dígitos permitido.\n" +
-                        "• ¡El primero en acertar gana la ronda!",
-                    "• 用完所有数字（各用一次）凑出目标数。\n" +
-                        "• 运算符：+ − × ÷ ( ) ^ √ ! · 允许数字拼接。\n" +
-                        "• 最先提交正确算式者赢得该回合！",
-                    "• استخدم كل رقم مرة واحدة للوصول للهدف.\n" +
-                        "• العمليات: + − × ÷ ( ) ^ √ ! · دمج الأرقام مسموح.\n" +
-                        "• أول حل صحيح يفوز بالجولة!"
+                    "Используйте каждую цифру ровно один раз, чтобы получить целевое число. Доступны знаки + − × ÷ ( ) ^ √ ! и склейка цифр (2 и 3 дают 23). Первое точное решение приносит победу в раунде.",
+                    "Use every issued digit once to reach the target number. Allowed operators: + − × ÷ ( ) ^ √ ! and digit concatenation (2 and 3 make 23). The first exact solution wins the round.",
+                    "Usa cada dígito una vez para alcanzar el número objetivo. Operadores: + − × ÷ ( ) ^ √ ! y unión de dígitos. La primera solución exacta gana la ronda.",
+                    "使用全部给定数字（各用一次）凑出目标数。支持 + − × ÷ ( ) ^ √ ! 与数字拼接。最先提交正确算式者赢得该回合。",
+                    "استخدم كل رقم مرة واحدة للوصول إلى الرقم المستهدف. العمليات المتاحة: + − × ÷ ( ) ^ √ ! ودمج الأرقام. أول حل صحيح يفوز بالجولة."
                 ),
                 color = colors.ink,
                 fontFamily = FontFamily.Monospace,
                 fontSize = 12.sp,
-                lineHeight = 17.sp
+                lineHeight = 18.sp
             )
         }
 
         PdButton(
-            text = AppStrings.tr(lang, "Политика конфиденциальности", "Privacy Policy", "Privacidad", "隐私政策", "الخصوصية"),
+            text = AppStrings.tr(lang, "Политика конфиденциальности", "Privacy policy", "Privacidad", "隐私政策", "الخصوصية"),
             variant = PdButtonVariant.OUTLINE,
             onClick = {
                 onClickSound()
@@ -319,7 +309,7 @@ fun SettingsScreen(
         )
 
         PdButton(
-            text = AppStrings.tr(lang, "Сбросить статистику", "Reset Stats", "Reiniciar", "重置数据", "إعادة ضبط"),
+            text = AppStrings.tr(lang, "Сбросить статистику", "Reset stats", "Reiniciar", "重置数据", "إعادة ضبط"),
             variant = PdButtonVariant.OUTLINE,
             onClick = {
                 onClickSound()
@@ -332,31 +322,31 @@ fun SettingsScreen(
     if (showPrivacyModal) {
         Dialog(onDismissRequest = { showPrivacyModal = false }) {
             PdPanel(
-                borderColor = colors.orange,
+                borderColor = colors.line,
                 backgroundColor = colors.surface,
-                cornerRadius = 24.dp,
+                cornerRadius = 16.dp,
                 contentPadding = PaddingValues(20.dp)
             ) {
                 Text(
-                    text = AppStrings.tr(lang, "Политика конфиденциальности", "Privacy Policy — PlusDuel", "Privacidad", "隐私政策", "الخصوصية"),
+                    text = AppStrings.tr(lang, "Политика конфиденциальности", "Privacy policy", "Privacidad", "隐私政策", "الخصوصية"),
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
+                    fontWeight = FontWeight.SemiBold,
                     fontSize = 15.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "• Настройки, соло-рекорды, монеты и открытые скины хранятся локально на устройстве.\n• Для показа нижнего баннера используется Google AdMob SDK (com.google.android.gms:play-services-ads), который может обрабатывать рекламный ID (AAID) и регион по IP согласно Политике Google.\n• В онлайн-дуэлях сервер обрабатывает никнейм, игровой ID для рейтинга Elo и отправленные формулы.\n• URL: https://plusduel.onrender.com/privacy.html",
-                        "• Settings, solo stats, coins, and unlocked styles are stored locally on your device.\n• PlusDuel uses Google AdMob SDK (com.google.android.gms:play-services-ads) for bottom banner ads, which may process your Advertising ID (AAID), coarse IP location, and ad diagnostics under Google's Privacy Policy.\n• In online duels, the server processes your nickname, player ID for Elo rankings, and submitted math expressions.\n• Web: https://plusduel.onrender.com/privacy.html"
+                        "Настройки, соло-рекорды, монеты и открытые темы хранятся локально на устройстве. Для показа нижнего баннера используется Google AdMob SDK (com.google.android.gms:play-services-ads), который может обрабатывать рекламный ID (AAID) и регион по IP согласно Политике Google. В онлайн-дуэлях сервер обрабатывает никнейм, игровой ID для рейтинга Elo и отправленные формулы.\nhttps://plusduel.onrender.com/privacy.html",
+                        "Settings, solo stats, coins, and unlocked styles are stored locally on your device. PlusDuel uses Google AdMob SDK (com.google.android.gms:play-services-ads) for bottom banner ads, which may process your Advertising ID (AAID), coarse IP location, and ad diagnostics under Google's Privacy Policy. In online duels, the server processes your nickname, player ID for Elo rankings, and submitted math expressions.\nhttps://plusduel.onrender.com/privacy.html"
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
-                    fontSize = 11.sp,
-                    lineHeight = 16.sp
+                    fontSize = 12.sp,
+                    lineHeight = 18.sp
                 )
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 PdButton(
                     text = AppStrings.tr(lang, "Закрыть", "Close", "Cerrar", "关闭", "إغلاق"),
                     variant = PdButtonVariant.PRIMARY,
@@ -375,28 +365,29 @@ fun SettingsScreen(
             PdPanel(
                 borderColor = colors.danger,
                 backgroundColor = colors.surface,
-                cornerRadius = 24.dp,
+                cornerRadius = 16.dp,
                 contentPadding = PaddingValues(20.dp)
             ) {
                 Text(
-                    text = AppStrings.tr(lang, "Сбросить статистику?", "Reset Local Stats?", "¿Reiniciar?", "重置统计？", "إعادة ضبط؟"),
+                    text = AppStrings.tr(lang, "Сбросить статистику?", "Reset local stats?", "¿Reiniciar?", "重置统计？", "إعادة ضبط؟"),
                     color = colors.ink,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 16.sp
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 15.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "Счётчик матчей и соло-рекорды будут сброшены. Монеты и скины сохранятся.",
-                        "Local match counters and solo records will be reset. Coins and skins are kept."
+                        "Счётчик матчей и соло-рекорды будут сброшены. Монеты и темы сохранятся.",
+                        "Local match counters and solo records will be reset. Coins and styles are kept."
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
-                    fontSize = 12.sp
+                    fontSize = 12.sp,
+                    lineHeight = 18.sp
                 )
-                Spacer(modifier = Modifier.height(14.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 PdButton(
                     text = AppStrings.tr(lang, "Сбросить", "Reset", "Reiniciar", "确认", "نعم"),
                     variant = PdButtonVariant.ACCENT,

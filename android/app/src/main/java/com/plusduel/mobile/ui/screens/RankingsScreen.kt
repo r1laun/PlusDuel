@@ -54,16 +54,16 @@ fun RankingsScreen(
             .fillMaxSize()
             .background(colors.bg)
             .verticalScroll(rememberScrollState())
-            .padding(horizontal = 18.dp, vertical = 12.dp),
+            .padding(horizontal = 16.dp, vertical = 12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         PlusDuelLogoHeader(
             subtitle = AppStrings.tr(
                 lang,
-                "Рейтинг Elo и мировой топ",
-                "Elo Rating & Global Leaderboard",
-                "Clasificación Elo y Top Mundial",
-                "Elo 段位与全球排行",
+                "Рейтинг Elo и таблица лидеров",
+                "Elo rating and leaderboard",
+                "Clasificación Elo y tabla",
+                "Elo 积分与排行榜",
                 "تصنيف Elo والمتصدرين"
             ),
             compact = true
@@ -71,7 +71,7 @@ fun RankingsScreen(
 
         // ==================== YOUR PROFILE & ELO CARD ====================
         PdPanel(
-            borderColor = colors.orange,
+            borderColor = colors.line,
             backgroundColor = colors.surface,
             contentPadding = PaddingValues(16.dp)
         ) {
@@ -83,20 +83,19 @@ fun RankingsScreen(
                 Column(modifier = Modifier.weight(1f)) {
                     Text(
                         text = progress.nickname.ifBlank {
-                            AppStrings.tr(lang, "Игрок", "Player", "Jugador", "玩家", "لاعب")
+                            AppStrings.tr(lang, "Гость", "Guest", "Invitado", "访客", "ضيف")
                         },
                         color = colors.ink,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 17.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
                     Text(
                         text = AppStrings.rankTitle(lang, progress.rankTitle),
-                        color = colors.orange,
+                        color = colors.muted,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
                         fontSize = 12.sp,
                         maxLines = 1
                     )
@@ -104,22 +103,22 @@ fun RankingsScreen(
 
                 Box(
                     modifier = Modifier
-                        .background(colors.tint, RoundedCornerShape(14.dp))
-                        .border(1.5.dp, colors.orange, RoundedCornerShape(14.dp))
-                        .padding(horizontal = 14.dp, vertical = 8.dp)
+                        .background(colors.tint, RoundedCornerShape(10.dp))
+                        .border(1.dp, colors.orange, RoundedCornerShape(10.dp))
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
                 ) {
                     Text(
-                        text = "★ ${progress.rating}",
+                        text = "${progress.rating} Elo",
                         color = colors.orange,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 18.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 16.sp,
                         maxLines = 1
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Row(
                 modifier = Modifier.fillMaxWidth(),
@@ -135,11 +134,11 @@ fun RankingsScreen(
                 )
                 StatCell(
                     value = progress.duelLosses.toString(),
-                    label = AppStrings.tr(lang, "Пораж.", "Losses", "Derrotas", "负场", "خسارة")
+                    label = AppStrings.tr(lang, "Поражения", "Losses", "Derrotas", "负场", "خسارة")
                 )
                 StatCell(
                     value = "$winRate%",
-                    label = AppStrings.tr(lang, "Винрейт", "Win %", "% Vict.", "胜率", "نسبة")
+                    label = AppStrings.tr(lang, "Побед %", "Win rate", "Victoria", "胜率", "نسبة")
                 )
             }
         }
@@ -154,27 +153,30 @@ fun RankingsScreen(
                 Text(
                     text = AppStrings.tr(
                         lang,
-                        "ТОП ИГРОКОВ",
-                        "LEADERBOARD",
-                        "CLASIFICACIÓN",
+                        "Таблица лидеров",
+                        "Leaderboard",
+                        "Clasificación",
                         "排行榜",
                         "المتصدرون"
                     ),
                     color = colors.muted,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp
+                    fontWeight = FontWeight.Medium,
+                    fontSize = 12.sp
                 )
                 Text(
-                    text = if (onlineState.connected) "● ONLINE" else "○ OFFLINE",
+                    text = if (onlineState.connected) {
+                        AppStrings.tr(lang, "Онлайн", "Online", "En línea", "在线", "متصل")
+                    } else {
+                        AppStrings.tr(lang, "Офлайн", "Offline", "Sin red", "离线", "غير متصل")
+                    },
                     color = if (onlineState.connected) colors.success else colors.muted,
                     fontFamily = FontFamily.Monospace,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 11.sp
+                    fontSize = 12.sp
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             if (onlineState.rankingsTop.isNotEmpty()) {
                 Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -184,16 +186,17 @@ fun RankingsScreen(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .height(40.dp)
                                 .background(
                                     color = if (isYou) colors.tint else colors.bg,
-                                    shape = RoundedCornerShape(12.dp)
+                                    shape = RoundedCornerShape(10.dp)
                                 )
                                 .border(
-                                    width = if (isYou) 1.5.dp else 1.dp,
+                                    width = 1.dp,
                                     color = if (isYou) colors.orange else colors.line,
-                                    shape = RoundedCornerShape(12.dp)
+                                    shape = RoundedCornerShape(10.dp)
                                 )
-                                .padding(horizontal = 12.dp, vertical = 9.dp),
+                                .padding(horizontal = 12.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
@@ -202,18 +205,17 @@ fun RankingsScreen(
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Text(
-                                    text = "#${idx + 1}",
-                                    color = if (idx < 3) colors.orange else colors.muted,
+                                    text = "${idx + 1}.",
+                                    color = colors.muted,
                                     fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
-                                    fontSize = 13.sp
+                                    fontSize = 12.sp,
+                                    modifier = Modifier.width(28.dp)
                                 )
-                                Spacer(modifier = Modifier.width(8.dp))
                                 Text(
                                     text = entry.name,
                                     color = colors.ink,
                                     fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.Bold,
+                                    fontWeight = FontWeight.Medium,
                                     fontSize = 13.sp,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
@@ -224,7 +226,7 @@ fun RankingsScreen(
                                 text = "${entry.rating} · ${AppStrings.rankTitle(lang, entry.title)}",
                                 color = if (isYou) colors.orange else colors.muted,
                                 fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.Bold,
+                                fontWeight = FontWeight.Medium,
                                 fontSize = 12.sp,
                                 maxLines = 1
                             )
@@ -247,14 +249,14 @@ fun RankingsScreen(
                     textAlign = TextAlign.Center,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(vertical = 10.dp)
+                        .padding(vertical = 12.dp)
                 )
             }
 
-            Spacer(modifier = Modifier.height(10.dp))
+            Spacer(modifier = Modifier.height(12.dp))
 
             PdButton(
-                text = AppStrings.tr(lang, "Обновить ↻", "Refresh ↻", "Actualizar ↻", "刷新 ↻", "تحديث ↻"),
+                text = AppStrings.tr(lang, "Обновить", "Refresh", "Actualizar", "刷新", "تحديث"),
                 variant = PdButtonVariant.OUTLINE,
                 onClick = {
                     onClickSound()
@@ -269,16 +271,16 @@ fun RankingsScreen(
             Text(
                 text = AppStrings.tr(
                     lang,
-                    "ЗВАНИЯ ELO",
-                    "ELO TIERS",
-                    "RANGOS ELO",
-                    "ELO 段位",
-                    "الرتب"
+                    "Звания Elo",
+                    "Rating tiers",
+                    "Rangos Elo",
+                    "Elo 段位",
+                    "مستويات التصنيف"
                 ),
                 color = colors.muted,
                 fontFamily = FontFamily.Monospace,
-                fontWeight = FontWeight.Bold,
-                fontSize = 11.sp
+                fontWeight = FontWeight.Medium,
+                fontSize = 12.sp
             )
             Spacer(modifier = Modifier.height(8.dp))
 
@@ -291,23 +293,24 @@ fun RankingsScreen(
                 800 to "Club",
                 0 to "Novice"
             )
-            Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
                 for ((minElo, rawTitle) in bands) {
                     val isCurrent = progress.rankTitle == rawTitle
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(if (isCurrent) colors.tint else colors.bg, RoundedCornerShape(10.dp))
-                            .border(1.dp, if (isCurrent) colors.orange else colors.line, RoundedCornerShape(10.dp))
-                            .padding(horizontal = 12.dp, vertical = 7.dp),
+                            .height(36.dp)
+                            .background(if (isCurrent) colors.tint else colors.bg, RoundedCornerShape(8.dp))
+                            .border(1.dp, if (isCurrent) colors.orange else colors.line, RoundedCornerShape(8.dp))
+                            .padding(horizontal = 12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            text = AppStrings.rankTitle(lang, rawTitle) + if (isCurrent) " ★" else "",
+                            text = AppStrings.rankTitle(lang, rawTitle),
                             color = if (isCurrent) colors.orange else colors.ink,
                             fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Bold,
+                            fontWeight = if (isCurrent) FontWeight.Medium else FontWeight.Normal,
                             fontSize = 12.sp,
                             maxLines = 1
                         )
@@ -333,7 +336,7 @@ private fun StatCell(value: String, label: String) {
             text = value,
             color = colors.ink,
             fontFamily = FontFamily.Monospace,
-            fontWeight = FontWeight.Bold,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
             maxLines = 1
         )

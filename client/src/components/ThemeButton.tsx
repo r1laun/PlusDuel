@@ -82,7 +82,7 @@ export default function ThemeButton() {
         title={t('themeToggle')}
         aria-label={t('themeToggle')}
       >
-        {dark ? '☀' : '☾'}
+        {dark ? t('themeLight') : t('themeDark')}
       </button>
 
       <button
@@ -93,7 +93,7 @@ export default function ThemeButton() {
         title={t('audioSection')}
         aria-label={t('audioSection')}
       >
-        {anyAudioOn ? 'SND' : 'OFF'}
+        {anyAudioOn ? 'Sound' : 'Muted'}
       </button>
 
       <button
@@ -104,7 +104,6 @@ export default function ThemeButton() {
         }}
         title={t('styleModalTitle')}
       >
-        <span>●</span>
         <span>{t('styleBtn')}</span>
       </button>
 

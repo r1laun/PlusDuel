@@ -24,9 +24,9 @@ object AppStrings {
     // Bottom Navigation
     fun navArena(lang: AppLanguage) = tr(lang, "Арена", "Arena", "Arena", "对战", "الساحة")
     fun navSolo(lang: AppLanguage) = tr(lang, "Соло", "Solo", "Solo", "单人", "فردي")
-    fun navRankings(lang: AppLanguage) = tr(lang, "Топ", "Rank", "Rank", "排行", "التصنيف")
-    fun navShop(lang: AppLanguage) = tr(lang, "Стиль", "Style", "Estilo", "装扮", "المظهر")
-    fun navSettings(lang: AppLanguage) = tr(lang, "Опции", "Options", "Ajustes", "设置", "الإعدادات")
+    fun navRankings(lang: AppLanguage) = tr(lang, "Рейтинг", "Ratings", "Ranking", "排行", "التصنيف")
+    fun navShop(lang: AppLanguage) = tr(lang, "Стиль", "Style", "Estilo", "外观", "المظهر")
+    fun navSettings(lang: AppLanguage) = tr(lang, "Опции", "Settings", "Ajustes", "设置", "الإعدادات")
 
     // Rank Titles
     fun rankTitle(lang: AppLanguage, rawTitle: String): String = when (rawTitle) {
@@ -48,51 +48,51 @@ object AppStrings {
 
     fun targetHeader(lang: AppLanguage) = tr(
         lang,
-        "ЦЕЛЬ",
-        "TARGET",
-        "OBJETIVO",
+        "Цель",
+        "Target",
+        "Objetivo",
         "目标数",
         "الهدف"
     )
 
     fun useEveryDigitOnce(lang: AppLanguage, used: Int, total: Int) = tr(
         lang,
-        "Цифры: $used/$total",
-        "Digits used: $used/$total",
-        "Dígitos: $used/$total",
-        "已用数字: $used/$total",
-        "الأرقام: $used/$total"
+        "Использовано цифр: $used из $total",
+        "Digits used: $used of $total",
+        "Dígitos usados: $used de $total",
+        "已用数字: $used / $total",
+        "الأرقام المستخدمة: $used من $total"
     )
 
     fun readyToSubmitBanner(lang: AppLanguage) = tr(
         lang,
-        "✓ Цель собрана! Жми Готово",
-        "✓ Target reached! Tap Submit",
-        "✓ ¡Objetivo listo! Pulsa Enviar",
-        "✓ 已达成目标！点击提交",
-        "✓ الهدف جاهز! اضغط إرسال"
+        "Цель собрана — нажмите Готово",
+        "Target reached — tap Submit",
+        "Objetivo listo — pulsa Enviar",
+        "已达成目标 — 点击提交",
+        "الهدف جاهز — اضغط إرسال"
     )
 
     fun operatorsHint(lang: AppLanguage) = tr(
         lang,
-        "+ − × ÷ ( ) ^ √ ! · Склейка цифр",
-        "+ − × ÷ ( ) ^ √ ! · Concatenation allowed",
-        "+ − × ÷ ( ) ^ √ ! · Unir dígitos",
+        "+ − × ÷ ( ) ^ √ ! · склейка цифр разрешена",
+        "+ − × ÷ ( ) ^ √ ! · concatenation allowed",
+        "+ − × ÷ ( ) ^ √ ! · unir dígitos permitido",
         "+ − × ÷ ( ) ^ √ ! · 允许数字拼接",
-        "+ − × ÷ ( ) ^ √ ! · دمج الأرقام"
+        "+ − × ÷ ( ) ^ √ ! · دمج الأرقام مسموح"
     )
 
     fun tapTilesPlaceholder(lang: AppLanguage) = tr(
         lang,
-        "Нажимай на плитки…",
-        "Tap tiles below…",
-        "Toca las fichas…",
-        "点击下方方块…",
-        "اضغط على المربعات…"
+        "Соберите формулу",
+        "Build expression",
+        "Crea la expresión",
+        "输入算式",
+        "كوّن المعادلة"
     )
 
     fun clearBtn(lang: AppLanguage) = tr(lang, "Сброс", "Clear", "Borrar", "清空", "مسح")
-    fun submitBtn(lang: AppLanguage) = tr(lang, "Готово ✓", "Submit ✓", "Enviar ✓", "提交 ✓", "إرسال ✓")
+    fun submitBtn(lang: AppLanguage) = tr(lang, "Готово", "Submit", "Enviar", "提交", "إرسال")
 
     fun validationError(
         lang: AppLanguage,
@@ -100,16 +100,16 @@ object AppStrings {
         detail: String,
         target: Int
     ): String = when (code) {
-        ValidationErrorCode.EMPTY -> tr(lang, "Пусто", "Empty expression", "Vacío", "请输入算式", "فارغ")
-        ValidationErrorCode.INVALID_CHAR -> tr(lang, "Неверный символ", "Invalid symbol", "Símbolo inválido", "无效字符", "رمز غير صالح")
-        ValidationErrorCode.LEADING_ZERO -> tr(lang, "Ведущий ноль ($detail)", "No leading zero ($detail)", "Sin cero inicial ($detail)", "禁止前导零 ($detail)", "صفر بادئ ($detail)")
-        ValidationErrorCode.SQRT_NEEDS_ARG -> tr(lang, "Нужно число после √", "√ needs a number", "Falta número tras √", "√ 后需数字", "أدخل رقماً بعد √")
-        ValidationErrorCode.UNBALANCED_PARENS -> tr(lang, "Проверьте скобки ( )", "Check parentheses ( )", "Revisa paréntesis ( )", "括号不匹配", "أقواس غير متوازنة")
-        ValidationErrorCode.UNUSED_DIGITS -> tr(lang, "Остались цифры: $detail", "Unused digits: $detail", "Faltan: $detail", "未用数字: $detail", "أرقام متبقية: $detail")
+        ValidationErrorCode.EMPTY -> tr(lang, "Введите формулу", "Enter an expression", "Introduce una expresión", "请输入算式", "أدخل معادلة")
+        ValidationErrorCode.INVALID_CHAR -> tr(lang, "Недопустимый символ", "Invalid character", "Carácter inválido", "无效字符", "حرف غير صالح")
+        ValidationErrorCode.LEADING_ZERO -> tr(lang, "Ведущий ноль ($detail)", "Leading zero ($detail)", "Cero inicial ($detail)", "前导零 ($detail)", "صفر بادئ ($detail)")
+        ValidationErrorCode.SQRT_NEEDS_ARG -> tr(lang, "После √ нужно число", "√ requires a number", "Falta número tras √", "√ 后需数字", "أدخل رقماً بعد √")
+        ValidationErrorCode.UNBALANCED_PARENS -> tr(lang, "Незакрытые скобки", "Unbalanced parentheses", "Paréntesis sin cerrar", "括号不匹配", "أقواس غير متوازنة")
+        ValidationErrorCode.UNUSED_DIGITS -> tr(lang, "Остались цифры: $detail", "Unused digits: $detail", "Dígitos sin usar: $detail", "未用数字: $detail", "أرقام متبقية: $detail")
         ValidationErrorCode.EXTRA_DIGITS -> tr(lang, "Лишние цифры: $detail", "Extra digits: $detail", "Dígitos extra: $detail", "多余数字: $detail", "أرقام إضافية: $detail")
-        ValidationErrorCode.NON_EXACT_INTERMEDIATE -> tr(lang, "Нецелое деление / корень", "Non-exact division or root", "Valor no entero", "非整数结果", "قيمة غير صحيحة")
-        ValidationErrorCode.NON_INTEGER_RESULT -> tr(lang, "Дробь ($detail) ≠ $target", "Fraction ($detail) ≠ $target", "Fracción ($detail) ≠ $target", "分数 ($detail) ≠ $target", "كسر ($detail) ≠ $target")
-        ValidationErrorCode.WRONG_VALUE -> tr(lang, "$detail ≠ $target", "$detail ≠ $target", "$detail ≠ $target", "$detail ≠ $target", "$detail ≠ $target")
-        else -> tr(lang, "Ошибка в формуле", "Syntax error", "Error de sintaxis", "语法错误", "خطأ في المعادلة")
+        ValidationErrorCode.NON_EXACT_INTERMEDIATE -> tr(lang, "Нецелое деление или корень", "Non-integer division or root", "División o raíz no entera", "非整数结果", "قيمة غير صحيحة")
+        ValidationErrorCode.NON_INTEGER_RESULT -> tr(lang, "Дробь ($detail) вместо $target", "Fraction ($detail), target is $target", "Fracción ($detail), objetivo $target", "分数 ($detail)，目标 $target", "كسر ($detail)، الهدف $target")
+        ValidationErrorCode.WRONG_VALUE -> tr(lang, "$detail вместо $target", "$detail, target is $target", "$detail, objetivo $target", "$detail，目标 $target", "$detail، الهدف $target")
+        else -> tr(lang, "Ошибка в записи формулы", "Syntax error", "Error de sintaxis", "算式语法错误", "خطأ في الصيغة")
     }
 }

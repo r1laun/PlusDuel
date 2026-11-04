@@ -725,9 +725,9 @@ private fun BottomNavigationBar(
         modifier = Modifier
             .fillMaxWidth()
             .background(colors.surface)
-            .border(1.5.dp, colors.line)
-            .padding(horizontal = 8.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+            .border(1.dp, colors.line)
+            .padding(horizontal = 8.dp, vertical = 6.dp),
+        horizontalArrangement = Arrangement.spacedBy(4.dp)
     ) {
         for (item in items) {
             val active = currentTab == item.tab
@@ -738,13 +738,13 @@ private fun BottomNavigationBar(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .clip(RoundedCornerShape(14.dp))
+                    .clip(RoundedCornerShape(10.dp))
                     .background(if (active || pressed) colors.tint else colors.surface)
                     .statefulBorder(
                         isDashed = active || pressed,
                         strokeWidth = 1.5.dp,
                         color = if (active || pressed) colors.orange else colors.surface,
-                        cornerRadius = 14.dp
+                        cornerRadius = 10.dp
                     )
                     .clickable(
                         interactionSource = interaction,
@@ -758,14 +758,14 @@ private fun BottomNavigationBar(
                         imageVector = item.icon,
                         contentDescription = item.label,
                         tint = fgColor,
-                        modifier = Modifier.size(22.dp)
+                        modifier = Modifier.size(18.dp)
                     )
-                    Spacer(modifier = Modifier.height(3.dp))
+                    Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = item.label,
                         color = fgColor,
                         fontFamily = FontFamily.Monospace,
-                        fontWeight = FontWeight.Bold,
+                        fontWeight = if (active) FontWeight.Medium else FontWeight.Normal,
                         fontSize = 11.sp,
                         maxLines = 1
                     )
